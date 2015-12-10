@@ -1,0 +1,33 @@
+machine:
+  node:
+    version: 0.12.0
+  services:
+    - docker
+dependencies:
+  pre:
+    - npm install -g mocha
+    - npm install -g istanbul
+  override:
+    - sudo pip install awscli
+    - docker info
+    - docker build -t claytonsilva/book4you:book4you-back  .
+#general:
+#  artifacts:
+#    - ./coverage
+test:
+  override:
+    - docker run -d --name mongodb  xdevelsistemas/debian-env:mongodb-env
+    - docker run -d --name redis  xdevelsistemas/debian-env:redis-env
+    - docker run -d  -e "NODE_ENV=production"  -e "REDIS_HOST=redis" -e "REDIS_PORT=6379" -e "REDIS_DB=0" -e "MONGO_URL=mongodb://mongodb:27017/book4you"  -p 80:3000 --link mongodb:mongodb --link redis:redis  claytonsilva/book4you:book4you-back; sleep 10
+    - curl --retry 10 --retry-delay 5 -v http://localhost:80
+deployment:
+  prod:
+    branch: publicacao
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - (npm install)
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push claytonsilva/book4you:book4you-back
+      - (bash ecscmd.sh)
+
+

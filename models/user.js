@@ -18,14 +18,6 @@ var MongooseErr = require("../services/MongooseErr");
 var _ = require('lodash');
 
 /**
- * model Schema do likes e dislikes
- */
-var likeSchema = mongoose.Schema({
-    readlist : {type:ObjectId,required:true},
-    book: {type:ObjectId,required:true}
-}, { noId: true });
-
-/**
  * padrão - utilizando bluebird como promise
  */
 mongoose.Promise = require('bluebird');

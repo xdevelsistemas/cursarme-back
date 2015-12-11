@@ -13,8 +13,8 @@ module.exports = function (app, passport) {
 
     /* pegar a imagem de perfil  do usuário por email */
     /**
-     * @api {get} /api/v1.1/users/picture/:email Busca a imagem(foto) do usuário.
-     * @apiVersion 1.1.0
+     * @api {get} /api/v1/users/picture/:email Busca a imagem(foto) do usuário.
+     * @apiVersion 1.0.0
      * @apiName getPictureUrl
      * @apiGroup Users
      *
@@ -36,13 +36,13 @@ module.exports = function (app, passport) {
      *     }
      *
      */
-    app.route('/api/v1.1/users/picture/:email').get(autentica(passport), userController.getPictureUrl);
+    app.route('/api/v1/users/picture/:email').get(autentica(passport), userController.getPictureUrl);
 
 
     /* POST token email. */
     /**
-     * @api {post} /api/v1.1/users/signup Envia uma email com os passos para seguir com ocadastro.
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/users/signup Envia uma email com os passos para seguir com ocadastro.
+     * @apiVersion 1.0.0
      * @apiName sendTokenPasswordEmail
      * @apiGroup Users
      *
@@ -64,12 +64,12 @@ module.exports = function (app, passport) {
      *     HTTP/1.1 200 OK
      *
      */
-    app.route('/api/v1.1/users/signup').post(autentica(passport), userController.sendTokenCompleteEmail);
+    app.route('/api/v1/users/signup').post(autentica(passport), userController.sendTokenCompleteEmail);
 
 
     /**
-     * @api {get} /api/v1.1/users/signup/:token verificar token (pré-cadastro)
-     * @apiVersion 1.1.0
+     * @api {get} /api/v1/users/signup/:token verificar token (pré-cadastro)
+     * @apiVersion 1.0.0
      * @apiName verifyTokenSignup
      * @apiGroup Users
      *
@@ -119,13 +119,13 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.route('/api/v1.1/users/signup/:token').get(autentica(passport),userController.verifyTokenSignup);
+    app.route('/api/v1/users/signup/:token').get(autentica(passport),userController.verifyTokenSignup);
 
 
     /* POST token password reset. */
     /**
-     * @api {post} /api/v1.1/users/forgot Envia uma email com os passos para resetar a senha.
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/users/forgot Envia uma email com os passos para resetar a senha.
+     * @apiVersion 1.0.0
      * @apiName sendTokenPasswordEmail
      * @apiGroup Users
      *
@@ -147,12 +147,12 @@ module.exports = function (app, passport) {
      *     HTTP/1.1 200 OK
      *
      */
-    app.route('/api/v1.1/users/forgot').post(autentica(passport), userController.sendTokenPasswordEmail);
+    app.route('/api/v1/users/forgot').post(autentica(passport), userController.sendTokenPasswordEmail);
 
 
     /**
-     * @api {get} /api/v1.1/api/users/forgot/:token verificar token (resetar senha)
-     * @apiVersion 1.1.0
+     * @api {get} /api/v1/api/users/forgot/:token verificar token (resetar senha)
+     * @apiVersion 1.0.0
      * @apiName verifyTokenResetPassword
      * @apiGroup Users
      *
@@ -201,12 +201,12 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.route('/api/v1.1/users/forgot/:token').get(autentica(passport),userController.verifyTokenResetPassword);
+    app.route('/api/v1/users/forgot/:token').get(autentica(passport),userController.verifyTokenResetPassword);
 
 
     /**
-     * @api {post} /api/v1.1/api/users/forgot/:token token para resetar senha
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/api/users/forgot/:token token para resetar senha
+     * @apiVersion 1.0.0
      * @apiName resetPassword
      * @apiGroup Users
      *
@@ -255,13 +255,13 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.route('/api/v1.1/users/forgot/:token').put(autentica(passport),userController.resetPassword);
+    app.route('/api/v1/users/forgot/:token').put(autentica(passport),userController.resetPassword);
 
 
     /* GET list users. */
     /**
-     * @api {get} /api/v1.1/users Listar Usuário
-     * @apiVersion 1.1.0
+     * @api {get} /api/v1/users Listar Usuário
+     * @apiVersion 1.0.0
      * @apiName showViewUser
      * @apiGroup Users
      *
@@ -346,13 +346,13 @@ module.exports = function (app, passport) {
      *       }
      *     ]
      */
-    app.get('/api/v1.1/users',autentica(passport), userController.showViewUser);
+    app.get('/api/v1/users',autentica(passport), userController.showViewUser);
 
 
     /* POST auth users with local strategy. */
     /**
-     * @api {post} /api/v1.1/users/auth/local gerar autenticacao local
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/users/auth/local gerar autenticacao local
+     * @apiVersion 1.0.0
      * @apiName authenticateLocal
      * @apiGroup Users
      *
@@ -403,21 +403,21 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.post('/api/v1.1/users/auth/local',autentica(passport), userController.authenticateLocal);
+    app.post('/api/v1/users/auth/local',autentica(passport), userController.authenticateLocal);
 
 
     /* POST auth users with facebook strategy. */
-    app.post('/api/v1.1/users/auth/google',autentica(passport), userController.authenticateGoogle);
+    app.post('/api/v1/users/auth/google',autentica(passport), userController.authenticateGoogle);
 
 
     /* POST auth users with facebook strategy. */
-    app.post('/api/v1.1/users/auth/facebook',autentica(passport), userController.authenticateFacebook);
+    app.post('/api/v1/users/auth/facebook',autentica(passport), userController.authenticateFacebook);
 
 
     /* POST atualiza categoria no usuario. */
     /**
-     * @api {post} /api/v1.1/users/insereCategoria Insere o objeto {readlist, book} em like do usuário
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/users/insereCategoria Insere o objeto {readlist, book} em like do usuário
+     * @apiVersion 1.0.0
      * @apiName atualizaCategoria
      * @apiGroup Users
      *
@@ -477,13 +477,13 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.put('/api/v1.1/users/atualizaCategoria',autentica(passport), userController.atualizaCategoria);
+    app.put('/api/v1/users/atualizaCategoria',autentica(passport), userController.atualizaCategoria);
 
 
     /* GET one user. */
     /**
-     * @api {get} /api/v1.1/users/:id obter usuário
-     * @apiVersion 1.1.0
+     * @api {get} /api/v1/users/:id obter usuário
+     * @apiVersion 1.0.0
      * @apiName obtemUser
      * @apiGroup Users
      *
@@ -532,13 +532,13 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.get('/api/v1.1/users/:id',autentica(passport), userController.obtemUser);
+    app.get('/api/v1/users/:id',autentica(passport), userController.obtemUser);
 
 
     /* POST create user. */
     /**
-     * @api {post} /api/v1.1/users criar usuário (genérico).
-     * @apiVersion 1.1.0
+     * @api {post} /api/v1/users criar usuário (genérico).
+     * @apiVersion 1.0.0
      * @apiName obtemUser
      * @apiGroup Users
      *
@@ -600,13 +600,13 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.post('/api/v1.1/users',autentica(passport), userController.salvaUser);
+    app.post('/api/v1/users',autentica(passport), userController.salvaUser);
 
 
     /* POST delete user. */
     /**
-     * @api {delete} /api/v1.1/users/:id remover usuário
-     * @apiVersion 1.1.0
+     * @api {delete} /api/v1/users/:id remover usuário
+     * @apiVersion 1.0.0
      * @apiName removeUser
      * @apiGroup Users
      *
@@ -616,7 +616,7 @@ module.exports = function (app, passport) {
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
      */
-    app.delete('/api/v1.1/users/:id',autentica(passport), userController.removeUser);
+    app.delete('/api/v1/users/:id',autentica(passport), userController.removeUser);
 
 
     return app;

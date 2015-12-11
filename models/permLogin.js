@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var mongooseRedisCache = require("../config/mongooseRedisCache");
+var mongooseRedisCache = require("../config/mongooseRedisCache");
 
 var PLschema = mongoose.Schema({
     users: {

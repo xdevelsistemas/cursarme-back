@@ -4,7 +4,7 @@
  */
 
 var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
+var mongooseRedisCache = require("../config/mongooseRedisCache");
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var toObjectId = require('mongoose').Types.ObjectId;
 var bcrypt = require('bcrypt-nodejs');
@@ -24,6 +24,11 @@ var likeSchema = mongoose.Schema({
     readlist : {type:ObjectId,required:true},
     book: {type:ObjectId,required:true}
 }, { noId: true });
+
+/**
+ * padrão - utilizando bluebird como promise
+ */
+mongoose.Promise = require('bluebird');
 
 /**
  * model Schema
@@ -52,9 +57,7 @@ var userSchema = mongoose.Schema({
         name: String,
         picture: String,
         gender: String,
-        birthday: Date,
-        movies: [],
-        books: []
+        birthday: Date
     },
     twitter: {
         id: String,
@@ -63,13 +66,17 @@ var userSchema = mongoose.Schema({
         name: String,
         picture: String
     },
-    likes: [likeSchema],
-    dislikes: [likeSchema],
-    categories: [],
     token: String,
     admin: Boolean,
-    email: { type: String, unique: true , require: true }
+    email: { type: String, unique: true , require: true },
+    cpf: { type: String, unique: true , require: true }
 });
+
+
+/**
+ * enabling caching
+ */
+userSchema.set('redisCache', true);
 
 
 /**

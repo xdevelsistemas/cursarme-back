@@ -16,7 +16,7 @@
         describe('-> Unauthorized', function () {
             it('-> Requisição não autorizada', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/authors')
+                supertest(app).get('/api/v1/authors')
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
                         if (err) return done(err);
@@ -31,7 +31,7 @@
         describe('-> GET PermLogin', function () {
             it('-> Verificando acesso de usuário sem permissão', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/permlogins/email@invalido.com')
+                supertest(app).get('/api/v1/permlogins/email@invalido.com')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -48,7 +48,7 @@
 
             it('-> Verificando acesso de usuário com permissão', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/permlogins/douglas.lima@xdevel.com.br')
+                supertest(app).get('/api/v1/permlogins/douglas.lima@xdevel.com.br')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {

@@ -22,7 +22,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> Unauthorized', function () {
             it('-> Requisição não autorizada', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users')
+                supertest(app).get('/api/v1/users')
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
                         if (err) return done(err);
@@ -38,7 +38,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> UPDATING Password ( Parte 1 )', function () {
             it('-> Requisitando alteração de password para um usuário local inexistente', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/forgot')
+                supertest(app).post('/api/v1/users/forgot')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -64,7 +64,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> CREATING User ( Parte 1 )', function () {
             it('-> Adicionando um usuário local com dados em branco(vazio)', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/signup')
+                supertest(app).post('/api/v1/users/signup')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -85,7 +85,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Adicionando um novo usuário', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/signup')
+                supertest(app).post('/api/v1/users/signup')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -114,7 +114,7 @@ var sanitize = require('mongo-sanitize');
         describe("VALIDATING Token", function() {
             it('-> Validando token e retornando o usuário se for válido', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/signup/' + tokenSignup)
+                supertest(app).get('/api/v1/users/signup/' + tokenSignup)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -136,7 +136,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> AUTHENTICATING User ( Parte 1 )', function() {
             it('-> Autenticando usuário local com o email faltando', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -155,7 +155,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Autenticando usuário local com o password faltando', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -174,7 +174,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Autenticando usuário local inexistente', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -193,7 +193,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Autenticando usuário local, mas os seus dados ainda estão incompletos', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -215,7 +215,7 @@ var sanitize = require('mongo-sanitize');
         describe("COMPLETING Registration", function() {
             it('-> Completando cadastro do usuário com email em branco(vazio)', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -234,7 +234,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Completando cadastro de um usuário inexistente', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -252,7 +252,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Completando cadastro do usuário com dados em branco(vazio)', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -275,7 +275,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Completando cadastro do usuário', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -301,7 +301,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Atualizando dados do novo usuário', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -329,7 +329,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Atualizando dados do novo usuário junto com a senha', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users')
+                supertest(app).post('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -361,7 +361,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> AUTHENTICATING User ( Parte 2 )', function() {
             it('-> Autenticando usuário local com os passwords diferentes', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -380,7 +380,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Autenticando usuário local com o password correto', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/auth/local')
+                supertest(app).post('/api/v1/users/auth/local')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -409,7 +409,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> UPDATING Password ( Parte 2 )', function () {
             it('-> Requisitando alteração de password para o usuário com dados em branco(vazio)', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/forgot')
+                supertest(app).post('/api/v1/users/forgot')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -430,7 +430,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Requisitando alteração de password para o usuário cadastrado', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/forgot')
+                supertest(app).post('/api/v1/users/forgot')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -456,7 +456,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Validando token de resetPassword e retornando o usuário se for válido', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/forgot/' + tokenForgot)
+                supertest(app).get('/api/v1/users/forgot/' + tokenForgot)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -475,7 +475,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Alterando senha do usuário com o token inválido', function (done) {
                 this.timeout(60000);
-                supertest(app).put('/api/v1.1/users/forgot/abcdefghikj')
+                supertest(app).put('/api/v1/users/forgot/abcdefghikj')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -490,7 +490,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Alterando senha do usuário', function (done) {
                 this.timeout(60000);
-                supertest(app).put('/api/v1.1/users/forgot/' + tokenForgot)
+                supertest(app).put('/api/v1/users/forgot/' + tokenForgot)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -514,7 +514,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Alterando senha do usuário novamente para token expirado', function (done) {
                 this.timeout(60000);
-                supertest(app).put('/api/v1.1/users/forgot/' + tokenForgot)
+                supertest(app).put('/api/v1/users/forgot/' + tokenForgot)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -532,7 +532,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Validando usuário para resetPassword pelo token inválido', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/forgot/abcdefghikj')
+                supertest(app).get('/api/v1/users/forgot/abcdefghikj')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -547,7 +547,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Validando usuário para resetPassword pelo token expirado', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/forgot/' + tokenForgot)
+                supertest(app).get('/api/v1/users/forgot/' + tokenForgot)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
@@ -565,7 +565,7 @@ var sanitize = require('mongo-sanitize');
         describe("CREATING User ( Parte 2 )", function() {
             it('-> Adicionando um usuário existente', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/users/signup')
+                supertest(app).post('/api/v1/users/signup')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -591,7 +591,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> GET Users', function() {
             it('-> Buscando todos os usuários', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users')
+                supertest(app).get('/api/v1/users')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -638,7 +638,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando um usuário com id inválido', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/1234567890')
+                supertest(app).get('/api/v1/users/1234567890')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -652,7 +652,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando um usuário com id válido mas com erro de cast', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/123x123x123x')
+                supertest(app).get('/api/v1/users/123x123x123x')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -666,7 +666,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando um usuário inexistente', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/1344d78ef8c62e0100859266')
+                supertest(app).get('/api/v1/users/1344d78ef8c62e0100859266')
                 .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                 .set('Accept', 'application/json')
                 .end(function (err, res) {
@@ -680,7 +680,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando o usuário cadastrado', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/users/' + newUser._id)
+                supertest(app).get('/api/v1/users/' + newUser._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -704,7 +704,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> Criando categoria no teste do usuário', function() {
             it('-> Adicionando uma nova categoria para ser testada pelo usuário', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/categories')
+                supertest(app).post('/api/v1/categories')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -727,7 +727,7 @@ var sanitize = require('mongo-sanitize');
         describe('-> Criando readlist no teste do usuário', function() {
             it('-> Adicionando uma nova readlist corretamente', function (done) {
                 this.timeout(120000);
-                supertest(app).post('/api/v1.1/readlists')
+                supertest(app).post('/api/v1/readlists')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -762,7 +762,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Buscando lojas", function() {
             it('-> Buscando todas as lojas', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/shops')
+                supertest(app).get('/api/v1/shops')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -788,7 +788,7 @@ var sanitize = require('mongo-sanitize');
             listBook.forEach(function(el) {
                 it('-> Adicionando o ' + el + ' livro', function (done) {
                     this.timeout(200000);
-                    supertest(app).post('/api/v1.1/books')
+                    supertest(app).post('/api/v1/books')
                         .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                         .set('Accept', 'application/json')
                         .send({
@@ -826,7 +826,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Adicionando categorias para o usuário", function() {
             it('-> Atualizando as categorias do usuário com a categoria inválida', function (done) {
                 this.timeout(60000);
-                supertest(app).put('/api/v1.1/users/atualizaCategoria')
+                supertest(app).put('/api/v1/users/atualizaCategoria')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -847,7 +847,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Atualizando as categorias do usuário corretamente', function (done) {
                 this.timeout(60000);
-                supertest(app).put('/api/v1.1/users/atualizaCategoria')
+                supertest(app).put('/api/v1/users/atualizaCategoria')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -874,7 +874,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Obtem sinopses das readlist ( Parte 1 )", function() {
             it('-> Buscando as sinopses com readlist inválida', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/sinopses/1234567890')
+                supertest(app).get('/api/v1/sinopses/1234567890')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -889,7 +889,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando as sinopses das readlists de usuário não logado', function (done) {
                 this.timeout(120000);
-                supertest(app).get('/api/v1.1/sinopses/' + readlist._id)
+                supertest(app).get('/api/v1/sinopses/' + readlist._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -915,7 +915,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando as sinopses com userId inválido', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/sinopses/' + readlist._id + '/1')
+                supertest(app).get('/api/v1/sinopses/' + readlist._id + '/1')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -930,7 +930,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Buscando as sinopses das readlists de usuário logado', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/sinopses/' + readlist._id + '/' + newUser._id)
+                supertest(app).get('/api/v1/sinopses/' + readlist._id + '/' + newUser._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -958,7 +958,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Requisitando like e dislike", function() {
             it('-> Dando like no livro com os dados em branco', function (done) {
                 this.timeout(90000);
-                supertest(app).post('/api/v1.1/books/likes')
+                supertest(app).post('/api/v1/books/likes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -978,7 +978,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Dando like no primeiro livro cadastrado pelo teste do usuário', function (done) {
                 this.timeout(90000);
-                supertest(app).post('/api/v1.1/books/likes')
+                supertest(app).post('/api/v1/books/likes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -996,7 +996,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Dando dislike no segundo livro cadastrado pelo teste do usuário', function (done) {
                 this.timeout(90000);
-                supertest(app).post('/api/v1.1/books/dislikes')
+                supertest(app).post('/api/v1/books/dislikes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -1017,7 +1017,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Histórico de likes", function() {
             it('-> Requisitando histórico de likes de um usuário inválido', function (done) {
                 this.timeout(120000);
-                supertest(app).get('/api/v1.1/books/historicoLikes/1234567890')
+                supertest(app).get('/api/v1/books/historicoLikes/1234567890')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -1032,7 +1032,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Requisitando histórico de likes do usuário criado', function (done) {
                 this.timeout(120000);
-                supertest(app).get('/api/v1.1/books/historicoLikes/' + newUser._id)
+                supertest(app).get('/api/v1/books/historicoLikes/' + newUser._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -1054,7 +1054,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Obtem sinopses das readlist ( Parte 2 )", function() {
             it('-> Buscando as sinopses das readlists novamente para usuário logado', function (done) {
                 this.timeout(120000);
-                supertest(app).get('/api/v1.1/sinopses/' + readlist._id + '/' + newUser._id)
+                supertest(app).get('/api/v1/sinopses/' + readlist._id + '/' + newUser._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -1081,7 +1081,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Resetando dislikes", function() {
             it('-> Resetando dislikes com o usuário e a readlist em branco', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/books/resetaDislikes')
+                supertest(app).post('/api/v1/books/resetaDislikes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -1100,7 +1100,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Resetando dislikes com o usuário e a readlist inválidos', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/books/resetaDislikes')
+                supertest(app).post('/api/v1/books/resetaDislikes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -1119,7 +1119,7 @@ var sanitize = require('mongo-sanitize');
 
             it('-> Resetando dislikes do usuário corretamente', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/books/resetaDislikes')
+                supertest(app).post('/api/v1/books/resetaDislikes')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -1138,7 +1138,7 @@ var sanitize = require('mongo-sanitize');
         describe("-> Obtem sinopses das readlist ( Parte 3 )", function() {
             it('-> Buscando as sinopses das readlists novamente para usuário logado', function (done) {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/sinopses/' + readlist._id + '/' + newUser._id)
+                supertest(app).get('/api/v1/sinopses/' + readlist._id + '/' + newUser._id)
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -1169,7 +1169,7 @@ var sanitize = require('mongo-sanitize');
                 listBook.forEach(function(el) {
                     it('-> Deletando ' + el + ' livro do teste do usuário', function (done) {
                         this.timeout(300000);
-                        supertest(app).delete('/api/v1.1/books/' + book[el]._id)
+                        supertest(app).delete('/api/v1/books/' + book[el]._id)
                             .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                             .set('Accept', 'application/json')
                             .expect('Content-Type', /json/)
@@ -1189,7 +1189,7 @@ var sanitize = require('mongo-sanitize');
             describe("-> Deletando readlist", function() {
                 it('-> Deletando a readlist criada para testar o usuário', function (done) {
                     this.timeout(120000);
-                    supertest(app).delete('/api/v1.1/readlists/' + readlist._id)
+                    supertest(app).delete('/api/v1/readlists/' + readlist._id)
                         .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                         .set('Accept', 'application/json')
                         .expect('Content-Type', /json/)
@@ -1208,7 +1208,7 @@ var sanitize = require('mongo-sanitize');
             describe("-> Deletando categoria", function() {
                 it('-> Deletando a categoria criada para testar o usuário', function (done) {
                     this.timeout(120000);
-                    supertest(app).delete('/api/v1.1/categories/' + categoria._id)
+                    supertest(app).delete('/api/v1/categories/' + categoria._id)
                         .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                         .set('Accept', 'application/json')
                         .expect('Content-Type', /json/)
@@ -1227,7 +1227,7 @@ var sanitize = require('mongo-sanitize');
             describe("-> Deletando usuário", function() {
                 it('-> Deletando um usuário inválido', function (done) {
                     this.timeout(120000);
-                    supertest(app).delete('/api/v1.1/users/1234567890')
+                    supertest(app).delete('/api/v1/users/1234567890')
                         .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                         .set('Accept', 'application/json')
                         .expect('Content-Type', /json/)
@@ -1242,7 +1242,7 @@ var sanitize = require('mongo-sanitize');
 
                 it('-> Deletando o usuário criado', function (done) {
                     this.timeout(120000);
-                    supertest(app).delete('/api/v1.1/users/' + newUser._id)
+                    supertest(app).delete('/api/v1/users/' + newUser._id)
                         .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                         .set('Accept', 'application/json')
                         .expect('Content-Type', /json/)

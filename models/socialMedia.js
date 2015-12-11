@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+var mongooseRedisCache = require("../config/mongooseRedisCache");
 var SMschema = mongoose.Schema({
     clientname: {
         type: String
@@ -25,6 +25,13 @@ SMschema.statics.authSocial = function(social) {
         }
     );
 };
+
+/**
+ * enabling caching
+ */
+SMschema.set('redisCache', true);
+
+
 
 //has social
 SMschema.statics.hasSocial = function(social) {

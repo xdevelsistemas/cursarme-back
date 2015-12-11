@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var mongooseRedisCache = require("../config/mongooseRedisCache");
 
 var PLschema = mongoose.Schema({
     users: {
@@ -8,6 +9,11 @@ var PLschema = mongoose.Schema({
         type: String
     }
 });
+
+/**
+ * enabling caching
+ */
+PLschema.set('redisCache', true);
 
 
 

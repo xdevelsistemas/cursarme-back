@@ -40,7 +40,7 @@ app = require('./routes/home')(app, passport);
 // load our routes and pass in our app and fully configured passport
 app = require('./routes/v1/userRoutes')(app, passport);
 app = require('./routes/v1/permLoginRoutes')(app, passport);
-
+app = require('./routes/v1/unidadeRoutes')(app, passport);
 
 
 app.use(function (err, req, res, next) {

@@ -397,7 +397,7 @@ module.exports = function() {
             op : "signup",
             host : req.body.host,
             token: "",
-            fromEmail : 'contato@book4you.co',
+            fromEmail : 'contato@cursar.me',
             subjectEmail : req.body.subject,
             template : req.body.template
         };

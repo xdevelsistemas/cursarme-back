@@ -1,5 +1,5 @@
 /**
- * xdevel sistemas escaláveis - book4you
+ * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
 
@@ -128,7 +128,7 @@ userSchema.statics.sendTokenEmail = function(emailVars, field, res, next) {
     //    op : "reset",
     //    host : host,
     //    token: "",
-    //    fromEmail : 'contato@book4you.co',
+    //    fromEmail : 'contato@cursar.me',
     //    subjectEmail : 'Book4You - Alterar Senha',
     //    template : textEmail
     //};

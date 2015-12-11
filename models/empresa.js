@@ -1,5 +1,5 @@
 /**
- * xdevel sistemas escaláveis - book4you
+ * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
 

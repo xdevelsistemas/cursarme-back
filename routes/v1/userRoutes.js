@@ -1,5 +1,5 @@
 /**
- * xdevel sistemas escaláveis - book4you
+ * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
 
@@ -54,7 +54,7 @@ module.exports = function (app, passport) {
      *
      * @apiParamExample {json} Request-Example:
      *      {
-     *        "host": "beta.book4you.com/#/",
+     *        "host": "beta.cursar.me/#/",
      *        "email": "example@test.co",
      *        "template": "template",
      *        "subject": "assunto"
@@ -137,7 +137,7 @@ module.exports = function (app, passport) {
      *
      * @apiParamExample {json} Request-Example:
      *      {
-     *        "host": "beta.book4you.com/#/",
+     *        "host": "beta.cursar.me/#/",
      *        "email": "example@test.co",
      *        "template": "template",
      *        "subject": "assunto"

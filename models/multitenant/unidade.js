@@ -1,10 +1,9 @@
 /**
- * xdevel sistemas escaláveis - book4you
+ * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
 
 var mongoose = require('mongoose');
-require('mongoose-multitenant');
 var mongooseRedisCache = require("../../config/mongooseRedisCache");
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var toObjectId = require('mongoose').Types.ObjectId;
@@ -42,4 +41,6 @@ unidadeSchema.set('redisCache', true);
  * export the model Schema
  * @type {Aggregate|Model|*|{}}
  */
-module.exports = mongoose.mtModel('Unidade', unidadeSchema);
+module.exports = function (client) {
+    return mongoose.model(client + '.' +  'Unidade', unidadeSchema);
+};

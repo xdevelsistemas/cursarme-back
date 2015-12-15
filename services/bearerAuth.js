@@ -1,6 +1,7 @@
 // route middleware to make sure a user is logged in
 function autentica(passport) {
-    return passport.authenticate('bearer', { session: false })
+    //necessário obter o user
+    return passport.authenticate('bearer')
 }
 
 module.exports = autentica;

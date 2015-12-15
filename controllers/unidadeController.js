@@ -1,8 +1,9 @@
 /**
  * Created by clayton on 21/08/15.
  */
-var  mongooseErr = require('../services/MongooseErr');
-module.exports = function() {
+module.exports = function(client) {
+    const  mongooseErr = require('../services/MongooseErr');
+    const  UnidadeModel = require('../models/multitenant/unidade')(client);
     var unidadeController = {};
 
     /**
@@ -11,7 +12,6 @@ module.exports = function() {
      * @param res
      */
     unidadeController.all = function(req, res) {
-        var  UnidadeModel = require('../models/multitenant/unidade')('ieses');
         UnidadeModel.find()
             .then(
                 function(data) {

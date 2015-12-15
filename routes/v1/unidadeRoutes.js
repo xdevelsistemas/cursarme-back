@@ -1,12 +1,21 @@
 var autentica = require('../../services/bearerAuth');
 
 module.exports = function (app, passport) {
-
-    var unidadeController =  require('../../controllers/unidadeController')();
+    "use strict";
     /**
      * Obtém todas as unidades
      */
-    app.get('/api/v1/unidades', unidadeController.all);
+
+    const unidadeController = require('../../controllers/unidadeController');
+
+
+
+    app.get('/api/v1/unidades',autentica(passport), getUnit.all);
+
+    function getUnit(req, res, next){
+        const empresa  = req.headers['empresa'];
+        return unidadeController(empresa);
+    }
 
     return app;
 };

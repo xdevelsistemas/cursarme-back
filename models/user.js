@@ -2,192 +2,295 @@
  * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
-
-var mongoose = require('mongoose');
-var mongooseRedisCache = require("../config/mongooseRedisCache");
-var ObjectId = mongoose.Schema.Types.ObjectId;
-var toObjectId = require('mongoose').Types.ObjectId;
-var bcrypt = require('bcrypt-nodejs');
-var async = require('async');
-var crypto = require('crypto');
-var format = require('string-format');
-var ses = require('nodemailer-ses-transport');
-var nodemailer = require('nodemailer');
-var awsConf = require('../config/aws');
-var MongooseErr = require("../services/MongooseErr");
-var _ = require('lodash');
-
-/**
- * padrão - utilizando bluebird como promise
- */
-mongoose.Promise = require('bluebird');
-
-/**
- * model Schema
- */
-var userSchema = mongoose.Schema({
-    local: {
-        name: String,
-        email: String,
-        password: String,
-        resetPasswordToken: String,
-        resetPasswordExpires: Date,
-        signupToken: String,
-        signupExpires: Date,
-        picture: String
-    },
-    google: {
-        id: String,
-        token: String,
-        email: String,
-        name: String,
-        picture: String
-    },
-    facebook: {
-        id: String,
-        email: String,
-        name: String,
-        picture: String,
-        gender: String,
-        birthday: Date
-    },
-    twitter: {
-        id: String,
-        token: String,
-        email: String,
-        name: String,
-        picture: String
-    },
-    token: String,
-    admin: Boolean,
-    email: { type: String, unique: true , require: true },
-    cpf: { type: String, unique: true , require: true }
-});
-
-
-/**
- * enabling caching
- */
-userSchema.set('redisCache', true);
-
-
-/**
- * static methods
- * generate Hash
- * @param password
- * @returns {*}
- */
-userSchema.statics.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
-
-/**
- * buscar de usuários pelo email
- * @param email
- * @returns {*|Query}
- */
-userSchema.statics.findByEmail = function(email){
-    return this.findOne({ 'email': email });
-};
-
-
-/**
- * filtra usuário pela id
- * @param id
- * @returns {*|Query}
- */
-userSchema.statics.filtraUsuario = function(id){
-    return this.findOne({ '_id': id });
-};
-
-/**
- * checa se a senha é valida
- * @param password
- * @returns {*}
- */
-userSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.local.password);
-};
-
-
-/**
- * envia token por email para o usuário
- * @param emailVars
- * @param field
- * @param res
- * @param next
- */
-userSchema.statics.sendTokenEmail = function(emailVars, field, res, next) {
-    var UserModel = this;
+module.exports = callmodule();
 
 
 
-    // sample - emailVars
-    //var emailVars = {
-    //    email : email,
-    //    op : "reset",
-    //    host : host,
-    //    token: "",
-    //    fromEmail : 'contato@cursar.me',
-    //    subjectEmail : 'Book4You - Alterar Senha',
-    //    template : textEmail
-    //};
+function callmodule() {
+    "use strict";
+
+    let mongoose = require('mongoose');
+    const Schema = mongoose.Schema;
+    const mongooseRedisCache = require("../config/mongooseRedisCache");
+    const ObjectId = mongoose.Schema.Types.ObjectId;
+    const toObjectId = require('mongoose').Types.ObjectId;
+    const bcrypt = require('bcrypt-nodejs');
+    const async = require('async');
+    const crypto = require('crypto');
+    const format = require('string-format');
+    const ses = require('nodemailer-ses-transport');
+    const nodemailer = require('nodemailer');
+    const awsConf = require('../config/aws');
+    const MongooseErr = require("../services/MongooseErr");
+    const _ = require('lodash');
+
+
+    /**
+     * padrão - utilizando bluebird como promise
+     */
+    mongoose.Promise = require('bluebird');
+
+    /**
+     * model Schema
+     */
+    const TokenSchema = new Schema({
+        token: { type: String, unique: true , require: true },
+        enabled: { type: Boolean , require: true },
+        empresa: { type: String , require: true }
+    });
+
+    let UserSchema = new Schema({
+        local: {
+            name: String,
+            email: String,
+            password: String,
+            resetPasswordToken: String,
+            resetPasswordExpires: Date,
+            signupToken: String,
+            signupExpires: Date,
+            picture: String
+        },
+        google: {
+            id: String,
+            token: String,
+            email: String,
+            name: String,
+            picture: String
+        },
+        facebook: {
+            id: String,
+            email: String,
+            name: String,
+            picture: String,
+            gender: String,
+            birthday: Date
+        },
+        twitter: {
+            id: String,
+            token: String,
+            email: String,
+            name: String,
+            picture: String
+        },
+        token: TokenSchema,
+        admin: Boolean,
+        email: { type: String, unique: true , require: true },
+        cpf: { type: String, unique: true , require: true }
+    });
+
+    /**
+     * enabling caching
+     */
+    UserSchema.set('redisCache', true);
+
+
+    /**
+     * static methods
+     * generate Hash
+     * @param password
+     * @returns {*}
+     */
+    UserSchema.statics.generateHash = function (password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    };
+
+    /**
+     * buscar de usuários pelo email
+     * @param email
+     * @returns {*|Query}
+     */
+    UserSchema.statics.findByEmail = function(email){
+        return this.findOne({ 'email': email });
+    };
+
+
+    /**
+     * filtra usuário pela id
+     * @param id
+     * @returns {*|Query}
+     */
+    UserSchema.statics.filtraUsuario = function(id){
+        return this.findOne({ '_id': id });
+    };
+
+    /**
+     * checa se a senha é valida
+     * @param password
+     * @returns {*}
+     */
+    UserSchema.methods.validPassword = function (password) {
+        return bcrypt.compareSync(password, this.local.password);
+    };
+
+
+    /**
+     * envia token por email para o usuário
+     * @param emailVars
+     * @param field
+     * @param res
+     * @param next
+     */
+    UserSchema.statics.sendTokenEmail = function(emailVars, field, res, next) {
+        var UserModel = this;
 
 
 
-    try {
-        var token, erro;
+        try {
+            var token, erro;
 
-        crypto.randomBytes(20, function(err, buf) {
-            if (err) throw err;
-            token = buf.toString('hex');
-        });
-
-        UserModel.findOne({ email: emailVars.email })
-            .then(function(user) {
-                if (!user) {
-                    if (field === 'resetPassword') {
-                        erro = new Error("O usuário não existe");
-                        erro.status = 400;
-                        throw erro;
-                    }
-                    user =  new UserModel({"email" : emailVars.email});
-                    insertToken(user, field, emailVars, token);
-
-                    user.save(function(err){
-                        if(err) {
-                            throw err;
-                        }
-                    });
-                } else {
-                    if (field === 'signup') {
-                        erro = new Error("O usuário já existe");
-                        erro.status = 400;
-                        throw erro;
-                    }
-
-                    if (!!user.google.email || !!user.facebook.email) {
-                        erro = new Error("O usuário possui rede social");
-                        erro.status = 400;
-                        throw erro;
-                    }
-
-                    insertToken(user, field, emailVars, token);
-                    user.save(function (err) {
-                        if (err) throw err;
-                    });
-                }
-                return enviaEmail(emailVars, token, res);
-            })
-            .catch(function(err) {
-                return MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode);
+            crypto.randomBytes(20, function(err, buf) {
+                if (err) throw err;
+                token = buf.toString('hex');
             });
 
-    }
-    catch(err) {
-        return MongooseErr.apiCallErr(err.message + " - Passou por aqui", res, err.status || err.statusCode);
-    }
-};
+            UserModel.findOne({ email: emailVars.email })
+                .then(function(user) {
+                    if (!user) {
+                        if (field === 'resetPassword') {
+                            erro = new Error("O usuário não existe");
+                            erro.status = 400;
+                            throw erro;
+                        }
+                        user =  new UserModel({"email" : emailVars.email});
+                        insertToken(user, field, emailVars, token);
+
+                        user.save(function(err){
+                            if(err) {
+                                throw err;
+                            }
+                        });
+                    } else {
+                        if (field === 'signup') {
+                            erro = new Error("O usuário já existe");
+                            erro.status = 400;
+                            throw erro;
+                        }
+
+                        if (!!user.google.email || !!user.facebook.email) {
+                            erro = new Error("O usuário possui rede social");
+                            erro.status = 400;
+                            throw erro;
+                        }
+
+                        insertToken(user, field, emailVars, token);
+                        user.save(function (err) {
+                            if (err) throw err;
+                        });
+                    }
+                    return enviaEmail(emailVars, token, res);
+                })
+                .catch(function(err) {
+                    return MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode);
+                });
+
+        }
+        catch(err) {
+            return MongooseErr.apiCallErr(err.message + " - Passou por aqui", res, err.status || err.statusCode);
+        }
+    };
+
+
+
+    /**
+     * verifica o token e retorna o usuário caso correto para prosseguir com operacao desejada
+     * @param token
+     * @param field
+     * @param res
+     */
+    UserSchema.statics.verifyToken = function(token,field,res) {
+        var filtro = JSON.parse("{\"local." + field+ "Token\":\"" + token + "\"}");
+        this.findOne(filtro)
+            .then(function(user){
+                    if (!user) {
+                        return MongooseErr.apiCallErr("token inválido", res, 401);
+                    }
+
+                    if(user.local[field + "Expires"] &&  new Date(user.local[field + "Expires"]) < Date.now()){
+                        return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
+                    }
+
+                    return res.status(200).json(user);
+                },
+                function(err){
+                    return MongooseErr.apiGetMongooseErr(err, res);
+                }
+            )
+    };
+
+    /**
+     * Reseta a senha do usuário
+     * @param req
+     * @param res
+     */
+    UserSchema.statics.resetPassword = function(req, res) {
+        var UserModel = this;
+
+        UserModel.findOne({"local.resetPasswordToken": req.params.token})
+            .then(function (user) {
+                    if (!user) {
+                        return MongooseErr.apiCallErr("token inválido", res, 401);
+                    }
+
+                    if (user.local.resetPasswordExpires && new Date(user.local.resetPasswordExpires).getTime() < Date.now()) {
+                        return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
+                    }
+
+                    user.local.resetPasswordExpires = Date.now();
+                    user.local.password = UserModel.generateHash(req.body.password);
+
+                    user.save(function (err) {
+                        if (!!err) {
+                            return MongooseErr.apiGetMongooseErr(err, res);
+                        }
+                    });
+
+                    return res.status(200).json(user);
+                },
+                function (err) {
+                    return MongooseErr.apiGetMongooseErr(err, res);
+                }
+            );
+    };
+
+    /**
+     * Insere a categoria em categories do usuário
+     * @param Database
+     * @param body
+     * @param res
+     * @returns {*}
+     */
+    UserSchema.statics.atualizaCategoria = function(body, res) {
+        if (!!body.userId) {
+            this.findOne({_id: body.userId})
+                .then(function(user) {
+
+                        // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
+                        user.categories = _.difference(
+                            _.union(user.categories.map(
+                                function(el){ return el.toString();}
+                                ),
+                                _.filter(body.categories,{active: true}).map(
+                                    function(el){return el.id;})),
+                            _.filter(body.categories,{active: false}).map(function(el){return el.id;})).map(function(el){return toObjectId(el)});
+
+                        user.save(function(err) {
+                            if(err) {
+                                return MongooseErr.apiGetMongooseErr(err, res)
+                            }
+                            return res.status(201).send();
+                        });
+                    },
+                    function(erro) {
+                        return MongooseErr.apiGetMongooseErr(erro, res);
+                    }
+                );
+        } else return res.send();
+    };
+
+
+    return mongoose.model('User', UserSchema);
+}
+
 
 /**
  * Prepara e envia o email (signup || resetPassword)
@@ -231,105 +334,7 @@ function insertToken(user, field, emailVars, token) {
     user.local[field + "Expires"] = Date.now() + (3600000 * 24); // 24 hours
 }
 
-/**
- * verifica o token e retorna o usuário caso correto para prosseguir com operacao desejada
- * @param token
- * @param field
- * @param res
- */
-userSchema.statics.verifyToken = function(token,field,res) {
-    var filtro = JSON.parse("{\"local." + field+ "Token\":\"" + token + "\"}");
-    this.findOne(filtro)
-        .then(function(user){
-            if (!user) {
-                return MongooseErr.apiCallErr("token inválido", res, 401);
-            }
-
-            if(user.local[field + "Expires"] &&  new Date(user.local[field + "Expires"]) < Date.now()){
-                return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
-            }
-
-            return res.status(200).json(user);
-        },
-        function(err){
-            return MongooseErr.apiGetMongooseErr(err, res);
-        }
-    )
-};
-
-/**
- * Reseta a senha do usuário
- * @param req
- * @param res
- */
-userSchema.statics.resetPassword = function(req, res) {
-    var UserModel = this;
-
-    UserModel.findOne({"local.resetPasswordToken": req.params.token})
-        .then(function (user) {
-            if (!user) {
-                return MongooseErr.apiCallErr("token inválido", res, 401);
-            }
-
-            if (user.local.resetPasswordExpires && new Date(user.local.resetPasswordExpires).getTime() < Date.now()) {
-                return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
-            }
-
-            user.local.resetPasswordExpires = Date.now();
-            user.local.password = UserModel.generateHash(req.body.password);
-
-            user.save(function (err) {
-                if (!!err) {
-                    return MongooseErr.apiGetMongooseErr(err, res);
-                }
-            });
-
-            return res.status(200).json(user);
-        },
-        function (err) {
-            return MongooseErr.apiGetMongooseErr(err, res);
-        }
-    );
-};
-
-/**
- * Insere a categoria em categories do usuário
- * @param Database
- * @param body
- * @param res
- * @returns {*}
- */
-userSchema.statics.atualizaCategoria = function(body, res) {
-    if (!!body.userId) {
-        this.findOne({_id: body.userId})
-            .then(function(user) {
-
-                // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
-                user.categories = _.difference(
-                    _.union(user.categories.map(
-                        function(el){ return el.toString();}
-                    ),
-                        _.filter(body.categories,{active: true}).map(
-                            function(el){return el.id;})),
-                    _.filter(body.categories,{active: false}).map(function(el){return el.id;})).map(function(el){return toObjectId(el)});
-
-                user.save(function(err) {
-                    if(err) {
-                        return MongooseErr.apiGetMongooseErr(err, res)
-                    }
-                    return res.status(201).send();
-                });
-            },
-            function(erro) {
-                return MongooseErr.apiGetMongooseErr(erro, res);
-            }
-        );
-    } else return res.send();
-};
 
 
-/**
- * export the model Schema
- * @type {Aggregate|Model|*|{}}
- */
-module.exports = mongoose.model('User', userSchema);
+
+

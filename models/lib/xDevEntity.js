@@ -14,6 +14,10 @@ var ops =  {
     DELETE : 3
 };
 
+
+util.inherits(BaseSchema, Schema);
+
+
 function extend (obj,userId,op,geralog) {
 
     if (!obj.user_created && op === ops.INSERT){

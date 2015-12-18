@@ -2,19 +2,21 @@
  * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
-module.exports = callmodule;
+module.exports = callModule;
 
 
 
-function callmodule(client) {
+function callModule(client) {
     "use strict";
 
-    var mongoose = require('mongoose');
+    let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
     const _ = require('lodash');
+    const AdressSchema = require("../lib/address");
+
 
     /**
      * padrão - utilizando bluebird como promise
@@ -24,8 +26,9 @@ function callmodule(client) {
     /**
      * model Schema
      */
-    const UnitSchema = new Schema({
-        nome : String,
+    let UnitSchema = new Schema({
+        name : String,
+        address : AdressSchema,
         cnpj: { type: String, unique: true , require: true }
     });
     /**

@@ -12,10 +12,8 @@ module.exports = function (passport) {
             User.findByToken(token)
             .then(function(data){
                     let sessVars = _.first(data.token);
-                    if (sessVars && sessVars.enabled){
-
-
-                        return done(null, data, { scope: 'all' });
+                    if (sessVars && sessVars.enabled && sessVars.client){
+                        return done(null, data, { scope: sessVars.client });
                     }else{
                         return done(null, false);
                     }

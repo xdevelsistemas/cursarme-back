@@ -11,6 +11,7 @@ function callmodule(client) {
 
     var mongoose = require('mongoose');
     const Schema = mongoose.Schema;
+    const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
     const _ = require('lodash');
@@ -33,5 +34,6 @@ function callmodule(client) {
     UnidadeSchema.set('redisCache', true);
 
 
-    return mongoose.model(client + '.' +  'Unidade', UnidadeSchema);
+
+    return xDevModel.model(client,'Unidade',UnidadeSchema);
 }

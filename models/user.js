@@ -2,11 +2,11 @@
  * xdevel sistemas escaláveis - cursarme
  * @type {*|exports|module.exports}
  */
-module.exports = callmodule();
+module.exports = callModule();
 
 
 
-function callmodule() {
+function callModule() {
     "use strict";
 
     let mongoose = require('mongoose');
@@ -36,7 +36,7 @@ function callmodule() {
     const TokenSchema = new Schema({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
-        empresa: { type: String , require: true }
+        client: { type: String , require: true }
     });
 
     let UserSchema = new Schema({
@@ -72,10 +72,10 @@ function callmodule() {
             name: String,
             picture: String
         },
-        token: TokenSchema,
+        token: [TokenSchema],
         admin: Boolean,
         email: { type: String, unique: true , require: true },
-        cpf: { type: String, unique: true , require: true }
+        cpfcnpj: { type: String, unique: true , require: true }
     });
 
     /**
@@ -101,6 +101,11 @@ function callmodule() {
      */
     UserSchema.statics.findByEmail = function(email){
         return this.findOne({ 'email': email });
+    };
+
+
+    UserSchema.statics.findByToken = function(token){
+        return  this.findOne({ token: { $elemMatch: { token : token } } });
     };
 
 

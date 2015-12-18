@@ -1,9 +1,10 @@
 /**
  * Created by clayton on 21/08/15.
  */
-module.exports = function(client) {
+module.exports = function() {
+    "use strict";
     const  mongooseErr = require('../services/MongooseErr');
-    const  UnidadeModel = require('../models/multitenant/unidade')(client);
+    const getClient = require('../services/getClient');
     var unidadeController = {};
 
     /**
@@ -12,6 +13,8 @@ module.exports = function(client) {
      * @param res
      */
     unidadeController.all = function(req, res) {
+        const  UnidadeModel = require('../models/multitenant/unidade')(getClient(req));
+
         UnidadeModel.find()
             .then(
                 function(data) {

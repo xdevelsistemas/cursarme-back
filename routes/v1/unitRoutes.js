@@ -8,11 +8,11 @@ function callModule (app,passport) {
      * Obtém todas as unidades
      */
 
-    const unidadeController = require('../../controllers/unidadeController');
+    const unitController = require('../../controllers/unitController');
 
 
 
-    app.get('/api/v1/unidades',autentica(passport), unidadeController().all);
+    app.get('/api/v1/units',autentica(passport), unitController().all);
 
 
     return app;

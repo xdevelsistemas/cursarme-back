@@ -233,7 +233,7 @@ module.exports = function() {
      * @param req
      * @param res
      */
-    userController.showViewUser = function(req, res) {
+    userController.all = function(req, res) {
         UserModel.find()
             .then(
             function(user) {
@@ -251,7 +251,7 @@ module.exports = function() {
      * @param req
      * @param res
      */
-    userController.obtemUser = function(req, res) {
+    userController.getUser = function(req, res) {
         var _id = sanitize(req.params.id);
 
         if (!ObjectId.isValid(_id)) {
@@ -300,7 +300,7 @@ module.exports = function() {
      * @param req
      * @param res
      */
-    userController.salvaUser = function(req, res) {
+    userController.saveUser = function(req, res) {
 
         if (!!req.body._id) {
 
@@ -506,37 +506,7 @@ module.exports = function() {
     };
 
 
-    /**
-     * Insere a readlist em categoria do usuário
-     * @param req
-     * @param res
-     */
-    userController.atualizaCategoria = function(req, res) {
-        /**
-         * Dados esperados
-         * @type {userId: String, categorias: Object[]}
-         */
-        var body = {
-            userId: sanitize(req.body.userId),
-            categories: req.body.categories
-        };
 
-        if (!ObjectId.isValid(body.userId) || verificaCategorias(body.categories)) {
-            return mongooseErr.apiCallErr("Registro inválido", res, 400);
-        }
-
-        return UserModel.atualizaCategoria(body, res);
-    };
-
-    function verificaCategorias(list) {
-        var isNotValid = false;
-
-        list.forEach(function(el) {
-            isNotValid = isNotValid || !ObjectId.isValid(el.id);
-        });
-
-        return isNotValid;
-    }
 
 
     return userController;

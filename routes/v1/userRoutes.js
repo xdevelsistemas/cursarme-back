@@ -262,7 +262,7 @@ module.exports = function (app, passport) {
     /**
      * @api {get} /api/v1/users Listar Usuário
      * @apiVersion 1.0.0
-     * @apiName showViewUser
+     * @apiName all
      * @apiGroup Users
      *
      * @apiSuccess {Object[]} users                            Lista de usuários.
@@ -346,7 +346,7 @@ module.exports = function (app, passport) {
      *       }
      *     ]
      */
-    app.get('/api/v1/users',autentica(passport), userController.showViewUser);
+    app.get('/api/v1/users',autentica(passport), userController.all);
 
 
     /* POST auth users with local strategy. */
@@ -414,77 +414,13 @@ module.exports = function (app, passport) {
     app.post('/api/v1/users/auth/facebook',autentica(passport), userController.authenticateFacebook);
 
 
-    /* POST atualiza categoria no usuario. */
-    /**
-     * @api {post} /api/v1/users/insereCategoria Insere o objeto {readlist, book} em like do usuário
-     * @apiVersion 1.0.0
-     * @apiName atualizaCategoria
-     * @apiGroup Users
-     *
-     * @apiParam {Object}    categories                  Objeto com os dados para inserir em categories do usuário
-     * @apiParam {String}    categories.userId           Id do usuário
-     * @apiParam {Object[]}  categories.categoria        Lista com as categorias selecionadas
-     * @apiParam {String}    categories.categoria.id     Id da categoria
-     * @apiParam {String}    categories.categoria.nome   Nome da categoria
-     * @apiParam {Boolean}   categories.categoria.active Categoria selecionada
-     *
-     * @apiParamExample {json} Request-Example:
-     *      {
-     *          "userId": "562020752b0799b4a36ff86f",
-     *          "categories": [
-     *              {
-     *                  "id": "5602ff9eb57c5d0b00d9a411",
-     *                  "nome": "Inicial",
-     *                  "active": true
-     *              }
-     *          ]
-     *     }
-     *
-     * @apiSuccess {String}   _id                        Id do usuário.
-     * @apiSuccess {String}   token                      Token de permissão do usuário.
-     * @apiSuccess {String[]} likes                      Lista com ids de sipnoses que o usuário gostou.
-     * @apiSuccess {String[]} dislikes                   Lista com ids de sipnoses que o usuário não gostou.
-     * @apiSuccess {Boolean}  admin                      Boolean para saber se é admin.
-     * @apiSuccess {String[]} categories                 Lista com id das categorias.
-     * @apiSuccess {Object}   local                      Objeto com os dados para ter acesso localmente.
-     * @apiSuccess {String}   local.name                 Nome completo do usuário.
-     * @apiSuccess {String}   local.username             Nome de usuário para acessar localmente.
-     * @apiSuccess {String}   local.email                Email para acessar localmente.
-     * @apiSuccess {String}   local.password             Senha para acessar localmente.
-     * @apiSuccess {String}   local.resetPassWordToken   Token para resetar a senha.
-     * @apiSuccess {Date}     local.resetPassWordExpires Data de expiração do resetPasswordToken.
-     * @apiSuccess {String}   local.picture              Imagem  de usuário em autenticação local.
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *    {
-     *      "_id": "5612465f94f",
-     *      "token": "1234",
-     *      "likes": [],
-     *      "dislikes": [],
-     *      "admin": false,
-     *      "categories": [
-     *        "5602ff9eb57c5d0b00d9a411"
-     *      ],
-     *      "local": {
-     *        "name": "",
-     *        "username": "",
-     *        "email": "",
-     *        "password": "",
-     *        "resetPasswordToken": "",
-     *        "resetPasswordExpires": "99/99/9999",
-     *        "picture": "https://lh4.googleusercontent.com/-VXo4ZIPkq40/AAAAAAAAAAI/AAAAAAAAAh0/qt7VpaZvDLM/photo.jpg?sz=50"
-     *      }
-     *    }
-     */
-    app.put('/api/v1/users/atualizaCategoria',autentica(passport), userController.atualizaCategoria);
 
 
     /* GET one user. */
     /**
      * @api {get} /api/v1/users/:id obter usuário
      * @apiVersion 1.0.0
-     * @apiName obtemUser
+     * @apiName getUser
      * @apiGroup Users
      *
      * @apiParam {Object} param      Objeto com os dados do usuário.
@@ -532,14 +468,14 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.get('/api/v1/users/:id',autentica(passport), userController.obtemUser);
+    app.get('/api/v1/users/:id',autentica(passport), userController.getUser);
 
 
     /* POST create user. */
     /**
      * @api {post} /api/v1/users criar usuário (genérico).
      * @apiVersion 1.0.0
-     * @apiName obtemUser
+     * @apiName getUser
      * @apiGroup Users
      *
      * @apiParam {Object}   user                Object com os dados do usuário.
@@ -600,7 +536,7 @@ module.exports = function (app, passport) {
      *      }
      *    }
      */
-    app.post('/api/v1/users',autentica(passport), userController.salvaUser);
+    app.post('/api/v1/users',autentica(passport), userController.saveUser);
 
 
     /* POST delete user. */

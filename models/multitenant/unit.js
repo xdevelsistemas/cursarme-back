@@ -24,16 +24,16 @@ function callmodule(client) {
     /**
      * model Schema
      */
-    const UnidadeSchema = new Schema({
+    const UnitSchema = new Schema({
         nome : String,
         cnpj: { type: String, unique: true , require: true }
     });
     /**
      * enabling caching
      */
-    UnidadeSchema.set('redisCache', true);
+    UnitSchema.set('redisCache', true);
 
 
 
-    return xDevModel.model(client,'Unidade',UnidadeSchema);
+    return xDevModel.model(client,'Unit',UnitSchema);
 }

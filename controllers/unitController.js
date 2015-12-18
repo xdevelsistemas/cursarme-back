@@ -5,17 +5,17 @@ module.exports = function() {
     "use strict";
     const  mongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
-    var unidadeController = {};
+    var unitController = {};
 
     /**
      * lista todas as unidades
      * @param req
      * @param res
      */
-    unidadeController.all = function(req, res) {
-        const  UnidadeModel = require('../models/multitenant/unidade')(getClient(req));
+    unitController.all = function(req, res) {
+        const  UnitModel = require('../models/multitenant/unit')(getClient(req));
 
-        UnidadeModel.find()
+        UnitModel.find()
             .then(
                 function(data) {
                     return res.json(data);
@@ -25,5 +25,5 @@ module.exports = function() {
                 }
             );
     };
-    return unidadeController;
+    return unitController;
 };

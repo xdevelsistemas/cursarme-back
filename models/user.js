@@ -73,7 +73,6 @@ function callModule() {
             picture: String
         },
         token: [TokenSchema],
-        admin: Boolean,
         email: { type: String, unique: true , require: true },
         cpfcnpj: { type: String, unique: true , require: true }
     });

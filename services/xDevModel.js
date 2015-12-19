@@ -8,14 +8,20 @@ function callModule(mongoose){
     "use strict";
     let  funcs = {};
 
-    funcs.model = function(client,model,schema){
+    let concat = (a,b) =>  a + '.' + 'b';
+
+    funcs.model = (client,model,schema) => {
         let ret;
         try {
-            ret = mongoose.model(client + '.' +  model);
+            ret = mongoose.model(concat(client,model));
         }catch(e) {
-            ret = mongoose.model(client + '.' +  model, schema);
+            ret = mongoose.model(concat(client,model), schema);
         }
         return ret;
+    };
+
+    funcs.ref = (client,model,schema) => {
+        return concat(client,model);
     };
 
     return funcs;

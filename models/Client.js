@@ -35,9 +35,10 @@ function callModule(){
      * model Schema
      */
     let ClientSchema = new Schema({
-        nome : String,
-        fname: String,
-        cnpj: { type: String, unique: true , require: true }
+        name : String,
+        alias: String,
+        cpfcnpj: { type: String, unique: true , require: true },
+        user: { type: Schema.Types.ObjectId, ref : 'User' , require: true }
     });
 
 

@@ -8,35 +8,69 @@
  * @param op operacao
  */
 
-var ops =  {
-    INSERT : 1,
-    UPDATE : 2,
-    DELETE : 3
-};
+/**
+ * xdevel sistemas escaláveis - cursarme
+ * @type {*|exports|module.exports}
+ */
+module.exports = callModule();
 
 
-util.inherits(BaseSchema, Schema);
+
+function callModule() {
+    "use strict";
+
+    const mongoose = require('mongoose');
+    const Schema = mongoose.Schema;
+    const ClientSchema = require("../client");
 
 
-function extend (obj,userId,op,geralog) {
+    let xDevEntity = {};
 
-    if (!obj.user_created && op === ops.INSERT){
+    /**
+     * model Schema
+     */
+    xDevEntity.xDevSchema = new Schema({
+        client: {type: Schema.Types.ObjectId, ref: 'Client', required: true},
+        user_created: {type: String, required: true},
+        date_created: {type: Date, required: true , default : Date.now},
+        user_updated: {type: String, required: false},
+        date_updated: {type: Date, required: true , default : Date.now}
+    });
+
+
+    xDevEntity.xDevSchema.add = (obj,userId,useLog) => {
         obj.user_created = userId;
         obj.date_created = new Date();
-    }
 
-    if (!obj.user_updated && op === ops.UPDATE ){
-        obj.user_updated = userId;
-        obj.date_updated = new Date();
-    }
+        if (useLog){
+
+            //todo colocar insercao na tabela log
+
+        }
+
+        return obj;
+    };
+
+    xDevEntity.xDevSchema.update = (obj,userId,useLog) => {
+        obj.user_created = userId;
+        obj.date_created = new Date();
+
+        if (useLog){
 
 
-    if (geralog){
+            //todo colocar insercao na tabela log
+        }
 
-    }
+        return obj;
+
+    };
 
 
-    return obj;
-
+    return xDevEntity
 }
 
+
+
+
+
+extend = require('mongoose-schema-extend');

@@ -27,13 +27,13 @@ function callmodule(client) {
     const DataSchema = new Schema({});
 
     let LogSchema = new Schema({
-        unidade: { type: Schema.Types.ObjectId, ref: client + '.' + 'unidade', require: true },
-        op: { type: Number, require: true },
-        entity: { type: String, require: true },
-        data: { type: DataSchema, require: true },
-        text: { type: String, require: true },
+        unidade: { type: Schema.Types.ObjectId, ref: client + '.' + 'unidade', required: true },
+        op: { type: Number, required: true },
+        entity: { type: String, required: true },
+        data: { type: DataSchema, required: true },
+        text: { type: String, required: true },
         date: { type: Date },
-        user: { type: Schema.Types.ObjectId, ref: 'user', require: true }
+        user: { type: Schema.Types.ObjectId, ref: 'user', required: true }
     });
 
 

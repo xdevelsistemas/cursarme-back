@@ -68,9 +68,3 @@ function callModule() {
 
     return xDevEntity
 }
-
-
-
-
-
-extend = require('mongoose-schema-extend');

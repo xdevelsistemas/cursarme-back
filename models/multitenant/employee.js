@@ -37,6 +37,8 @@ function callModule(client) {
      */
     let EmployeeSchema = PersonSchema.extend({
         admin: {type: Boolean, required: true , default: false},
+
+        enabled: {type: Boolean, required: true , default: true},
         /*
           cargo
          */

@@ -16,6 +16,8 @@ function callModule() {
     const AddressSchema = require("lib/address");
     const ContactSchema = require("lib/contact");
     const maritalStatus = require("enum/maritalStatus");
+    const gender = require("enum/gender");
+    const ethnicity = require("enum/ethnicity");
 
 
 
@@ -32,14 +34,22 @@ function callModule() {
         imageUrl : { type: String, required: true }
     });
 
+    const PhoneSchema = new Schema({
+        description : { type: String, required: true },
+        phone : { type: String, required: true }
+    });
+
     return  xDevSchema.extend({
         name: { type: String, required: true },
         address: [AddressSchema],
+        birthDate: { type: Date, required: true },
         cpf: { type: String, unique: true , required: true },
         rg: { type: String, required: false },
-        phone: { type: String , required: true },
+        phones: [PhoneSchema],
         user: { type: Schema.Types.ObjectId, ref : 'User' , required: true },
         maritalStatus: { type: String , required: true , array: maritalStatus.options },
+        gender: { type: String , required: true , array: gender.options },
+        ethnicity: { type: String , required: true , array: ethnicity.options },
         contacts : [ContactSchema],
         documents: [DocSchema]
     });

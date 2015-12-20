@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "async": "^1.4.2",
-    "aws-sdk": "^2.2.9",
+    "aws-sdk": "^2.2.25",
     "base64-stream": "^0.1.2",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^2.10.2",
@@ -24,6 +24,7 @@
     "express": "~4.13.0",
     "express-session": "^1.11.3",
     "extend": "^3.0.0",
+    "iugu": "0.0.6",
     "kerberos": "0.0.17",
     "lodash": "^3.10.1",
     "lodash-fp": "^0.10.2",

@@ -11,6 +11,8 @@ function callModule() {
 
     let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
+    let extend = require('mongoose-schema-extend');
+    const xDevSchema = require("lib/xDevEntity").xDevSchema;
     const mongooseRedisCache = require("../config/mongooseRedisCache");
     const ObjectId = mongoose.Schema.Types.ObjectId;
     const toObjectId = require('mongoose').Types.ObjectId;
@@ -33,7 +35,7 @@ function callModule() {
     /**
      * model Schema
      */
-    const TokenSchema = new Schema({
+    const TokenSchema = xDevSchema.extend({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
         client: { type: String , require: true }

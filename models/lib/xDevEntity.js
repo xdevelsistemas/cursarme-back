@@ -30,7 +30,6 @@ function callModule() {
      * model Schema
      */
     xDevEntity.xDevSchema = new Schema({
-        client: {type: Schema.Types.ObjectId, ref: 'Client', required: true},
         user_created: {type: String, required: true},
         date_created: {type: Date, required: true , default : Date.now},
         user_updated: {type: String, required: false},

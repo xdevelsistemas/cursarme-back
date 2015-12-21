@@ -35,7 +35,7 @@ function callModule() {
     /**
      * model Schema
      */
-    const TokenSchema = xDevSchema.extend({
+    const TokenSchema = new Schema({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
         client: { type: String , require: true }

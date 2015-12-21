@@ -8,7 +8,7 @@ function callModule(mongoose){
     "use strict";
     let  funcs = {};
 
-    let concat = (a,b) =>  a + '.' + 'b';
+    let concat = (a,b) =>  a + '.' + b;
 
     funcs.model = (client,model,schema) => {
         let ret;

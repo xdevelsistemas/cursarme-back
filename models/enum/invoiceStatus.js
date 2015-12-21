@@ -3,8 +3,8 @@
  */
 module.exports = {
     values : {
-        active: 'solteiro',
-        canceled: 'casado',
+        active: 'ativo',
+        canceled: 'cancelado',
         renegotiated: 'renegociado',
         judged: 'ajuizado'
     },

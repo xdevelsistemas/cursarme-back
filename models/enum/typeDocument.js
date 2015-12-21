@@ -8,7 +8,7 @@ module.exports = {
         tituloEleitor: 'título de eleitor',
         certificadoReservista: 'certificado de reservista'
     },
-    options : ['male','female']
+    options : ['rg','cpf','tituloEleitor','certificadoReservista']
 };
 
 

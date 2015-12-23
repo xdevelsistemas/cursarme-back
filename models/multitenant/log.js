@@ -8,12 +8,12 @@ module.exports = callmodule;
 function callmodule(client) {
     "use strict";
 
-    const mongoose = require('mongoose');
+    let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     const mongooseRedisCache = require('../../config/mongooseRedisCache');
     const MongooseErr = require("../../services/MongooseErr");
 
-    let _ = require('lodash');
+    const _ = require('lodash');
 
     /**
      * padrão - utilizando bluebird como promise

@@ -11,7 +11,7 @@ function callModule(){
     "use strict";
 
 
-    const mongoose = require('mongoose');
+    let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
     const xDevSchema = require("lib/xDevEntity").xDevSchema;

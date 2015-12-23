@@ -51,8 +51,8 @@ function callModule() {
     };
 
     xDevEntity.xDevSchema.update = (obj,userId,useLog) => {
-        obj.user_created = userId;
-        obj.date_created = new Date();
+        obj.user_updated = userId;
+        obj.date_updated = new Date();
 
         if (useLog){
 

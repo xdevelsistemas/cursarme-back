@@ -63,15 +63,48 @@ function callModule(client) {
     UnitSchema.set('redisCache', true);
 
 
-    UnitSchema.methods.add = (userId,useLog) => {
-        return xDevSchema.prototype.add(this,userId,useLog);
+    UnitSchema.methods.add = (userId, useLog, req, res) => {
+
+        // Verificando se os dados estão corretos
+        /*if (!!req.body.name && !!req.body.address.street && !!req.body.address.number && !!req.body.address.neighborhood && !!req.body.address.city && !!req.body.address.state && !!req.body.address.country && !!req.body.address.postalCode && !!req.body.address.enabled && !!req.body.cnpj && !!req.body.alias && !!req.body.phone && !!req.body.website && !!req.body.directorAuthorization && !!req.body.secretaryAuthorization) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+         }*/
+
+        // Criando nova unidade
+        // 'This': contendo métodos do mongodb
+        this.create(req.body)
+            .then(function(data) {
+                //
+                return xDevSchema.prototype.add(data, userId, useLog);
+            })
+            .then(function(result){
+                return res.status(201).json(result);
+            })
+            .catch(function (err) {
+                //
+                return MongooseErr.apiGetMongooseErr(err, res);
+            });
     };
 
-    UnitSchema.methods.update = (userId,useLog) => {
-        return xDevSchema.prototype.update(this,userId,useLog);
+    UnitSchema.methods.update = (userId, useLog, req, res) => {
+        // validando os dados de req.body da requisição
+        /*if (!!req.body.name && !!req.body.address.street && !!req.body.address.number && !!req.body.address.neighborhood && !!req.body.address.city && !!req.body.address.state && !!req.body.address.country && !!req.body.address.postalCode && !!req.body.address.enabled && !!req.body.cnpj && !!req.body.alias && !!req.body.phone && !!req.body.website && !!req.body.directorAuthorization && !!req.body.secretaryAuthorization) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }*/
+
+        // 'This': contendo os métodos do mongodb
+        this.find({/* filtro */})
+        .then(function(data) {
+            // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
+            return xDevSchema.prototype.update(data, userId, useLog, res);
+        })
+        .then(function(result) {
+            return res.status(201).json(result);
+        })
+        .catch(function(err) {
+            return MongooseErr.apiGetMongooseErr(err, res);
+        })
     };
-
-
 
     return xDevModel.model(client,'Unit',UnitSchema);
 }

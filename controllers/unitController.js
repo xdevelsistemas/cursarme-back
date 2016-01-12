@@ -1,28 +1,24 @@
 /**
  * Created by clayton on 21/08/15.
  */
-module.exports = function() {
+module.exports = () => {
     "use strict";
     const  mongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
-    var unitController = {};
+    let unitController = {};
 
     /**
      * lista todas as unidades
      * @param req
      * @param res
      */
-    unitController.all = function(req, res) {
-        const  UnitModel = require('../models/multitenant/unit')(getClient(req));
+    unitController.all = (req, res) => {
+        const UnitModel = require('../models/multitenant/unit')(getClient(req));
 
         UnitModel.find()
             .then(
-                function(data) {
-                    return res.json(data);
-                },
-                function(erro) {
-                    return mongooseErr.apiGetMongooseErr(erro,res);
-                }
+                (data) => res.json(data),
+                (erro) => mongooseErr.apiGetMongooseErr(erro,res)
             );
     };
     return unitController;

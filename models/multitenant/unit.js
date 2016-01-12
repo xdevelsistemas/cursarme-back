@@ -70,20 +70,19 @@ function callModule(client) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
          }*/
 
-        // Criando nova unidade
+        // Criando unidade
         // 'This': contendo métodos do mongodb
         this.create(req.body)
-            .then(function(data) {
+            .then((data) => {
                 //
                 return xDevSchema.prototype.add(data, userId, useLog);
             })
-            .then(function(result){
+            .then((result) => {
                 return res.status(201).json(result);
             })
-            .catch(function (err) {
+            .catch((err) =>
                 //
-                return MongooseErr.apiGetMongooseErr(err, res);
-            });
+                MongooseErr.apiGetMongooseErr(err, res));
     };
 
     UnitSchema.methods.update = (userId, useLog, req, res) => {
@@ -92,18 +91,18 @@ function callModule(client) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
 
+        // Atualizando unidade
         // 'This': contendo os métodos do mongodb
         this.find({/* filtro */})
-        .then(function(data) {
-            // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
-            return xDevSchema.prototype.update(data, userId, useLog, res);
-        })
-        .then(function(result) {
-            return res.status(201).json(result);
-        })
-        .catch(function(err) {
-            return MongooseErr.apiGetMongooseErr(err, res);
-        })
+            .then((data) => {
+                // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
+                return xDevSchema.prototype.update(data, userId, useLog, res);
+            })
+            .then((result) => {
+                return res.status(200).json(result);
+            })
+            .catch((err) =>
+                MongooseErr.apiGetMongooseErr(err, res));
     };
 
     return xDevModel.model(client,'Unit',UnitSchema);

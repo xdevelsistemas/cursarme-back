@@ -31,14 +31,15 @@ function callmodule(client) {
         op: { type: Number, required: true },
         entity: { type: String, required: true },
         data: { type: DataSchema, required: true },
-        text: { type: String, required: true },
+        text: { type: String },
         date: { type: Date },
         user: { type: Schema.Types.ObjectId, ref: 'user', required: true }
     });
 
 
-    LogSchema.statics.createLog = function(entity,obj,text,userId,op) {
+    LogSchema.statics.createLog = (entity,obj,text,userId,op) => {
         const log = new LogSchema();
+
         log.op = op;
         log.data = obj;
         log.entity = entity;
@@ -46,6 +47,7 @@ function callmodule(client) {
         log.user = userId;
         log.date = new Date();
         log.save();
+
         return log;
     };
 

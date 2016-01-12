@@ -31,7 +31,7 @@ function callmodule(client) {
         op: { type: Number, required: true },
         entity: { type: String, required: true },
         data: { type: DataSchema, required: true },
-        text: { type: String, required: true },
+        text: { type: String },
         date: { type: Date },
         user: { type: Schema.Types.ObjectId, ref: 'user', required: true }
     });

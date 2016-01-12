@@ -19,17 +19,11 @@ PLschema.set('redisCache', true);
 
 
 PLschema.statics.validPerm = (email) => {
-    function include(arr,obj) {
-        return (arr.indexOf(obj) != -1);
-    }
+    let include = (arr,obj) => (arr.indexOf(obj) != -1);
 
-    function testSuffix(email,suffix){
-        return (suffix.length != 0 && suffix != '*') ? email.match(suffix) : true
-    }
+    let testSuffix = (email,suffix) => (suffix.length != 0 && suffix != '*') ? email.match(suffix) : true;
 
-    function testUsers(email,users){
-        return users.length != 0 ? include(users,email) : true;
-    }
+    let testUsers = (email,users) => users.length != 0 ? include(users,email) : true;
 
     return this.find()
         .then(

@@ -18,33 +18,23 @@ PLschema.set('redisCache', true);
 
 
 
-PLschema.statics.validPerm = function(email) {
+PLschema.statics.validPerm = (email) => {
     function include(arr,obj) {
         return (arr.indexOf(obj) != -1);
     }
 
     function testSuffix(email,suffix){
-        if (suffix.length != 0 && suffix != '*'){
-            return email.match(suffix);
-        }else{
-            return true
-        }
+        return (suffix.length != 0 && suffix != '*') ? email.match(suffix) : true
     }
 
     function testUsers(email,users){
-        if (users.length != 0){
-            return include(users,email);
-        }else{
-            return true;
-        }
+        return users.length != 0 ? include(users,email) : true;
     }
 
     return this.find()
         .then(
-        function (perms) {
-            return (testSuffix(email,perms[0]._doc.suffix) && testUsers(email, perms[0]._doc.users));
-        },
-        function (erro) {
+        (perms) => (testSuffix(email,perms[0]._doc.suffix) && testUsers(email, perms[0]._doc.users)),
+        (erro) => {
             console.error(erro);
             res.status(500).json(erro);
         }

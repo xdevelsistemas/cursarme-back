@@ -42,12 +42,33 @@ function callModule(client) {
     DeveloperSchema.set('redisCache', true);
 
 
-    DeveloperSchema.methods.add = (userId,useLog) => {
-        return xDevSchema.prototype.add(this,userId,useLog);
+    DeveloperSchema.methods.add = (userId, useLog, req, res) => {
+        //
+        this.create(req.body)
+            .then((data) => {
+                //
+                return xDevSchema.prototype.add(data, userId, useLog);
+            })
+            .then((result) => {
+                return res.status(201).json(result);
+            })
+            .catch((err) =>
+                //
+                MongooseErr.apiGetMongooseErr(err, res));
     };
 
-    DeveloperSchema.methods.update = (userId,useLog) => {
-        return xDevSchema.prototype.update(this,userId,useLog);
+    DeveloperSchema.methods.update = (userId, useLog, req, res) => {
+        //
+        this.find({/* filtro */})
+            .then((data) => {
+                // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
+                return xDevSchema.prototype.update(data, userId, useLog, res);
+            })
+            .then((result) => {
+                return res.status(200).json(result);
+            })
+            .catch((err) =>
+                MongooseErr.apiGetMongooseErr(err, res));
     };
 
 

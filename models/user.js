@@ -91,23 +91,17 @@ function callModule() {
      * @param password
      * @returns {*}
      */
-    UserSchema.statics.generateHash = function (password) {
-        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-    };
+    UserSchema.statics.generateHash = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 
     /**
      * buscar de usuários pelo email
      * @param email
      * @returns {*|Query}
      */
-    UserSchema.statics.findByEmail = function(email){
-        return this.findOne({ 'email': email });
-    };
+    UserSchema.statics.findByEmail = (email) => this.findOne({ 'email': email });
 
 
-    UserSchema.statics.findByToken = function(token){
-        return  this.findOne({ token: { $elemMatch: { token : token } } });
-    };
+    UserSchema.statics.findByToken = (token) => this.findOne({ token: { $elemMatch: { token : token } } });
 
 
     /**
@@ -115,18 +109,14 @@ function callModule() {
      * @param id
      * @returns {*|Query}
      */
-    UserSchema.statics.filtraUsuario = function(id){
-        return this.findOne({ '_id': id });
-    };
+    UserSchema.statics.findById = (id) => this.findOne({ '_id': id });
 
     /**
      * checa se a senha é valida
      * @param password
      * @returns {*}
      */
-    UserSchema.methods.validPassword = function (password) {
-        return bcrypt.compareSync(password, this.local.password);
-    };
+    UserSchema.methods.validPassword = (password) => bcrypt.compareSync(password, this.local.password);
 
 
     /**
@@ -136,26 +126,25 @@ function callModule() {
      * @param res
      * @param next
      */
-    UserSchema.statics.sendTokenEmail = function(emailVars, field, res, next) {
-        var UserModel = this;
-
-
+    UserSchema.statics.sendTokenEmail = (emailVars, field, res, next) => {
+        // todo verificar o uso de UserModel ao invés do this
+        const UserModel = this;
 
         try {
-            var token, erro;
+            let token, error;
 
-            crypto.randomBytes(20, function(err, buf) {
+            crypto.randomBytes(20, (err, buf) => {
                 if (err) throw err;
                 token = buf.toString('hex');
             });
 
             UserModel.findOne({ email: emailVars.email })
-                .then(function(user) {
+                .then((user) => {
                     if (!user) {
                         if (field === 'resetPassword') {
-                            erro = new Error("O usuário não existe");
-                            erro.status = 400;
-                            throw erro;
+                            error = new Error("O usuário não existe");
+                            error.status = 400;
+                            throw error;
                         }
                         user =  new UserModel({"email" : emailVars.email});
                         insertToken(user, field, emailVars, token);
@@ -167,27 +156,27 @@ function callModule() {
                         });
                     } else {
                         if (field === 'signup') {
-                            erro = new Error("O usuário já existe");
-                            erro.status = 400;
-                            throw erro;
+                            error = new Error("O usuário já existe");
+                            error.status = 400;
+                            throw error;
                         }
 
                         if (!!user.google.email || !!user.facebook.email) {
-                            erro = new Error("O usuário possui rede social");
-                            erro.status = 400;
-                            throw erro;
+                            error = new Error("O usuário possui rede social");
+                            error.status = 400;
+                            throw error;
                         }
 
                         insertToken(user, field, emailVars, token);
-                        user.save(function (err) {
-                            if (err) throw err;
+                        user.save((err) => {
+                            if (!!err) throw err;
                         });
                     }
                     return enviaEmail(emailVars, token, res);
                 })
-                .catch(function(err) {
-                    return MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode);
-                });
+                .catch((err) =>
+                    MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode)
+                );
 
         }
         catch(err) {
@@ -203,24 +192,20 @@ function callModule() {
      * @param field
      * @param res
      */
-    UserSchema.statics.verifyToken = function(token,field,res) {
-        var filtro = JSON.parse("{\"local." + field+ "Token\":\"" + token + "\"}");
-        this.findOne(filtro)
-            .then(function(user){
-                    if (!user) {
-                        return MongooseErr.apiCallErr("token inválido", res, 401);
-                    }
-
-                    if(user.local[field + "Expires"] &&  new Date(user.local[field + "Expires"]) < Date.now()){
-                        return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
-                    }
-
-                    return res.status(200).json(user);
-                },
-                function(err){
-                    return MongooseErr.apiGetMongooseErr(err, res);
+    UserSchema.statics.verifyToken = (token,field,res) => {
+        this.findOne(JSON.parse("{\"local." + field+ "Token\":\"" + token + "\"}"))
+            .then((user) => {
+                if (!user) {
+                    return MongooseErr.apiCallErr("token inválido", res, 401);
                 }
-            )
+
+                if(user.local[field + "Expires"] &&  new Date(user.local[field + "Expires"]) < Date.now()){
+                    return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
+                }
+
+                return res.status(200).json(user);
+            },
+            (err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     /**
@@ -228,11 +213,12 @@ function callModule() {
      * @param req
      * @param res
      */
-    UserSchema.statics.resetPassword = function(req, res) {
-        var UserModel = this;
+    UserSchema.statics.resetPassword = (req, res) => {
+        // todo Verificar o uso de UserModel, ao invés de this
+        const UserModel = this;
 
         UserModel.findOne({"local.resetPasswordToken": req.params.token})
-            .then(function (user) {
+            .then((user) => {
                     if (!user) {
                         return MongooseErr.apiCallErr("token inválido", res, 401);
                     }
@@ -252,11 +238,10 @@ function callModule() {
 
                     return res.status(200).json(user);
                 },
-                function (err) {
-                    return MongooseErr.apiGetMongooseErr(err, res);
-                }
-            );
+                (err) => MongooseErr.apiGetMongooseErr(err, res));
     };
+
+
 
     /**
      * Insere a categoria em categories do usuário
@@ -265,31 +250,23 @@ function callModule() {
      * @param res
      * @returns {*}
      */
-    UserSchema.statics.atualizaCategoria = function(body, res) {
+    UserSchema.statics.updateCategory = (body, res) => {
         if (!!body.userId) {
             this.findOne({_id: body.userId})
-                .then(function(user) {
+                .then((user) => {
+                    // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
+                    user.categories = _.difference(
+                        _.union(user.categories.map((el) => el.toString()),_.filter(body.categories,{active: true}).map((el) => el.id)),
+                        _.filter(body.categories,{active: false}).map((el) => el.id)).map((el) => toObjectId(el));
 
-                        // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
-                        user.categories = _.difference(
-                            _.union(user.categories.map(
-                                function(el){ return el.toString();}
-                                ),
-                                _.filter(body.categories,{active: true}).map(
-                                    function(el){return el.id;})),
-                            _.filter(body.categories,{active: false}).map(function(el){return el.id;})).map(function(el){return toObjectId(el)});
-
-                        user.save(function(err) {
-                            if(err) {
-                                return MongooseErr.apiGetMongooseErr(err, res)
-                            }
-                            return res.status(201).send();
-                        });
-                    },
-                    function(erro) {
-                        return MongooseErr.apiGetMongooseErr(erro, res);
-                    }
-                );
+                    user.save((err) => {
+                        if(!!err) {
+                            return MongooseErr.apiGetMongooseErr(err, res)
+                        }
+                        return res.status(201).send();
+                    });
+                },
+                (erro) => MongooseErr.apiGetMongooseErr(erro, res));
         } else return res.send();
     };
 

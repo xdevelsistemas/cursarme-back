@@ -65,5 +65,5 @@ function callModule() {
     };
 
 
-    module.exports = mongoose.model('SocialMedia', SMschema);
+    return mongoose.model('SocialMedia', SMschema);
 }

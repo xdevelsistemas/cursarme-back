@@ -128,6 +128,7 @@ function callModule() {
      */
     UserSchema.statics.sendTokenEmail = (emailVars, field, res, next) => {
         // todo verificar o uso de UserModel ao invés do this
+        // (escopo em bloco)
         const UserModel = this;
 
         try {
@@ -219,26 +220,26 @@ function callModule() {
 
         UserModel.findOne({"local.resetPasswordToken": req.params.token})
             .then((user) => {
-                if (!user) {
-                    return MongooseErr.apiCallErr("token inválido", res, 401);
-                }
-
-                if (user.local.resetPasswordExpires && new Date(user.local.resetPasswordExpires).getTime() < Date.now()) {
-                    return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
-                }
-
-                user.local.resetPasswordExpires = Date.now();
-                user.local.password = UserModel.generateHash(req.body.password);
-
-                user.save(function (err) {
-                    if (!!err) {
-                        return MongooseErr.apiGetMongooseErr(err, res);
+                    if (!user) {
+                        return MongooseErr.apiCallErr("token inválido", res, 401);
                     }
-                });
 
-                return res.status(200).json(user);
-            },
-            (err) => MongooseErr.apiGetMongooseErr(err, res));
+                    if (user.local.resetPasswordExpires && new Date(user.local.resetPasswordExpires).getTime() < Date.now()) {
+                        return MongooseErr.apiCallErr("token expirado, favor gerar novamente", res, 401);
+                    }
+
+                    user.local.resetPasswordExpires = Date.now();
+                    user.local.password = UserModel.generateHash(req.body.password);
+
+                    user.save(function (err) {
+                        if (!!err) {
+                            return MongooseErr.apiGetMongooseErr(err, res);
+                        }
+                    });
+
+                    return res.status(200).json(user);
+                },
+                (err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
 

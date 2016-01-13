@@ -15,7 +15,7 @@ module.exports = () => {
     unitController.all = (req, res) => {
         const UnitModel = require('../models/multitenant/unit')(getClient(req));
 
-        UnitModel.find()
+        UnitModel.all()
             .then(
                 (data) => res.json(data),
                 (erro) => mongooseErr.apiGetMongooseErr(erro,res)

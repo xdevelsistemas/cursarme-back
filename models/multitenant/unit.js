@@ -62,6 +62,11 @@ function callModule(client) {
      */
     UnitSchema.set('redisCache', true);
 
+    /**
+     * Busca todas as unidades
+     */
+    UnitSchema.statics.all = () => this.find({});
+
 
     UnitSchema.methods.add = (userId, useLog, req, res) => {
 

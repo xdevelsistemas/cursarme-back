@@ -37,6 +37,15 @@ function callmodule(client) {
     });
 
 
+    /**
+     *
+     * @param entity
+     * @param obj
+     * @param text
+     * @param userId
+     * @param op
+     * @returns {*}
+     */
     LogSchema.statics.createLog = (entity,obj,text,userId,op) => {
         const log = new LogSchema();
 

@@ -12,7 +12,7 @@ function callModule(client) {
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
     const Schema = mongoose.Schema;
-    const xDevSchema = require("../lib/xDevEntity").xDevSchema;
+    const xDevSchema = require("../lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
@@ -69,15 +69,14 @@ function callModule(client) {
 
 
     UnitSchema.methods.add = (userId, useLog, req, res) => {
-
-        // Verificando se os dados estão corretos
-        /*if (!!req.body.name && !!req.body.address.street && !!req.body.address.number && !!req.body.address.neighborhood && !!req.body.address.city && !!req.body.address.state && !!req.body.address.country && !!req.body.address.postalCode && !!req.body.address.enabled && !!req.body.cnpj && !!req.body.alias && !!req.body.phone && !!req.body.website && !!req.body.directorAuthorization && !!req.body.secretaryAuthorization) {
+        // validando os dados da unidade em req.body.unit
+        if (!!req.body.unit.name && !!req.body.unit.address.street && !!req.body.unit.address.number && !!req.body.unit.address.neighborhood && !!req.body.unit.address.city && !!req.body.unit.address.state && !!req.body.unit.address.country && !!req.body.unit.address.postalCode && !!req.body.unit.address.enabled && !!req.body.unit.cnpj && !!req.body.unit.alias && !!req.body.unit.phone && !!req.body.unit.website && !!req.body.unit.directorAuthorization && !!req.body.unit.secretaryAuthorization) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-         }*/
+        }
 
         // Criando unidade
         // 'This': contendo métodos do mongodb
-        this.create(req.body)
+        this.create(req.body.unit)
             .then((data) => {
                 //
                 return xDevSchema.prototype.add(data, userId, useLog);
@@ -85,16 +84,14 @@ function callModule(client) {
             .then((result) => {
                 return res.status(201).json(result);
             })
-            .catch((err) =>
-                //
-                MongooseErr.apiGetMongooseErr(err, res));
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     UnitSchema.methods.update = (userId, useLog, req, res) => {
-        // validando os dados de req.body da requisição
-        /*if (!!req.body.name && !!req.body.address.street && !!req.body.address.number && !!req.body.address.neighborhood && !!req.body.address.city && !!req.body.address.state && !!req.body.address.country && !!req.body.address.postalCode && !!req.body.address.enabled && !!req.body.cnpj && !!req.body.alias && !!req.body.phone && !!req.body.website && !!req.body.directorAuthorization && !!req.body.secretaryAuthorization) {
+        // validando os dados da unidade em req.body.unit
+        if (!!req.body.unit.name && !!req.body.unit.address.street && !!req.body.unit.address.number && !!req.body.unit.address.neighborhood && !!req.body.unit.address.city && !!req.body.unit.address.state && !!req.body.unit.address.country && !!req.body.unit.address.postalCode && !!req.body.unit.address.enabled && !!req.body.unit.cnpj && !!req.body.unit.alias && !!req.body.unit.phone && !!req.body.unit.website && !!req.body.unit.directorAuthorization && !!req.body.unit.secretaryAuthorization) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }*/
+        }
 
         // Atualizando unidade
         // 'This': contendo os métodos do mongodb
@@ -106,8 +103,7 @@ function callModule(client) {
             .then((result) => {
                 return res.status(200).json(result);
             })
-            .catch((err) =>
-                MongooseErr.apiGetMongooseErr(err, res));
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     return xDevModel.model(client,'Unit',UnitSchema);

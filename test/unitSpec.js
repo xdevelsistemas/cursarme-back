@@ -49,9 +49,9 @@
         });
 
         describe('-> POST Unit', function () {
-            it('-> Atualizando unidade', function (done) {
+            it('-> Adicionando unidade', function (done) {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/updateUnit')
+                supertest(app).post('/api/v1.1/addUnit')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -63,7 +63,7 @@
                     .end(function (err, res) {
                         if (err) return done(err);
                         expect(err).to.equal(null);
-                        /*expect(res.status).to.equal(/!* status esperado *!/);
+                        /*expect(res.status).to.equal(201);
                         expect(res.body).to.have.property();
                         expect(res.body._id).to.not.equal(null);
                         expect(res.body).to.have.property();
@@ -86,7 +86,7 @@
                     .end(function (err, res) {
                         if (err) return done(err);
                         expect(err).to.equal(null);
-                        /*expect(res.status).to.equal(/!* status esperado *!/);
+                        /*expect(res.status).to.equal(200);
                         expect(res.body).to.have.property();
                         expect(res.body._id).to.not.equal(null);
                         expect(res.body).to.have.property();

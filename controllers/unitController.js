@@ -22,16 +22,26 @@ module.exports = () => {
             );
     };
 
+    /**
+     * Adiciona uma unidade
+     * @param req
+     * @param res
+     */
     unitController.add = (req, res) => {
         const UnitModel = require('../models/multitenant/unit')(getClient(req));
 
-        UnitModel.add(req.body.userId, req.body.useLog, req, res);
+        return UnitModel.add(req.body.userId, true, req, res);
     };
 
+    /**
+     * Atualiza uma unidade
+     * @param req
+     * @param res
+     */
     unitController.update = (req, res) => {
         const UnitModel = require('../models/multitenant/unit')(getClient(req));
 
-        UnitModel.update(req.body.userId, req.body.useLog, req, res);
+        return UnitModel.update(req.body.userId, true, req, res);
     };
 
 

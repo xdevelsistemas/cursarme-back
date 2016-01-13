@@ -67,9 +67,10 @@ function callModule(client) {
         // Salvando as alterações dos dados
         obj.save(function(err) {
             if(!!err) {
-
                 //
                 //return MongooseErr.apiGetMongooseErr(err, res);
+
+                console.error(err);
             }
         });
         return obj;

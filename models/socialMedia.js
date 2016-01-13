@@ -57,11 +57,7 @@ function callModule() {
 
 //has social
     SMschema.statics.hasSocial = (social) => {
-        return this.findOne({'clientname': social},
-            (err, auth) => {
-                return !!err ? false : !!auth;
-            }
-        );
+        return this.findOne({'clientname': social}, (err, auth) => !!err ? false : !!auth);
     };
 
 

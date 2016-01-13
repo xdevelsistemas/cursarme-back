@@ -6,21 +6,14 @@ module.exports = callModule;
 
 
 
-function callModule(client) {
+function callModule() {
     "use strict";
 
     let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
-    let extend = require('mongoose-schema-extend');
-    const mongooseRedisCache = require("../config/mongooseRedisCache");
-    const mongooseRedisCache = require("../config/mongooseRedisCache");
-    const xDevSchema = require("lib/xDevEntity").xDevSchema;
-    const xDevModel = require("../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../config/mongooseRedisCache");
     const MongooseErr = require("../services/MongooseErr");
     const _ = require('lodash');
-    const PersonSchema = require("person");
-    const modules = require("enum/modules");
 
 
     /**
@@ -28,13 +21,9 @@ function callModule(client) {
      */
     mongoose.Promise = require('bluebird');
 
-    let PLschema = mongoose.Schema({
-        users: {
-            type: Array
-        },
-        suffix: {
-            type: String
-        }
+    let PLschema = new Schema({
+        users: { type: Array },
+        suffix: { type: String }
     });
 
     /**

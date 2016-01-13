@@ -1,56 +1,69 @@
-var mongoose = require('mongoose');
-var mongooseRedisCache = require("../config/mongooseRedisCache");
-var SMschema = mongoose.Schema({
-    clientname: {
-        type: String
-    },
-    config: {
-        type: Array
-    }
-});
+/**
+ * xdevel sistemas escaláveis - cursarme
+ * @type {*|exports|module.exports}
+ */
+module.exports = callModule;
+
+
+function callModule() {
+    "use strict";
+
+    let mongoose = require('mongoose');
+    const Schema = mongoose.Schema;
+    const mongooseRedisCache = require("../config/mongooseRedisCache");
+    const MongooseErr = require("../services/MongooseErr");
+    const _ = require('lodash');
+
+
+    /**
+     * padrão - utilizando bluebird como promise
+     */
+    mongoose.Promise = require('bluebird');
+
+
+    let SMschema = new Schema({
+        clientname: {
+            type: String
+        },
+        config: {
+            type: Array
+        }
+    });
+
+
+    /**
+     * enabling caching
+     */
+    SMschema.set('redisCache', true);
 
 
 // methods ======================
 // get social
-SMschema.statics.authSocial = function(social) {
-    return this.findOne({ 'clientname': social },
-        function (err, auth) {
-            if(auth){
-                return auth;
+    SMschema.statics.authSocial = (social, res) => {
+        return this.findOne({'clientname': social},
+            (err, auth) => {
+                if (!!auth) {
+                    return auth;
+                } else {
+                    if (!!err) {
+                        console.error(err);
+                        return res.status(500).json(err);
+                    }
+                }
             }
-            if(err){
-                console.error(erro);
-                res.status(500).json(erro);
-            }
-        }
-    );
-};
-
-/**
- * enabling caching
- */
-SMschema.set('redisCache', true);
-
+        );
+    };
 
 
 //has social
-SMschema.statics.hasSocial = function(social) {
-    return this.findOne({ 'clientname': social },
-        function (err, auth) {
-            if(err){
-                return false;
-            }else{
-                if (auth){
-                    return true;
-                }
-                else{
-                    return false;
-                }
+    SMschema.statics.hasSocial = (social) => {
+        return this.findOne({'clientname': social},
+            (err, auth) => {
+                return !!err ? false : !!auth;
             }
-        }
-    );
-};
+        );
+    };
 
 
-
-module.exports = mongoose.model('SocialMedia', SMschema);
+    module.exports = mongoose.model('SocialMedia', SMschema);
+}

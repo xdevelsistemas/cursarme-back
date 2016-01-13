@@ -15,11 +15,36 @@ module.exports = () => {
     unitController.all = (req, res) => {
         const UnitModel = require('../models/multitenant/unit')(getClient(req));
 
-        UnitModel.find()
+        UnitModel.all()
             .then(
-                (data) => res.json(data),
+                (data) => res.status(200).json(data),
                 (erro) => mongooseErr.apiGetMongooseErr(erro,res)
             );
     };
+
+    /**
+     * Adiciona uma unidade
+     * @param req
+     * @param res
+     */
+    unitController.add = (req, res) => {
+        const UnitModel = require('../models/multitenant/unit')(getClient(req));
+
+        return UnitModel.add(req.body.userId, true, req, res);
+    };
+
+    /**
+     * Atualiza uma unidade
+     * @param req
+     * @param res
+     */
+    unitController.update = (req, res) => {
+        const UnitModel = require('../models/multitenant/unit')(getClient(req));
+
+        return UnitModel.update(req.body.userId, true, req, res);
+    };
+
+
+
     return unitController;
 };

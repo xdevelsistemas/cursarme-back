@@ -16,13 +16,13 @@ module.exports = callModule();
 
 
 
-function callModule() {
+function callModule(client) {
     "use strict";
 
     const mongoose = require('mongoose');
     const Schema = mongoose.Schema;
+    const LogSchema = require("../multitenant/log")(client);
     const ClientSchema = require("../Client");
-    const getClient = require('../../services/getClient');
     const MongooseErr = require("../../services/MongooseErr");
 
 
@@ -38,23 +38,26 @@ function callModule() {
         date_updated: {type: Date, required: true , default : Date.now}
     });
 
-
-    xDevEntity.xDevSchema.add = (obj, userId, useLog, req, res) => {
-        const LogSchema = require("../multitenant/log")(getClient(req));
-
+    xDevEntity.xDevSchema.add = (obj, userId, useLog) => {
         obj.user_created = userId;
         obj.date_created = new Date();
 
         if (useLog){
 
             //todo colocar insercao na tabela log
-            LogSchema.createLog = (entity, obj, text, userId, op);
+
+            // client
+            // obj
+            // userId
+            // op - "create"
+            // text(optional)
+            LogSchema.createLog(client, obj, userId, op, text);
         }
 
         return obj;
     };
 
-    xDevEntity.xDevSchema.update = (obj, userId, useLog, req, res) => {
+    xDevEntity.xDevSchema.update = (obj, userId, useLog) => {
         // Guardando o userId e a data/hora que o obj foi alterado
         obj.user_updated = userId;
         obj.date_updated = new Date();
@@ -67,10 +70,13 @@ function callModule() {
         // Salvando as alterações dos dados
         obj.save(function(err) {
             if(!!err) {
-                return MongooseErr.apiGetMongooseErr(err, res);
+                //
+                //return MongooseErr.apiGetMongooseErr(err, res);
+
+                console.error(err);
             }
-            return obj;
         });
+        return obj;
     };
 
 

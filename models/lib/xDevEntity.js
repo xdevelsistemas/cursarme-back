@@ -45,10 +45,13 @@ function callModule(client) {
         if (useLog){
 
             //todo colocar insercao na tabela log
-            /**
-             *
-             */
-            LogSchema.createLog(client, obj, text, userId, 'create');
+
+            // client
+            // obj
+            // userId
+            // op - "create"
+            // text(optional)
+            LogSchema.createLog(client, obj, userId, op, text);
         }
 
         return obj;

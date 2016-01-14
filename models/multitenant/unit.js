@@ -16,6 +16,7 @@ function callModule(client) {
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
+    const ValidValues = require("../../services/validValues");
     const _ = require('lodash');
     const AddressSchema = require("../lib/address");
 
@@ -64,17 +65,25 @@ function callModule(client) {
 
     /**
      * Busca todas as unidades
+     * @returns {*}
      */
     UnitSchema.statics.all = () => this.find({});
 
-
+    /**
+     * Cria uma unidade
+     * @param userId
+     * @param useLog
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     UnitSchema.methods.add = (userId, useLog, req, res) => {
         // validando os dados da unidade em req.body.unit
-        if (!!req.body.unit.name && !!req.body.unit.address.street && !!req.body.unit.address.number && !!req.body.unit.address.neighborhood && !!req.body.unit.address.city && !!req.body.unit.address.state && !!req.body.unit.address.country && !!req.body.unit.address.postalCode && !!req.body.unit.address.enabled && !!req.body.unit.cnpj && !!req.body.unit.alias && !!req.body.unit.phone && !!req.body.unit.website && !!req.body.unit.directorAuthorization && !!req.body.unit.secretaryAuthorization) {
+        if (!ValidValues.validValues(req.body.unit)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
-        // Criando unidade
+        // Criando uma unidade
         // 'This': contendo métodos do mongodb
         this.create(req.body.unit)
             .then((data) => {
@@ -87,15 +96,23 @@ function callModule(client) {
             .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
+    /**
+     * Atualiza uma unidade
+     * @param userId
+     * @param useLog
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     UnitSchema.methods.update = (userId, useLog, req, res) => {
         // validando os dados da unidade em req.body.unit
-        if (!!req.body.unit.name && !!req.body.unit.address.street && !!req.body.unit.address.number && !!req.body.unit.address.neighborhood && !!req.body.unit.address.city && !!req.body.unit.address.state && !!req.body.unit.address.country && !!req.body.unit.address.postalCode && !!req.body.unit.address.enabled && !!req.body.unit.cnpj && !!req.body.unit.alias && !!req.body.unit.phone && !!req.body.unit.website && !!req.body.unit.directorAuthorization && !!req.body.unit.secretaryAuthorization) {
+        if (!ValidValues.validValues(req.body.unit)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
         // Atualizando unidade
         // 'This': contendo os métodos do mongodb
-        this.find({/* filtro */})
+        this.find({_id: req.body.unit._id})
             .then((data) => {
                 // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
                 return xDevSchema.prototype.update(data, userId, useLog, res);

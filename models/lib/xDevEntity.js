@@ -54,6 +54,12 @@ function callModule(client) {
             LogSchema.createLog(client, obj, userId, op, text);
         }
 
+        // Salvando a adição de user_created e date_created
+        obj.save(function(err) {
+            if(!!err) {
+                console.error(err);
+            }
+        });
         return obj;
     };
 
@@ -67,12 +73,9 @@ function callModule(client) {
             //todo colocar insercao na tabela log
         }
 
-        // Salvando as alterações dos dados
+        // Salvando as alterações dos dados e a adição de user_updated e date_updated
         obj.save(function(err) {
             if(!!err) {
-                //
-                //return MongooseErr.apiGetMongooseErr(err, res);
-
                 console.error(err);
             }
         });

@@ -3,9 +3,11 @@
  */
 module.exports = () => {
     "use strict";
+
+    let unitController = {};
     const  mongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
-    let unitController = {};
+    const UnitModel = require('../models/multitenant/unit');
 
     /**
      * lista todas as unidades
@@ -13,11 +15,10 @@ module.exports = () => {
      * @param res
      */
     unitController.all = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
-
-        UnitModel.all()
-            .then(
-                (data) => res.status(200).json(data),
+        UnitModel(getClient(req))._all()
+            .then(function(data) {
+                res.status(200).json(data);
+            },
                 (erro) => mongooseErr.apiGetMongooseErr(erro,res)
             );
     };
@@ -28,9 +29,7 @@ module.exports = () => {
      * @param res
      */
     unitController.add = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
-
-        return UnitModel.add(req.body.userId, true, req, res);
+        return UnitModel(getClient(req))._add(req.body.userId, true, 'Test', req, res);
     };
 
     /**
@@ -39,9 +38,7 @@ module.exports = () => {
      * @param res
      */
     unitController.update = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
-
-        return UnitModel.update(req.body.userId, true, req, res);
+        return UnitModel(getClient(req))._update(req.body.userId, true, 'Test', req, res);
     };
 
 

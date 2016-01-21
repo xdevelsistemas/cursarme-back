@@ -27,7 +27,7 @@ function callmodule(client) {
     const DataSchema = new Schema({});
 
     let LogSchema = new Schema({
-        unidade: { type: Schema.Types.ObjectId, ref: client + '.' + 'unidade', required: true },
+        unidade: { type: Schema.Types.ObjectId, required: false },
         op: { type: Number, required: true },
         entity: { type: String, required: true },
         data: { type: DataSchema, required: true },

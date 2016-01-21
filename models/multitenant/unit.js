@@ -12,7 +12,7 @@ function callModule(client) {
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
     const Schema = mongoose.Schema;
-    const xDevSchema = require("lib/xDevEntity").xDevSchema;
+    const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
@@ -58,6 +58,7 @@ function callModule(client) {
          */
         secretaryAuthorization :{ type: String , required: true }
     });
+
     /**
      * enabling caching
      */
@@ -67,17 +68,18 @@ function callModule(client) {
      * Busca todas as unidades
      * @returns {*}
      */
-    UnitSchema.statics.all = () => this.find({});
+    UnitSchema.statics._all = function() { return this.find({}) };
 
     /**
      * Cria uma unidade
      * @param userId
      * @param useLog
+     * @param entity
      * @param req
      * @param res
      * @returns {*}
      */
-    UnitSchema.methods.add = (userId, useLog, req, res) => {
+    UnitSchema.methods._add = (userId, useLog, entity, req, res) => {
         // validando os dados da unidade em req.body.unit
         if (!ValidValues.validValues(req.body.unit)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
@@ -88,7 +90,7 @@ function callModule(client) {
         this.create(req.body.unit)
             .then((data) => {
                 //
-                return xDevSchema.prototype.add(data, userId, useLog, client, 1, 'Unidade criada');
+                return xDevSchema.prototype.add(entity, data, userId, useLog, 1, 'Unidade criada');
             })
             .then((result) => {
                 return res.status(201).json(result);
@@ -100,11 +102,12 @@ function callModule(client) {
      * Atualiza uma unidade
      * @param userId
      * @param useLog
+     * @param entity
      * @param req
      * @param res
      * @returns {*}
      */
-    UnitSchema.methods.update = (userId, useLog, req, res) => {
+    UnitSchema.methods._update = (userId, useLog, entity, req, res) => {
         // validando os dados da unidade em req.body.unit
         if (!ValidValues.validValues(req.body.unit)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
@@ -115,7 +118,7 @@ function callModule(client) {
         this.find({_id: req.body.unit._id})
             .then((data) => {
                 // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
-                return xDevSchema.prototype.update(data, userId, useLog, client, 0, 'Unidade atualizada');
+                return xDevSchema.prototype.update(entity, data, userId, useLog, 0, 'Unidade atualizada');
             })
             .then((result) => {
                 return res.status(200).json(result);

@@ -16,14 +16,13 @@ module.exports = callModule();
 
 
 
-function callModule(client) {
+function callModule() {
     "use strict";
 
     const mongoose = require('mongoose');
     const Schema = mongoose.Schema;
-    const LogSchema = require("../multitenant/log")(client);
-    const ClientSchema = require("../Client");
-    const MongooseErr = require("../../services/MongooseErr");
+    const LogSchema = require("../log");
+    const ClientSchema = require("../../Client");
 
 
     let xDevEntity = {};
@@ -38,24 +37,18 @@ function callModule(client) {
         date_updated: {type: Date, required: true , default : Date.now}
     });
 
-    xDevEntity.xDevSchema.add = (obj, userId, useLog) => {
+    xDevEntity.xDevSchema.add = (obj, userId, useLog, client, op, text) => {
         obj.user_created = userId;
         obj.date_created = new Date();
 
         if (useLog){
 
             //todo colocar insercao na tabela log
-
-            // client
-            // obj
-            // userId
-            // op - "create"
-            // text(optional)
-            LogSchema.createLog(client, obj, userId, op, text);
+            LogSchema(client).createLog(client, obj, userId, op, text);
         }
 
         // Salvando a adição de user_created e date_created
-        obj.save(function(err) {
+        obj.save((err) => {
             if(!!err) {
                 console.error(err);
             }
@@ -63,7 +56,7 @@ function callModule(client) {
         return obj;
     };
 
-    xDevEntity.xDevSchema.update = (obj, userId, useLog) => {
+    xDevEntity.xDevSchema.update = (obj, userId, useLog, client, op, text) => {
         // Guardando o userId e a data/hora que o obj foi alterado
         obj.user_updated = userId;
         obj.date_updated = new Date();
@@ -71,10 +64,11 @@ function callModule(client) {
         if (useLog){
 
             //todo colocar insercao na tabela log
+            LogSchema(client).createLog(client, obj, userId, op, text);
         }
 
         // Salvando as alterações dos dados e a adição de user_updated e date_updated
-        obj.save(function(err) {
+        obj.save((err) => {
             if(!!err) {
                 console.error(err);
             }

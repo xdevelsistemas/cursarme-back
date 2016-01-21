@@ -1,16 +1,13 @@
 (() => {
     'use strict';
 
-    // generating code coverage
-    // istanbul cover _mocha test/**/*Spec.js -- . -R spec
-
     const chai = require('chai');
     const should = chai.should();
     const expect = chai.expect;
     const supertest = require('supertest');
     const app = require('../app');
 
-    describe('UNIT test', () => {
+    describe('UNIT test : endpoint', () => {
         let newUnit = {};
 
         describe('-> Unauthorized', () => {

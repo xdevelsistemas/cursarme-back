@@ -2,6 +2,8 @@
  * Created by douglas on 13/10/15.
  */
 (() => {
+    "use strict";
+
     const _ = require("lodash");
 
     /**
@@ -12,5 +14,5 @@
         _.values(obj).forEach((el) => ((typeof el === "object") && !Array.isArray(el)) ? validValues(el) : !!el);
     };
 
-    module.exports = {validFields};
+    module.exports = {validValues};
 })();

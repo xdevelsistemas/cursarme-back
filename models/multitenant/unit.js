@@ -12,13 +12,13 @@ function callModule(client) {
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
     const Schema = mongoose.Schema;
-    const xDevSchema = require("../lib/xDevEntity")(client).xDevSchema;
+    const xDevSchema = require("lib/xDevEntity").xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
     const ValidValues = require("../../services/validValues");
     const _ = require('lodash');
-    const AddressSchema = require("../lib/address");
+    const AddressSchema = require("../lib/Address");
 
 
 
@@ -88,7 +88,7 @@ function callModule(client) {
         this.create(req.body.unit)
             .then((data) => {
                 //
-                return xDevSchema.prototype.add(data, userId, useLog);
+                return xDevSchema.prototype.add(data, userId, useLog, client, 1, 'Unidade criada');
             })
             .then((result) => {
                 return res.status(201).json(result);
@@ -115,7 +115,7 @@ function callModule(client) {
         this.find({_id: req.body.unit._id})
             .then((data) => {
                 // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
-                return xDevSchema.prototype.update(data, userId, useLog, res);
+                return xDevSchema.prototype.update(data, userId, useLog, client, 0, 'Unidade atualizada');
             })
             .then((result) => {
                 return res.status(200).json(result);

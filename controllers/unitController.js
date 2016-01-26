@@ -16,9 +16,9 @@ module.exports = () => {
      * @param res
      */
     unitController.all = (req, res) => {
-        return UnitModel(getClient(req))._all()
+        return UnitModel(getClient(req)).all()
             .then((data) => {
-                return res.status(200).json(data)
+                return res.status(200).json(data);
             })
             .catch((erro) => mongooseErr.apiGetMongooseErr(erro,res));
     };
@@ -29,18 +29,21 @@ module.exports = () => {
      * @param res
      */
     unitController.add = (req, res) => {
-        // validando os dados da unidade em req.body.unit
-        /*if (!ValidValues.validValues(req.body.unit)) {
+        // validando os dados da unidade em req.body
+        /*if (!ValidValues.validValues(req.body)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
 
-        let unit = new UnitModel(getClient(req))();
+        let unit = UnitModel(getClient(req));
 
-        unit._add(req.body.userId, true, 'Test', req)
-            .then((result) => {
-                return res.status(201).json(result)
+        return unit.add(req.user._id, true, 'Test', req.body)
+            .then((data) => {
+
+                return res.status(201).json(data);
             })
-            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
+            .catch((err) => {
+                return MongooseErr.apiGetMongooseErr(err, res);
+            });
     };
 
     /**

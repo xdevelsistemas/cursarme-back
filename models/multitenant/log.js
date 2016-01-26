@@ -49,8 +49,8 @@ function callmodule(client) {
      */
     LogSchema.statics.createLog = function(entity,obj,userId,op,text) {
         // TODO causando erro aqui
-        //let log = this();
-        const log = new LogSchema();
+        let log = this();
+        //const log = new LogSchema();
 
         log.op = op;
         log.data = obj;
@@ -71,7 +71,7 @@ function callmodule(client) {
     /**
      * return schema
      */
-    return xDevModel.model(client, client + '.' +  'Log', LogSchema);
+    return xDevModel.model(client, 'Log', LogSchema);
 }
 
 

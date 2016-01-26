@@ -3,9 +3,12 @@
  */
 module.exports = () => {
     "use strict";
-    const  mongooseErr = require('../services/MongooseErr');
-    const getClient = require('../services/getClient');
+
     let unitController = {};
+    const MongooseErr = require('../services/MongooseErr');
+    const getClient = require('../services/getClient');
+    const UnitModel = require('../models/multitenant/unit');
+    const ValidValues = require("../services/validValues");
 
     /**
      * lista todas as unidades
@@ -13,13 +16,11 @@ module.exports = () => {
      * @param res
      */
     unitController.all = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
-
-        UnitModel.all()
-            .then(
-                (data) => res.status(200).json(data),
-                (erro) => mongooseErr.apiGetMongooseErr(erro,res)
-            );
+        return UnitModel(getClient(req))._all()
+            .then((data) => {
+                return res.status(200).json(data)
+            })
+            .catch((erro) => mongooseErr.apiGetMongooseErr(erro,res));
     };
 
     /**
@@ -28,9 +29,18 @@ module.exports = () => {
      * @param res
      */
     unitController.add = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
+        // validando os dados da unidade em req.body.unit
+        /*if (!ValidValues.validValues(req.body.unit)) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }*/
 
-        return UnitModel.add(req.body.userId, true, req, res);
+        let unit = new UnitModel(getClient(req))();
+
+        unit._add(req.body.userId, true, 'Test', req)
+            .then((result) => {
+                return res.status(201).json(result)
+            })
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     /**
@@ -39,9 +49,7 @@ module.exports = () => {
      * @param res
      */
     unitController.update = (req, res) => {
-        const UnitModel = require('../models/multitenant/unit')(getClient(req));
-
-        return UnitModel.update(req.body.userId, true, req, res);
+        return UnitModel(getClient(req))._update(req.body.userId, true, 'Test', req, res);
     };
 
 

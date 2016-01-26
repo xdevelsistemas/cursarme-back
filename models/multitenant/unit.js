@@ -71,23 +71,30 @@ function callModule(client) {
      */
     // TODO Converter o bloco de código abaixo para es6
     // mantido código no formato antigo por problemas de escopo com o modelo
-    UnitSchema.statics._all = function() { return this.find({})};
+    UnitSchema.statics.all = function() { return this.find({})};
 
     /**
      * Cria uma unidade
      * @param userId
      * @param useLog
      * @param entity
-     * @param req
-     * @param res
+     * @param data
      * @returns {*}
      */
-    UnitSchema.methods._add = function(userId, useLog, entity, req) {
-        /*let unit = this;*/
-        let unit = new UnitSchema();
+    UnitSchema.statics.add = function(userId, useLog, entity, data) {
+        let unit = this();
 
-        //todo verificar/adiconar valores para a nova unidade
-        extendObj(true, unit, req.body.unit);
+        unit.name = data.name;
+        unit.address = data.address;
+        unit.cnpj = data.cnpj;
+        unit.alias = data.alias;
+        unit.phone = data.phone;
+        unit.website = data.website;
+        unit.director = data.director;
+        unit.directorAuthorization = data.directorAuthorization;
+        unit.secretary = data.secretary;
+        unit.secretaryAuthorization = data.secretaryAuthorization;
+
         return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade criada');
     };
 
@@ -100,7 +107,7 @@ function callModule(client) {
      * @param res
      * @returns {*}
      */
-    UnitSchema.methods._update = (userId, useLog, entity, req, res) => {
+    UnitSchema.methods.update = (userId, useLog, entity, req, res) => {
         // validando os dados da unidade em req.body.unit
         if (!ValidValues.validValues(req.body.unit)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);

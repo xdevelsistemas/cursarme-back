@@ -19,11 +19,16 @@ module.exports = callModule;
 function callModule(client) {
     "use strict";
 
-    const mongoose = require('mongoose');
+    let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     const LogSchema = require("../log")(client);
     const ClientSchema = require("../../Client");
 
+
+    /**
+     * padrão - utilizando bluebird como promise
+     */
+    mongoose.Promise = require('bluebird');
 
     let xDevEntity = {};
 
@@ -48,12 +53,12 @@ function callModule(client) {
         }
 
         // Salvando a adição de user_created e date_created
-        obj.save((err) => {
+        return obj.save()
+        .catch((err) => {
             if(!!err) {
                 console.error(err);
             }
         });
-        return obj;
     };
 
     xDevEntity.xDevSchema._update = (entity, obj, userId, useLog, op, text) => {

@@ -12,12 +12,12 @@
      * @param obj
      */
     let validValues = (obj) => {
+        // TODO verificar casos como campo não obrigatório e array vazio.
         _.values(obj).forEach((el) => {
             if ((typeof el === "object") && !Array.isArray(el)) {
                 return valid ? valid && validValues(el) : valid;
-            } else {
-                return !!el
             }
+            return !!el;
         });
     };
 

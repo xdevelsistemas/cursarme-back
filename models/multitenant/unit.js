@@ -11,6 +11,7 @@ function callModule(client) {
 
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
+    let extendObj = require('extend');
     const Schema = mongoose.Schema;
     const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
@@ -68,7 +69,9 @@ function callModule(client) {
      * Busca todas as unidades
      * @returns {*}
      */
-    UnitSchema.statics._all = function() { return this.find({}) };
+    // TODO Converter o bloco de código abaixo para es6
+    // mantido código no formato antigo por problemas de escopo com o modelo
+    UnitSchema.statics._all = function() { return this.find({})};
 
     /**
      * Cria uma unidade
@@ -79,23 +82,13 @@ function callModule(client) {
      * @param res
      * @returns {*}
      */
-    UnitSchema.methods._add = (userId, useLog, entity, req, res) => {
-        // validando os dados da unidade em req.body.unit
-        if (!ValidValues.validValues(req.body.unit)) {
-            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }
+    UnitSchema.methods._add = function(userId, useLog, entity, req) {
+        /*let unit = this;*/
+        let unit = new UnitSchema();
 
-        // Criando uma unidade
-        // 'This': contendo métodos do mongodb
-        this.create(req.body.unit)
-            .then((data) => {
-                //
-                return xDevSchema.prototype.add(entity, data, userId, useLog, 1, 'Unidade criada');
-            })
-            .then((result) => {
-                return res.status(201).json(result);
-            })
-            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
+        //todo verificar/adiconar valores para a nova unidade
+        extendObj(true, unit, req.body.unit);
+        return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade criada');
     };
 
     /**
@@ -118,7 +111,7 @@ function callModule(client) {
         this.find({_id: req.body.unit._id})
             .then((data) => {
                 // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
-                return xDevSchema.prototype.update(entity, data, userId, useLog, 0, 'Unidade atualizada');
+                return xDevSchema.prototype._update(entity, data, userId, useLog, 0, 'Unidade atualizada');
             })
             .then((result) => {
                 return res.status(200).json(result);

@@ -5,9 +5,10 @@ module.exports = () => {
     "use strict";
 
     let unitController = {};
-    const  mongooseErr = require('../services/MongooseErr');
+    const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
     const UnitModel = require('../models/multitenant/unit');
+    const ValidValues = require("../services/validValues");
 
     /**
      * lista todas as unidades
@@ -15,12 +16,11 @@ module.exports = () => {
      * @param res
      */
     unitController.all = (req, res) => {
-        UnitModel(getClient(req))._all()
-            .then(function(data) {
-                res.status(200).json(data);
-            },
-                (erro) => mongooseErr.apiGetMongooseErr(erro,res)
-            );
+        return UnitModel(getClient(req))._all()
+            .then((data) => {
+                return res.status(200).json(data)
+            })
+            .catch((erro) => mongooseErr.apiGetMongooseErr(erro,res));
     };
 
     /**
@@ -29,7 +29,18 @@ module.exports = () => {
      * @param res
      */
     unitController.add = (req, res) => {
-        return UnitModel(getClient(req))._add(req.body.userId, true, 'Test', req, res);
+        // validando os dados da unidade em req.body.unit
+        /*if (!ValidValues.validValues(req.body.unit)) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }*/
+
+        let unit = new UnitModel(getClient(req))();
+
+        unit._add(req.body.userId, true, 'Test', req)
+            .then((result) => {
+                return res.status(201).json(result)
+            })
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     /**

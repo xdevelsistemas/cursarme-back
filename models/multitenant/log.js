@@ -10,6 +10,7 @@ function callmodule(client) {
 
     let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
+    const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require('../../config/mongooseRedisCache');
     const MongooseErr = require("../../services/MongooseErr");
 
@@ -46,7 +47,9 @@ function callmodule(client) {
      * @param op
      * @returns {*}
      */
-    LogSchema.statics.createLog = (entity,obj,userId,op,text) => {
+    LogSchema.statics.createLog = function(entity,obj,userId,op,text) {
+        // TODO causando erro aqui
+        //let log = this();
         const log = new LogSchema();
 
         log.op = op;
@@ -68,7 +71,7 @@ function callmodule(client) {
     /**
      * return schema
      */
-    return mongoose.model(client + '.' +  'Log', LogSchema);
+    return xDevModel.model(client, client + '.' +  'Log', LogSchema);
 }
 
 

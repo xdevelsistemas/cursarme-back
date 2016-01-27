@@ -95,7 +95,7 @@ function callModule(client) {
         unit.secretary = data.secretary;
         unit.secretaryAuthorization = data.secretaryAuthorization;
 
-        return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade criada');
+        return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade adicionada');
     };
 
     /**
@@ -103,27 +103,23 @@ function callModule(client) {
      * @param userId
      * @param useLog
      * @param entity
-     * @param req
-     * @param res
+     * @param data
      * @returns {*}
      */
-    UnitSchema.methods.update = (userId, useLog, entity, req, res) => {
-        // validando os dados da unidade em req.body.unit
-        if (!ValidValues.validValues(req.body.unit)) {
-            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }
+    UnitSchema.statics.update = function(userId, useLog, entity, data) {
+        let UnitModel = this;
 
-        // Atualizando unidade
-        // 'This': contendo os métodos do mongodb
-        this.find({_id: req.body.unit._id})
-            .then((data) => {
-                // Agora com os dados encontrados, xDevEntity recebe no primeiro parâmetro
-                return xDevSchema.prototype._update(entity, data, userId, useLog, 0, 'Unidade atualizada');
-            })
+        return UnitModel.findOne({_id: data._id})
             .then((result) => {
-                return res.status(200).json(result);
+                if (!result) {
+                    let err = new Error("Dados inválidos");
+                    err.status = 400;
+                    throw err;
+                }
+
+                extendObj(true, result, data);
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
             })
-            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     return xDevModel.model(client,'Unit',UnitSchema);

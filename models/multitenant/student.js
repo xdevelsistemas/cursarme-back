@@ -43,12 +43,66 @@ function callModule(client) {
     StudentSchema.set('redisCache', true);
 
 
-    StudentSchema.methods.add = (userId,useLog) => {
-        return xDevSchema.prototype.add(this,userId,useLog);
+    /**
+     * Busca todos os estudantes
+     * @returns {*}
+     */
+    // TODO Converter o bloco de código abaixo para es6
+    // mantido código no formato antigo por problemas de escopo com o modelo
+    StudentSchema.statics.all = function() { return this.find({})};
+
+
+    /**
+     * Adiciona um novo estudate
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {Promise.<T>}
+     */
+    StudentSchema.statics.add = function(userId, useLog, entity, data) {
+        let stud = this();
+
+        stud.matNumber = data.matNumber;
+        stud.name = data.name;
+        stud.address = data.address;
+        stud.birthDate = data.birthDate;
+        stud.cpf = data.cpf;
+        stud.rg = data.rg;
+        stud.phones = data.phones;
+        stud.user = data.user;
+        stud.maritalStatus = data.maritalStatus;
+        stud.gender = data.gender;
+        stud.ethnicity = data.ethnicity;
+        stud.contacts = data.contacts;
+        stud.documents = data.documents;
+
+        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Estudante adicionado');
     };
 
-    StudentSchema.methods.update = (userId,useLog) => {
-        return xDevSchema.prototype.update(this,userId,useLog);
+
+    /**
+     * Atualiza um estudante
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {Promise.<T>|Promise}
+     */
+    StudentSchema.statics.update = function(userId, useLog, entity, data) {
+        let StudentModel = this;
+
+        return StudentModel.findOne({_id: data._id})
+            .then((result) => {
+                if (!result) {
+                    let err = new Error("Dados inválidos");
+                    err.status = 400;
+                    throw err;
+                }
+
+                extendObj(true, result, data);
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Estudante atualizado');
+            })
     };
 
 

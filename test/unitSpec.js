@@ -85,10 +85,10 @@
                         expect(res.status).to.equal(201);
                         expect(res.body).to.be.an('object').and.to.have.property("_id");
                         expect(res.body._id).not.to.be.null;
-                        expect(res.body).to.have.property("nome");
-                        expect(res.body.nome).not.to.be.null;
+                        expect(res.body).to.have.property("name");
+                        expect(res.body.name).not.to.be.null;
                         expect(res.body).to.have.property("address");
-                        expect(res.body.address).to.be.an('array').and.to.have.property("street");
+                        expect(res.body.address).to.be.an('object').and.to.have.property("street");
                         expect(res.body.address.street).not.to.be.null;
                         expect(res.body.address).to.have.property("number");
                         expect(res.body.address.number).not.to.be.null;
@@ -133,32 +133,29 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        userId: ObjectId("5697face19d3c9021d774490"),
-                        unit: {
-                            address: {
-                                street: "Ápice",
-                                number: "321",
-                                complement: "",
-                                neighborhood: "Centro",
-                                city: "Vitória",
-                                state: "Espírito Santo",
-                                country: "Brasil",
-                                postalCode: "06543210",
-                                enabled: true
-                            }
+                        address: {
+                            street: "Ápice",
+                            number: "321",
+                            complement: "",
+                            neighborhood: "Centro",
+                            city: "Vitória",
+                            state: "Espírito Santo",
+                            country: "Brasil",
+                            postalCode: "06543210",
+                            enabled: true
                         }
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
-                        expect(res.status).to.equal(201);
+                        expect(res.status).to.equal(200);
                         expect(res.body).to.be.an('object').and.to.have.property("_id");
                         expect(res.body._id).not.to.be.null;
-                        expect(res.body).to.have.property("nome");
-                        expect(res.body.nome).not.to.be.null;
+                        expect(res.body).to.have.property("name");
+                        expect(res.body.name).not.to.be.null;
                         expect(res.body).to.have.property("address");
-                        expect(res.body.address).to.be.an('array').and.to.have.property("street");
+                        expect(res.body.address).to.be.an('object').and.to.have.property("street");
                         expect(res.body.address.street).not.to.be.null;
                         expect(res.body.address).to.have.property("number");
                         expect(res.body.address.number).not.to.be.null;

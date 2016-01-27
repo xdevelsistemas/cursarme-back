@@ -66,7 +66,7 @@ function callModule(client) {
      * @param op
      * @param text
      * @returns {Promise.<T>}
-     * @private
+     * @public
      */
     xDevEntity.xDevSchema._add = (entity, obj, userId, useLog, op, text) => {
         obj.user_created = userId;
@@ -97,7 +97,7 @@ function callModule(client) {
      * @param op
      * @param text
      * @returns {Promise.<T>}
-     * @private
+     * @public
      */
     xDevEntity.xDevSchema._update = (entity, obj, userId, useLog, op, text) => {
         // Guardando o userId e a data/hora que o obj foi alterado

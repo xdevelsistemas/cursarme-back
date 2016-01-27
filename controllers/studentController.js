@@ -1,22 +1,20 @@
-/**
- * Created by clayton on 21/08/15.
- */
+
 module.exports = () => {
     "use strict";
 
-    let unitController = {};
+    let studentController = {};
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
-    const UnitModel = require('../models/multitenant/unit');
+    const StudentModel = require('../models/multitenant/student');
     const ValidValues = require("../services/validValues");
 
     /**
-     * lista todas as unidades
+     * lista todas os estudantes
      * @param req
      * @param res
      */
-    unitController.all = (req, res) => {
-        return UnitModel(getClient(req)).all()
+    studentController.all = (req, res) => {
+        return StudentModel(getClient(req)).all()
             .then((data) => {
                 return res.status(200).json(data);
             })
@@ -24,17 +22,17 @@ module.exports = () => {
     };
 
     /**
-     * Adiciona uma unidade
+     * Adiciona um estudante
      * @param req
      * @param res
      */
-    unitController.add = (req, res) => {
+    studentController.add = (req, res) => {
         // validando os dados da unidade em req.body
         /*if (!ValidValues.validValues(req.body)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
 
-        return UnitModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
+        return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
 
                 return res.status(201).json(data);
@@ -45,18 +43,18 @@ module.exports = () => {
     };
 
     /**
-     * Atualiza uma unidade
+     * Atualiza um estudante
      * @param req
      * @param res
      */
-    unitController.update = (req, res) => {
+    studentController.update = (req, res) => {
 
         // validando os dados da unidade em req.body
         /*if (!ValidValues.validValues(req.body)) {
          return MongooseErr.apiCallErr("Dados inválidos", res, 400);
          }*/
 
-        return UnitModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
+        return StudentModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
             .then((data) => {
 
                 return res.status(200).json(data);
@@ -68,5 +66,5 @@ module.exports = () => {
 
 
 
-    return unitController;
+    return studentController;
 };

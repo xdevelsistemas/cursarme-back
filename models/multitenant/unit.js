@@ -95,7 +95,7 @@ function callModule(client) {
         unit.secretary = data.secretary;
         unit.secretaryAuthorization = data.secretaryAuthorization;
 
-        return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade criada');
+        return xDevSchema._add(entity, unit, userId, useLog, 1, 'Unidade adicionada');
     };
 
     /**
@@ -107,12 +107,6 @@ function callModule(client) {
      * @returns {*}
      */
     UnitSchema.statics.update = function(userId, useLog, entity, data) {
-        // validando os dados da unidade em req.body
-        /*if (!ValidValues.validValues(req.body)) {
-            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }*/
-
-        // Atualizando unidade
         let UnitModel = this;
 
         return UnitModel.findOne({_id: data._id})

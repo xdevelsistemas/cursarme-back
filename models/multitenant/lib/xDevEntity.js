@@ -42,6 +42,32 @@ function callModule(client) {
         date_updated: {type: Date, required: true , default : Date.now}
     });
 
+
+    /**
+     * Cria logs de alterações no banco
+     * @param entity
+     * @param obj
+     * @param userId
+     * @param op
+     * @param text
+     * @private
+     */
+    let _createLog = (entity, obj, userId, op, text) => {
+        LogSchema.createLog(entity, obj, userId, op, text);
+    };
+
+
+    /**
+     * Adiciona um novo registro no banco
+     * @param entity
+     * @param obj
+     * @param userId
+     * @param useLog
+     * @param op
+     * @param text
+     * @returns {Promise.<T>}
+     * @private
+     */
     xDevEntity.xDevSchema._add = (entity, obj, userId, useLog, op, text) => {
         obj.user_created = userId;
         obj.date_created = new Date();
@@ -49,7 +75,7 @@ function callModule(client) {
         if (useLog){
 
             //todo colocar insercao na tabela log
-            LogSchema.createLog(entity, obj, userId, op, text);
+            _createLog(entity, obj, userId, op, text);
         }
 
         // Salvando a adição de user_created e date_created
@@ -61,6 +87,18 @@ function callModule(client) {
         });
     };
 
+
+    /**
+     * Atualiza um registro do banco
+     * @param entity
+     * @param obj
+     * @param userId
+     * @param useLog
+     * @param op
+     * @param text
+     * @returns {Promise.<T>}
+     * @private
+     */
     xDevEntity.xDevSchema._update = (entity, obj, userId, useLog, op, text) => {
         // Guardando o userId e a data/hora que o obj foi alterado
         obj.user_updated = userId;
@@ -69,17 +107,18 @@ function callModule(client) {
         if (useLog){
 
             //todo colocar insercao na tabela log
-            LogSchema.createLog(entity, obj, userId, op, text);
+            _createLog(entity, obj, userId, op, text);
         }
 
         // Salvando as alterações dos dados e a adição de user_updated e date_updated
-        obj.save((err) => {
+        return obj.save()
+        .catch((err) => {
             if(!!err) {
                 console.error(err);
             }
         });
-        return obj;
     };
+
 
     return xDevEntity
 }

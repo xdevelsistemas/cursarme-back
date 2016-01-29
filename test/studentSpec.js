@@ -45,8 +45,9 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        name: "Unidade teste unitário",
-                        address: {
+                        matNumber: "20161BSI0001",
+                        name: "João das Couves",
+                        address: [{
                             street: "Vale",
                             number: "123",
                             complement: "",
@@ -56,15 +57,25 @@
                             country: "Brasil",
                             postalCode: "01234560",
                             enabled: true
-                        },
-                        cnpj: "36625217000134",
-                        alias: "Teste",
-                        phone: "99999999999",
-                        website: "www.x.yyy.zz",
-                        director: ObjectId("5697face19d3c9021d774496"),
-                        directorAuthorization: "0123456789",
-                        secretary: ObjectId("5697face19d3c9021d774497"),
-                        secretaryAuthorization: "0123456789"
+                        }],
+                        birthDate: 764996400000,
+                        cpf: "01234567890",
+                        phones: [{
+                            description : "Home",
+                            phone : "2799999999"
+                        }],
+                        user: ObjectId("5697face19d3c9021d774496"),
+                        maritalStatus: "single",
+                        gender: "male",
+                        ethnicity: "brown",
+                        contacts : [{
+                            name : "Maria",
+                            phone : "2799999999"
+                        }],
+                        documents: [{
+                            description : "Comprovante de residência",
+                            imageUrl : "www.x.yyy.zz/imageDoc/1"
+                        }]
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {

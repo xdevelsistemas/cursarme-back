@@ -2,14 +2,15 @@
 (() => {
     'use strict';
 
-    const dbURI    = process.env.DB_URI_TEST;
-    const mongoose = require('mongoose');
     const expect = require('chai').expect;
+    const configSpec = require('configTest');
 
 
     describe('STUDENT test', () => {
         let newStudent = {};
         const Student = require('../controllers/studentController')();
+
+        // req e res simulando as funções de endpoints
         let req = { authInfo: {scope: 'ieses'}, user: {_id: "5697face19d3c9021d774497"} };
         let res = {
             statusCode: 0,
@@ -17,12 +18,6 @@
             status(s) {this.statusCode = s; return this},
             json(s) {this.body = s; return this}
         };
-
-
-        beforeEach((done) => {
-            if (mongoose.connection.db) return done();
-            mongoose.connect(dbURI, done);
-        });
 
 
         describe('-> GET Students', () => {
@@ -39,7 +34,17 @@
             it('-> Adicionando estudante', () => {
                 req.body = {
                     name: "Estudante teste",
-                    address: { street: "Vale", number: "123", complement: "", neighborhood: "Santo Antônio", city: "Vitória", state: "Espírito Santo", country: "Brasil", postalCode: "01234560", enabled: true },
+                    address: {
+                        street: "Vale",
+                        number: "123",
+                        complement: "",
+                        neighborhood: "Santo Antônio",
+                        city: "Vitória",
+                        state: "Espírito Santo",
+                        country: "Brasil",
+                        postalCode: "01234560",
+                        enabled: true
+                    },
                     cnpj: "36625217000135",
                     alias: "Teste",
                     phone: "99999999999",

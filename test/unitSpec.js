@@ -12,8 +12,7 @@
 
         describe('-> Unauthorized', () => {
             it('-> Requisição não autorizada', (done) => {
-                this.timeout(60000);
-                supertest(app).get('/api/v1.1/units')
+                supertest(app).get('/api/v1/units')
                     .set('Accept', 'application/json')
                     .end((err, res) => {
                         if (!!err) return done(err);
@@ -25,32 +24,25 @@
             });
         });
 
-        describe('-> GET Unit', function () {
-            it('-> Buscando todos as unidades', function (done) {
+        describe('-> GET Unit', () => {
+            it('-> Buscando todos as unidades', (done) => {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/units')
+                supertest(app).get('/api/v1/units')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
-                        expect(res.status).to.equal(200);
-                        expect(typeof res.body).to.equal('object');
-                        if (res.body.length !== 0) {
-                            /*expect(res.body[0]).to.have.property();
-                            expect(res.body[0]._id).to.not.equal();
-                            expect(res.body[0]).to.have.property();
-                            expect(res.body[0].nome).to.not.equal();*/
-                        }
+                        _verifyFields(res.body, res.status, 200);
                         done();
                     });
             });
         });
 
-        describe('-> POST Unit', function () {
-            it('-> Adicionando unidade', function (done) {
+        describe('-> ADD Unit', () => {
+            it('-> Adicionando unidade', (done) => {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/addUnit')
+                supertest(app).post('/api/v1/addUnit')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -82,54 +74,17 @@
                     .end(function (err, res) {
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
-                        expect(res.status).to.equal(201);
-                        expect(res.body).to.be.an('object').and.to.have.property("_id");
-                        expect(res.body._id).not.to.be.null;
-                        expect(res.body).to.have.property("name");
-                        expect(res.body.name).not.to.be.null;
-                        expect(res.body).to.have.property("address");
-                        expect(res.body.address).to.be.an('object').and.to.have.property("street");
-                        expect(res.body.address.street).not.to.be.null;
-                        expect(res.body.address).to.have.property("number");
-                        expect(res.body.address.number).not.to.be.null;
-                        expect(res.body.address).to.have.property("complement");
-                        expect(res.body.address.complement).not.to.be.null;
-                        expect(res.body.address).to.have.property("neighborhood");
-                        expect(res.body.address.neighborhood).not.to.be.null;
-                        expect(res.body.address).to.have.property("city");
-                        expect(res.body.address.city).not.to.be.null;
-                        expect(res.body.address).to.have.property("state");
-                        expect(res.body.address.state).not.to.be.null;
-                        expect(res.body.address).to.have.property("country");
-                        expect(res.body.address.country).not.to.be.null;
-                        expect(res.body.address).to.have.property("postalCode");
-                        expect(res.body.address.postalCode).not.to.be.null;
-                        expect(res.body.address).to.have.property("enabled");
-                        expect(res.body.address.enabled).not.to.be.null;
-                        expect(res.body).to.have.property("cnpj");
-                        expect(res.body.cnpj).not.to.be.null;
-                        expect(res.body).to.have.property("alias");
-                        expect(res.body.alias).not.to.be.null;
-                        expect(res.body).to.have.property("phone");
-                        expect(res.body.phone).not.to.be.null;
-                        expect(res.body).to.have.property("website");
-                        expect(res.body.website).not.to.be.null;
-                        expect(res.body).to.have.property("director");
-                        expect(res.body.director).not.to.be.null;
-                        expect(res.body).to.have.property("directorAuthorization");
-                        expect(res.body.directorAuthorization).not.to.be.null;
-                        expect(res.body).to.have.property("secretary");
-                        expect(res.body.secretary).not.to.be.null;
-                        expect(res.body).to.have.property("secretaryAuthorization");
-                        expect(res.body.secretaryAuthorization).not.to.be.null;
+                        _verifyFields(res.body, res.status, 201);
                         newUnit = res.body;
                         done();
                     });
             });
+        });
 
-            it('-> Atualizando unidade', function (done) {
+        describe('UPDATE Unit', () => {
+            it('-> Atualizando unidade', (done) => {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/updateUnit')
+                supertest(app).post('/api/v1/updateUnit')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -149,50 +104,53 @@
                     .end(function (err, res) {
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
-                        expect(res.status).to.equal(200);
-                        expect(res.body).to.be.an('object').and.to.have.property("_id");
-                        expect(res.body._id).not.to.be.null;
-                        expect(res.body).to.have.property("name");
-                        expect(res.body.name).not.to.be.null;
-                        expect(res.body).to.have.property("address");
-                        expect(res.body.address).to.be.an('object').and.to.have.property("street");
-                        expect(res.body.address.street).not.to.be.null;
-                        expect(res.body.address).to.have.property("number");
-                        expect(res.body.address.number).not.to.be.null;
-                        expect(res.body.address).to.have.property("complement");
-                        expect(res.body.address.complement).not.to.be.null;
-                        expect(res.body.address).to.have.property("neighborhood");
-                        expect(res.body.address.neighborhood).not.to.be.null;
-                        expect(res.body.address).to.have.property("city");
-                        expect(res.body.address.city).not.to.be.null;
-                        expect(res.body.address).to.have.property("state");
-                        expect(res.body.address.state).not.to.be.null;
-                        expect(res.body.address).to.have.property("country");
-                        expect(res.body.address.country).not.to.be.null;
-                        expect(res.body.address).to.have.property("postalCode");
-                        expect(res.body.address.postalCode).not.to.be.null;
-                        expect(res.body.address).to.have.property("enabled");
-                        expect(res.body.address.enabled).not.to.be.null;
-                        expect(res.body).to.have.property("cnpj");
-                        expect(res.body.cnpj).not.to.be.null;
-                        expect(res.body).to.have.property("alias");
-                        expect(res.body.alias).not.to.be.null;
-                        expect(res.body).to.have.property("phone");
-                        expect(res.body.phone).not.to.be.null;
-                        expect(res.body).to.have.property("website");
-                        expect(res.body.website).not.to.be.null;
-                        expect(res.body).to.have.property("director");
-                        expect(res.body.director).not.to.be.null;
-                        expect(res.body).to.have.property("directorAuthorization");
-                        expect(res.body.directorAuthorization).not.to.be.null;
-                        expect(res.body).to.have.property("secretary");
-                        expect(res.body.secretary).not.to.be.null;
-                        expect(res.body).to.have.property("secretaryAuthorization");
-                        expect(res.body.secretaryAuthorization).not.to.be.null;
+                        _verifyFields(res.body, res.status, 200);
                         newUnit = res.body;
                         done();
                     });
             });
         });
     });
+
+
+    /**
+     * Verifica se os campos estão corretos
+     * @param data
+     * @param statusCode
+     * @param status
+     * @private
+     */
+    let _verifyFields = (data, statusCode, status) => {
+        let type;
+
+        if (Array.isArray(data)) {
+            type = 'array';
+            if (data.length === 0) return;
+            data = data[0];
+        } else {
+            type = 'object';
+        }
+        expect(statusCode).to.equal(status);
+        expect(data).to.be.an(type);
+        expect(data).to.have.property("_id").and.not.to.be.null;
+        expect(data).to.have.property("name").and.not.to.be.null;
+        expect(data).to.have.property("address").and.to.be.an('object');
+        expect(data.address).and.to.have.property("street").and.not.to.be.null;
+        expect(data.address).to.have.property("number").and.not.to.be.null;
+        expect(data.address).to.have.property("complement").and.not.to.be.null;
+        expect(data.address).to.have.property("neighborhood").and.not.to.be.null;
+        expect(data.address).to.have.property("city").and.not.to.be.null;
+        expect(data.address).to.have.property("state").and.not.to.be.null;
+        expect(data.address).to.have.property("country").and.not.to.be.null;
+        expect(data.address).to.have.property("postalCode").and.not.to.be.null;
+        expect(data.address).to.have.property("enabled").and.not.to.be.null;
+        expect(data).to.have.property("cnpj").and.not.to.be.null;
+        expect(data).to.have.property("alias").and.not.to.be.null;
+        expect(data).to.have.property("phone").and.not.to.be.null;
+        expect(data).to.have.property("website").and.not.to.be.null;
+        expect(data).to.have.property("director").and.not.to.be.null;
+        expect(data).to.have.property("directorAuthorization").and.not.to.be.null;
+        expect(data).to.have.property("secretary").and.not.to.be.null;
+        expect(data).to.have.property("secretaryAuthorization").and.not.to.be.null;
+    }
 })();

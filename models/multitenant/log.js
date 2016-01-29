@@ -37,6 +37,11 @@ function callmodule(client) {
         user: { type: Schema.Types.ObjectId, ref: 'user', required: true }
     });
 
+    /**
+     * enabling caching
+     */
+    LogSchema.set('redisCache', true);
+
 
     /**
      *
@@ -48,7 +53,7 @@ function callmodule(client) {
      * @returns {*}
      */
     LogSchema.statics.createLog = function(entity,obj,userId,op,text) {
-        // TODO causando erro aqui
+        // TODO somente this causa erro
         let log = this();
         //const log = new LogSchema();
 
@@ -62,11 +67,6 @@ function callmodule(client) {
 
         return log;
     };
-
-    /**
-     * enabling caching
-     */
-    LogSchema.set('redisCache', true);
 
     /**
      * return schema

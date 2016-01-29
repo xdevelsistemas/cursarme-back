@@ -12,12 +12,12 @@ function callModule() {
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
     const Schema = mongoose.Schema;
-    const xDevSchema = require("lib/xDevEntity").xDevSchema;
-    const AddressSchema = require("lib/address");
-    const ContactSchema = require("lib/contact");
-    const maritalStatus = require("enum/maritalStatus");
-    const gender = require("enum/gender");
-    const ethnicity = require("enum/ethnicity");
+    const xDevSchema = require("../models/multitenant/lib/xDevEntity")().xDevSchema;
+    const AddressSchema = require("../models/lib/Address");
+    const ContactSchema = require("../models/lib/contact");
+    const maritalStatus = require("../models/enum/maritalStatus");
+    const gender = require("../models/enum/gender");
+    const ethnicity = require("../models/enum/ethnicity");
 
 
 

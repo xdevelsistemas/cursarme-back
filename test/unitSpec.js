@@ -12,8 +12,7 @@
 
         describe('-> Unauthorized', () => {
             it('-> Requisição não autorizada', (done) => {
-                this.timeout(60000);
-                supertest(app).get('/api/v1.1/units')
+                supertest(app).get('/api/v1/units')
                     .set('Accept', 'application/json')
                     .end((err, res) => {
                         if (!!err) return done(err);
@@ -28,7 +27,7 @@
         describe('-> GET Unit', () => {
             it('-> Buscando todos as unidades', (done) => {
                 this.timeout(60000);
-                supertest(app).get('/api/v1.1/units')
+                supertest(app).get('/api/v1/units')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -43,7 +42,7 @@
         describe('-> ADD Unit', () => {
             it('-> Adicionando unidade', (done) => {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/addUnit')
+                supertest(app).post('/api/v1/addUnit')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -85,7 +84,7 @@
         describe('UPDATE Unit', () => {
             it('-> Atualizando unidade', (done) => {
                 this.timeout(60000);
-                supertest(app).post('/api/v1.1/updateUnit')
+                supertest(app).post('/api/v1/updateUnit')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({

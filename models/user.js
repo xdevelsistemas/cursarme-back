@@ -12,7 +12,7 @@ function callModule() {
     let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
-    const xDevSchema = require("multitenant/lib/xDevEntity").xDevSchema;
+    const xDevSchema = require("./multitenant/lib/xDevEntity")().xDevSchema;
     const mongooseRedisCache = require("../config/mongooseRedisCache");
     const ObjectId = mongoose.Schema.Types.ObjectId;
     const toObjectId = require('mongoose').Types.ObjectId;

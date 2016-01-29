@@ -12,7 +12,7 @@ function callModule(client) {
     let mongoose = require('mongoose');
     const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
-    const xDevSchema = require("lib/xDevEntity").xDevSchema;
+    const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");

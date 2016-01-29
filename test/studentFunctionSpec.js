@@ -3,7 +3,7 @@
     'use strict';
 
     const expect = require('chai').expect;
-    const configSpec = require('configTest');
+    const configSpec = require('../test/configTest');
 
 
     describe('STUDENT test', () => {
@@ -20,21 +20,22 @@
         };
 
 
-        describe('-> GET Students', () => {
+        /*describe('-> GET Students', () => {
             it('-> Buscando todos os estudantes', () => {
                 // note o return
                 return Student.all(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
                 });
             });
-        });
+        });*/
 
 
         describe('-> ADD Students', () => {
             it('-> Adicionando estudante', () => {
                 req.body = {
-                    name: "Estudante teste",
-                    address: {
+                    matNumber: "20161BSI0001",
+                    name: "João das Couves",
+                    address: [{
                         street: "Vale",
                         number: "123",
                         complement: "",
@@ -44,15 +45,19 @@
                         country: "Brasil",
                         postalCode: "01234560",
                         enabled: true
-                    },
-                    cnpj: "36625217000135",
-                    alias: "Teste",
-                    phone: "99999999999",
-                    website: "www.x.yyy.zz",
-                    director: "5697face19d3c9021d774496",
-                    directorAuthorization: "0123456789",
-                    secretary: "5697face19d3c9021d774497",
-                    secretaryAuthorization: "0123456789"
+                    }],
+                    birthDate: 764996400000,
+                    cpf: "01234567890",
+                    phones: [{
+                        description : "Home",
+                        phone : "2799999999"
+                    }],
+                    user: "5697face19d3c9021d774496",
+                    maritalStatus: "single",
+                    gender: "male",
+                    ethnicity: "brown",
+                    contacts : [{ name : "Maria", phone : "2799999999" }],
+                    documents: [{ description : "Comprovante de residência", imageUrl : "www.x.yyy.zz/imageDoc/1" }]
                 };
 
                 // note o return
@@ -63,7 +68,7 @@
         });
 
 
-        describe('-> UPDATE Students', () => {
+        /*describe('-> UPDATE Students', () => {
             it('-> Atualizando um estudate', () => {
                 req.body = {
                     _id: "56a7f65448e4662660c51bf0",
@@ -75,7 +80,7 @@
                     _verifyFields(res.body, res.statusCode, 200);
                 });
             });
-        });
+        });*/
     });
 
     /**
@@ -101,16 +106,16 @@
         expect(data).to.have.property("_id").and.not.to.be.null;
         expect(data).to.have.property("matNumber").and.not.to.be.null;
         expect(data).to.have.property("name").and.not.to.be.null;
-        expect(data).to.have.property("address").and.to.be.an('object');
-        expect(data.address).to.have.property("street").and.not.to.be.null;
-        expect(data.address).to.have.property("number").and.not.to.be.null;
-        expect(data.address).to.have.property("complement").and.not.to.be.null;
-        expect(data.address).to.have.property("neighborhood").and.not.to.be.null;
-        expect(data.address).to.have.property("city").and.not.to.be.null;
-        expect(data.address).to.have.property("state").and.not.to.be.null;
-        expect(data.address).to.have.property("country").and.not.to.be.null;
-        expect(data.address).to.have.property("postalCode").and.not.to.be.null;
-        expect(data.address).to.have.property("enabled").and.not.to.be.null;
+        expect(data).to.have.property("address").and.to.be.an('array');
+        expect(data.address[0]).to.have.property("street").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("number").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("complement").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("neighborhood").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("city").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("state").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("country").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("postalCode").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("enabled").and.not.to.be.null;
         expect(data).to.have.property("birthDate").and.not.to.be.null;
         expect(data).to.have.property("cpf").and.not.to.be.null;
         expect(data).to.have.property("rg").and.not.to.be.null;

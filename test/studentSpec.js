@@ -10,8 +10,7 @@
 
         describe('-> Unauthorized', () => {
             it('-> Requisição não autorizada', (done) => {
-                this.timeout(60000);
-                supertest(app).get('/api/v1.1/students')
+                supertest(app).get('/api/v1/students')
                     .set('Accept', 'application/json')
                     .end((err, res) => {
                         if (!!err) return done(err);
@@ -25,8 +24,7 @@
 
         describe('-> GET Student', function () {
             it('-> Buscando todos os estudantes', function (done) {
-                this.timeout(60000);
-                supertest(app).get('/api/v1.1/students')
+                supertest(app).get('/api/v1/students')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -40,8 +38,7 @@
 
         describe('-> ADD Student', function () {
             it('-> Adicionando estudante', function (done) {
-                this.timeout(60000);
-                supertest(app).post('/api/v1.1/addStudent')
+                supertest(app).post('/api/v1/addStudent')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -64,7 +61,7 @@
                             description : "Home",
                             phone : "2799999999"
                         }],
-                        user: ObjectId("5697face19d3c9021d774496"),
+                        user: "5697face19d3c9021d774496",
                         maritalStatus: "single",
                         gender: "male",
                         ethnicity: "brown",
@@ -88,8 +85,7 @@
             });
 
             it('-> Atualizando estudante', function (done) {
-                this.timeout(60000);
-                supertest(app).post('/api/v1.1/updateStudent')
+                supertest(app).post('/api/v1/updateStudent')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
@@ -140,16 +136,16 @@
         expect(data).to.have.property("_id").and.not.to.be.null;
         expect(data).to.have.property("matNumber").and.not.to.be.null;
         expect(data).to.have.property("name").and.not.to.be.null;
-        expect(data).to.have.property("address").and.to.be.an('object');
-        expect(data.address).to.have.property("street").and.not.to.be.null;
-        expect(data.address).to.have.property("number").and.not.to.be.null;
-        expect(data.address).to.have.property("complement").and.not.to.be.null;
-        expect(data.address).to.have.property("neighborhood").and.not.to.be.null;
-        expect(data.address).to.have.property("city").and.not.to.be.null;
-        expect(data.address).to.have.property("state").and.not.to.be.null;
-        expect(data.address).to.have.property("country").and.not.to.be.null;
-        expect(data.address).to.have.property("postalCode").and.not.to.be.null;
-        expect(data.address).to.have.property("enabled").and.not.to.be.null;
+        expect(data).to.have.property("address").and.to.be.an('array');
+        expect(data.address[0]).to.have.property("street").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("number").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("complement").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("neighborhood").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("city").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("state").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("country").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("postalCode").and.not.to.be.null;
+        expect(data.address[0]).to.have.property("enabled").and.not.to.be.null;
         expect(data).to.have.property("birthDate").and.not.to.be.null;
         expect(data).to.have.property("cpf").and.not.to.be.null;
         expect(data).to.have.property("rg").and.not.to.be.null;

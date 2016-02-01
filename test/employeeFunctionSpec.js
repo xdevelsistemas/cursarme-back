@@ -84,11 +84,11 @@
         });
 
 
-        describe('-> UPDATE Students', () => {
-            it('-> Atualizando um estudate', (done) => {
+        describe('-> UPDATE Employee', () => {
+            it('-> Atualizando um funcionário', (done) => {
                 req.body = {
                     _id: res.body._id,
-                    name: "Estudante teste - teste de update"
+                    name: "Funcionário atualizado"
                 };
 
                 // note o return

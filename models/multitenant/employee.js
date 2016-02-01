@@ -13,13 +13,12 @@ function callModule(client) {
     let extend = require('mongoose-schema-extend');
     let extendObj = require('extend');
     const Schema = mongoose.Schema;
-    const xDevSchema = require("lib/xDevEntity").xDevSchema;
+    const xDevSchema = require("./lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
-    const MongooseErr = require("../../services/MongooseErr");
-    const _ = require('lodash');
     const PersonSchema = require("../person");
     const modules = require("../enum/modules");
+    const _ = require('lodash');
 
 
 

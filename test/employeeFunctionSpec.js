@@ -6,11 +6,11 @@
     const configSpec = require('../test/configTest');
 
 
-    describe('STUDENT test', () => {
-        let newStudent = {};
-        const Student = require('../controllers/studentController')();
+    describe('EMPLOYEE test', () => {
+        let newEmployee = {};
+        const Employee = require('../controllers/employeeController')();
 
-        // req e res simulando as funções de endpoints
+        // simulando as funções de endpoints
         let req = { authInfo: {scope: 'ieses'}, user: {_id: "5697face19d3c9021d774497"} };
         let res = {
             statusCode: 0,
@@ -20,20 +20,28 @@
         };
 
 
-        describe('-> GET Students', () => {
-            it('-> Buscando todos os estudantes', () => {
+        describe('-> GET Employees', () => {
+            it('-> Buscando todos os funcionários', (done) => {
                 // note o return
-                return Student.all(req, res).then(() => {
+                return Employee.all(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
+                    done();
                 });
             });
         });
 
 
-        describe('-> ADD Students', () => {
-            it('-> Adicionando estudante', () => {
+        describe('-> ADD Employee', () => {
+            it('-> Adicionando funcionário', (done) => {
                 req.body = {
-                    matNumber: "20161BSI0001",
+                    admin: false,
+                    enabled: true,
+                    position: "Auxiliar administrativo",
+                    titration: "Nível médio",
+                    perms: [{
+                        unit: "56a7f65448e4662660c51bf0",
+                        modules: ["sales"]
+                    }],
                     name: "João das Couves",
                     address: [{
                         street: "Vale",
@@ -50,34 +58,44 @@
                     cpf: "01234567890",
                     phones: [{
                         description : "Home",
-                        phone : "2799999999"
+                        phone : "2733221100"
                     }],
                     user: "5697face19d3c9021d774496",
                     maritalStatus: "single",
                     gender: "male",
                     ethnicity: "brown",
-                    contacts : [{ name : "Maria", phone : "2799999999" }],
-                    documents: [{ description : "Comprovante de residência", imageUrl : "www.x.yyy.zz/imageDoc/1" }]
+                    contacts : [{
+                        name : "Home",
+                        phone : "2744332211"
+                    }],
+                    documents: [{
+                        description : "Comprovante de residência",
+                        imageUrl : "www.x.yyy.zz/imageDoc/1"
+                    }]
                 };
 
                 // note o return
-                return Student.add(req, res).then(() => {
+                return Employee.add(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 201);
+                    newEmployee = res.body;
+                    done();
                 });
             });
         });
 
 
         describe('-> UPDATE Students', () => {
-            it('-> Atualizando um estudate', () => {
+            it('-> Atualizando um estudate', (done) => {
                 req.body = {
-                    _id: "56a7f65448e4662660c51bf0",
+                    _id: res.body._id,
                     name: "Estudante teste - teste de update"
                 };
 
                 // note o return
-                return Student.update(req, res).then(() => {
+                return Employee.update(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
+                    newEmployee = res.body;
+                    done();
                 });
             });
         });
@@ -104,7 +122,14 @@
         expect(statusCode).to.equal(status);
         expect(data).to.be.an(type);
         expect(data).to.have.property("_id").and.not.to.be.null;
-        expect(data).to.have.property("matNumber").and.not.to.be.null;
+        expect(data).to.have.property("admin").and.not.to.be.null;
+        expect(data).to.have.property("enabled").and.not.to.be.null;
+        expect(data).to.have.property("position").and.not.to.be.null;
+        expect(data).to.have.property("titration").and.not.to.be.null;
+        expect(data).to.have.property("perms").and.to.be.an('array');
+        expect(data.perms[0]).to.have.property("unit").and.not.to.be.null;
+        expect(data.perms[0]).to.have.property("modules").and.to.be.an('array');
+        expect(data.perms[0].modules[0]).not.to.be.null;
         expect(data).to.have.property("name").and.not.to.be.null;
         expect(data).to.have.property("address").and.to.be.an('array');
         expect(data.address[0]).to.have.property("street").and.not.to.be.null;

@@ -10,8 +10,9 @@ function callModule(client) {
     "use strict";
 
     let mongoose = require('mongoose');
-    const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
+    let extendObj = require('extend');
+    const Schema = mongoose.Schema;
     const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
@@ -103,6 +104,18 @@ function callModule(client) {
                 extendObj(true, result, data);
                 return xDevSchema._update(entity, result, userId, useLog, 0, 'Estudante atualizado');
             })
+    };
+
+    /**
+     * Remove um estudante
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    StudentSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
     };
 
 

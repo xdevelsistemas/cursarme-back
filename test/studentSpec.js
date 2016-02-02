@@ -89,6 +89,7 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
+                        _id: newStudent._id,
                         address: {
                             street: "Ápice",
                             number: "321",

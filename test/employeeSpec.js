@@ -99,6 +99,7 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
+                        _id: newEmployee._id,
                         address: {
                             street: "Ápice",
                             number: "321",

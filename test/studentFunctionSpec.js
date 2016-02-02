@@ -63,6 +63,7 @@
                 // note o return
                 return Student.add(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 201);
+                    newStudent = res.body;
                 });
             });
         });
@@ -71,13 +72,14 @@
         describe('-> UPDATE Students', () => {
             it('-> Atualizando um estudate', () => {
                 req.body = {
-                    _id: "56a7f65448e4662660c51bf0",
+                    _id: newStudent._id,
                     name: "Estudante teste - teste de update"
                 };
 
                 // note o return
                 return Student.update(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
+                    newStudent = res.body;
                 });
             });
         });

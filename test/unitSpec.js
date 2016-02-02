@@ -46,29 +46,26 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        userId: ObjectId("5697face19d3c9021d774490"),
-                        unit: {
-                            name: "Unidade teste unitário",
-                            address: {
-                                street: "Vale",
-                                number: "123",
-                                complement: "",
-                                neighborhood: "Santo Antônio",
-                                city: "Vitória",
-                                state: "Espírito Santo",
-                                country: "Brasil",
-                                postalCode: "01234560",
-                                enabled: true
-                            },
-                            cnpj: "36625217000134",
-                            alias: "Teste",
-                            phone: "99999999999",
-                            website: "www.x.yyy.zz",
-                            director: ObjectId("5697face19d3c9021d774496"),
-                            directorAuthorization: "0123456789",
-                            secretary: ObjectId("5697face19d3c9021d774497"),
-                            secretaryAuthorization: "0123456789"
-                        }
+                        name: "Unidade teste unitário",
+                        address: {
+                            street: "Vale",
+                            number: "123",
+                            complement: "",
+                            neighborhood: "Santo Antônio",
+                            city: "Vitória",
+                            state: "Espírito Santo",
+                            country: "Brasil",
+                            postalCode: "01234560",
+                            enabled: true
+                        },
+                        cnpj: "36625217000134",
+                        alias: "Teste",
+                        phone: "99999999999",
+                        website: "www.x.yyy.zz",
+                        director: ObjectId("5697face19d3c9021d774496"),
+                        directorAuthorization: "0123456789",
+                        secretary: ObjectId("5697face19d3c9021d774497"),
+                        secretaryAuthorization: "0123456789"
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {
@@ -88,6 +85,7 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
+                        _id: newUnit._id,
                         address: {
                             street: "Ápice",
                             number: "321",

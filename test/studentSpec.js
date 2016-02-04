@@ -23,7 +23,7 @@
         });
 
         describe('-> GET Student', function () {
-            it('-> Buscando todos os estudantes', function (done) {
+            it('-> Buscando todos os alunos', function (done) {
                 supertest(app).get('/api/v1/students')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
@@ -37,7 +37,7 @@
         });
 
         describe('-> ADD Student', function () {
-            it('-> Adicionando estudante', function (done) {
+            it('-> Adicionando aluno', function (done) {
                 supertest(app).post('/api/v1/addStudent')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
@@ -84,7 +84,7 @@
                     });
             });
 
-            it('-> Atualizando estudante', function (done) {
+            it('-> Atualizando aluno', function (done) {
                 supertest(app).post('/api/v1/updateStudent')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')

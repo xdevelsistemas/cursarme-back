@@ -21,7 +21,7 @@
 
 
         describe('-> GET Students', () => {
-            it('-> Buscando todos os estudantes', () => {
+            it('-> Buscando todos os alunos', () => {
                 // note o return
                 return Student.all(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
@@ -31,7 +31,7 @@
 
 
         describe('-> ADD Students', () => {
-            it('-> Adicionando estudante', () => {
+            it('-> Adicionando aluno', () => {
                 req.body = {
                     matNumber: "20161BSI0001",
                     name: "João das Couves",
@@ -73,7 +73,7 @@
             it('-> Atualizando um estudate', () => {
                 req.body = {
                     _id: newStudent._id,
-                    name: "Estudante teste - teste de update"
+                    name: "Aluno teste - teste de update"
                 };
 
                 // note o return

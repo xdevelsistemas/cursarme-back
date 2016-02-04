@@ -9,7 +9,7 @@ module.exports = () => {
     const ValidValues = require("../services/validValues");
 
     /**
-     * lista todas os estudantes
+     * lista todas os alunos
      * @param req
      * @param res
      */
@@ -22,7 +22,7 @@ module.exports = () => {
     };
 
     /**
-     * Adiciona um estudante
+     * Adiciona um aluno
      * @param req
      * @param res
      */
@@ -43,7 +43,7 @@ module.exports = () => {
     };
 
     /**
-     * Atualiza um estudante
+     * Atualiza um aluno
      * @param req
      * @param res
      */

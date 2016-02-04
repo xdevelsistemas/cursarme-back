@@ -45,7 +45,7 @@ function callModule(client) {
 
 
     /**
-     * Busca todos os estudantes
+     * Busca todos os alunos
      * @returns {*}
      */
     // TODO Converter o bloco de código abaixo para es6
@@ -78,12 +78,12 @@ function callModule(client) {
         stud.contacts = data.contacts;
         stud.documents = data.documents;
 
-        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Estudante adicionado');
+        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Aluno adicionado');
     };
 
 
     /**
-     * Atualiza um estudante
+     * Atualiza um aluno
      * @param userId
      * @param useLog
      * @param entity
@@ -102,12 +102,12 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Estudante atualizado');
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Aluno atualizado');
             })
     };
 
     /**
-     * Remove um estudante
+     * Remove um aluno
      * @param userId
      * @param useLog
      * @param entity

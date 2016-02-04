@@ -21,7 +21,8 @@
 
 
         describe('-> GET Employees', () => {
-            it('-> Buscando todos os funcionários', (done) => {
+            it('-> Buscando todos os funcionários', function(done) {
+                this.timeout(1000);
                 // note o return
                 return Employee.all(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
@@ -32,7 +33,8 @@
 
 
         describe('-> ADD Employee', () => {
-            it('-> Adicionando funcionário', (done) => {
+            it('-> Adicionando funcionário', function(done) {
+                this.timeout(60000);
                 req.body = {
                     admin: false,
                     enabled: true,
@@ -85,7 +87,8 @@
 
 
         describe('-> UPDATE Employee', () => {
-            it('-> Atualizando um funcionário', (done) => {
+            it('-> Atualizando um funcionário', function(done) {
+                this.timeout(60000);
                 req.body = {
                     _id: res.body._id,
                     name: "Funcionário atualizado"

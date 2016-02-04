@@ -3,7 +3,7 @@
     'use strict';
 
     const expect = require('chai').expect;
-    const configSpec = require('configTest');
+    const configSpec = require('./configTest');
 
 
     describe('UNIT test', () => {
@@ -21,20 +21,31 @@
 
 
         describe('-> GET Units', () => {
-            it('-> Buscando todas as unidades', () => {
+            it('-> Buscando todas as unidades', (done) => {
                 // note o return
                 return Unit.all(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
+                    done();
                 });
             });
         });
 
 
         describe('-> ADD Units', () => {
-            it('-> Adicionando unidade', () => {
+            it('-> Adicionando unidade', (done) => {
                 req.body = {
                     name: "Unidade teste",
-                    address: { street: "Vale", number: "123", complement: "", neighborhood: "Santo Antônio", city: "Vitória", state: "Espírito Santo", country: "Brasil", postalCode: "01234560", enabled: true },
+                    address: {
+                        street: "Vale",
+                        number: "123",
+                        complement: "",
+                        neighborhood: "Santo Antônio",
+                        city: "Vitória",
+                        state: "Espírito Santo",
+                        country: "Brasil",
+                        postalCode: "01234560",
+                        enabled: true
+                    },
                     cnpj: "36625217000135",
                     alias: "Teste",
                     phone: "99999999999",
@@ -48,21 +59,42 @@
                 // note o return
                 return Unit.add(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 201);
+                    newUnit = res.body;
+                    done();
                 });
             });
         });
 
 
         describe('-> UPDATE Units', () => {
-            it('-> Atualizando uma unidade', () => {
+            it('-> Atualizando uma unidade', (done) => {
                 req.body = {
-                    _id: "56a7f65448e4662660c51bf0",
-                    name: "Unidade teste unitário - teste de update"
+                    _id: newUnit._id,
+                    name: "Unidade teste - teste de update"
                 };
 
                 // note o return
                 return Unit.update(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
+                    newUnit = res.body;
+                    done();
+                });
+            });
+        });
+
+
+        describe('DELETE Unit', () => {
+            it('-> Removendo unidade', (done) => {
+                req.body = {
+                    _id: newUnit._id
+                };
+
+                // note o return
+                return Unit.delete(req, res).then(() => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property("success").and.to.be.true;
+                    done();
                 });
             });
         });

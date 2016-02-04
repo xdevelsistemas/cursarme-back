@@ -122,5 +122,18 @@ function callModule(client) {
             })
     };
 
+    /**
+     * Remove uma unidade
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    UnitSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
+    };
+
+
     return xDevModel.model(client,'Unit',UnitSchema);
 }

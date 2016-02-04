@@ -10,8 +10,9 @@ function callModule(client) {
     "use strict";
 
     let mongoose = require('mongoose');
-    const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
+    let extendObj = require('extend');
+    const Schema = mongoose.Schema;
     const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
@@ -44,7 +45,7 @@ function callModule(client) {
 
 
     /**
-     * Busca todos os estudantes
+     * Busca todos os alunos
      * @returns {*}
      */
     // TODO Converter o bloco de código abaixo para es6
@@ -77,12 +78,12 @@ function callModule(client) {
         stud.contacts = data.contacts;
         stud.documents = data.documents;
 
-        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Estudante adicionado');
+        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Aluno adicionado');
     };
 
 
     /**
-     * Atualiza um estudante
+     * Atualiza um aluno
      * @param userId
      * @param useLog
      * @param entity
@@ -101,10 +102,21 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Estudante atualizado');
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Aluno atualizado');
             })
     };
 
+    /**
+     * Remove um aluno
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    StudentSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
+    };
 
 
     return xDevModel.model(client,'Student',StudentSchema);

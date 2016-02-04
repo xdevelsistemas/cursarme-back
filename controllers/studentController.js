@@ -9,7 +9,7 @@ module.exports = () => {
     const ValidValues = require("../services/validValues");
 
     /**
-     * lista todas os estudantes
+     * lista todas os alunos
      * @param req
      * @param res
      */
@@ -22,7 +22,7 @@ module.exports = () => {
     };
 
     /**
-     * Adiciona um estudante
+     * Adiciona um aluno
      * @param req
      * @param res
      */
@@ -43,7 +43,7 @@ module.exports = () => {
     };
 
     /**
-     * Atualiza um estudante
+     * Atualiza um aluno
      * @param req
      * @param res
      */
@@ -62,6 +62,22 @@ module.exports = () => {
             .catch((err) => {
                 return MongooseErr.apiGetMongooseErr(err, res);
             });
+    };
+
+    /**
+     * Remove um aluno
+     * @param req
+     * @param res
+     * @returns {Promise.<T>}
+     */
+    studentController.delete = (req, res) => {
+        return StudentModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
+            .then(() => {
+                return res.status(200).json({success : true});
+            })
+            .catch((erro) => {
+                return MongooseErr.apiGetMongooseErr(erro, res);
+            })
     };
 
 

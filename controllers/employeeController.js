@@ -1,22 +1,20 @@
-/**
- * Created by clayton on 21/08/15.
- */
+
 module.exports = () => {
     "use strict";
 
-    let unitController = {};
+    let employeeController = {};
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
-    const UnitModel = require('../models/multitenant/unit');
+    const EmployeeModel = require('../models/multitenant/employee');
     const ValidValues = require("../services/validValues");
 
     /**
-     * lista todas as unidades
+     * lista todos os funcionários
      * @param req
      * @param res
      */
-    unitController.all = (req, res) => {
-        return UnitModel(getClient(req)).all()
+    employeeController.all = (req, res) => {
+        return EmployeeModel(getClient(req)).all()
             .then((data) => {
                 return res.status(200).json(data);
             })
@@ -24,17 +22,17 @@ module.exports = () => {
     };
 
     /**
-     * Adiciona uma unidade
+     * Adiciona um funcionário
      * @param req
      * @param res
      */
-    unitController.add = (req, res) => {
-        // validando os dados da unidade em req.body
+    employeeController.add = (req, res) => {
+        // validando os dados
         /*if (!ValidValues.validValues(req.body)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
 
-        return UnitModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
+        return EmployeeModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
 
                 return res.status(201).json(data);
@@ -45,18 +43,17 @@ module.exports = () => {
     };
 
     /**
-     * Atualiza uma unidade
+     * Atualiza os dados do funcionário
      * @param req
      * @param res
      */
-    unitController.update = (req, res) => {
-
-        // validando os dados da unidade em req.body
+    employeeController.update = (req, res) => {
+        // validando os dados
         /*if (!ValidValues.validValues(req.body)) {
          return MongooseErr.apiCallErr("Dados inválidos", res, 400);
          }*/
 
-        return UnitModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
+        return EmployeeModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
             .then((data) => {
 
                 return res.status(200).json(data);
@@ -66,22 +63,7 @@ module.exports = () => {
             });
     };
 
-    /**
-     * Remove uma unidade
-     * @param req
-     * @param res
-     * @returns {Promise.<T>}
-     */
-    unitController.delete = (req, res) => {
-        return UnitModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
-            .then(() => {
-                return res.status(200).json({success : true});
-            })
-            .catch((erro) => {
-                return MongooseErr.apiGetMongooseErr(erro, res);
-            })
-    };
 
 
-    return unitController;
+    return employeeController;
 };

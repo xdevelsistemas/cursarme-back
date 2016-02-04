@@ -5,12 +5,12 @@
     const expect = require('chai').expect;
     const app = require('../app');
 
-    describe('STUDENT test : endpoint', () => {
-        let newStudent = {};
+    describe('EMPLOYEE test : endpoint', () => {
+        let newEmployee = {};
 
         describe('-> Unauthorized', () => {
             it('-> Requisição não autorizada', (done) => {
-                supertest(app).get('/api/v1/students')
+                supertest(app).get('/api/v1/employees')
                     .set('Accept', 'application/json')
                     .end((err, res) => {
                         if (!!err) return done(err);
@@ -22,9 +22,9 @@
             });
         });
 
-        describe('-> GET Student', function () {
-            it('-> Buscando todos os alunos', function (done) {
-                supertest(app).get('/api/v1/students')
+        describe('-> GET Employees', function () {
+            it('-> Buscando todos os funcionários', function (done) {
+                supertest(app).get('/api/v1/employees')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .end(function (err, res) {
@@ -36,14 +36,20 @@
             });
         });
 
-
-        describe('-> ADD Student', function () {
-            it('-> Adicionando aluno', function (done) {
-                supertest(app).post('/api/v1/addStudent')
+        describe('-> ADD Employee', function () {
+            it('-> Adicionando funcionários', function (done) {
+                supertest(app).post('/api/v1/addEmployee')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        matNumber: "20161BSI0001",
+                        admin: false,
+                        enabled: true,
+                        position: "Auxiliar administrativo",
+                        titration: "Nível médio",
+                        perms: [{
+                            unit: "56a7f65448e4662660c51bf0",
+                            modules: ["sales"]
+                        }],
                         name: "João das Couves",
                         address: [{
                             street: "Vale",
@@ -60,15 +66,15 @@
                         cpf: "01234567890",
                         phones: [{
                             description : "Home",
-                            phone : "2799999999"
+                            phone : "2733221100"
                         }],
                         user: "5697face19d3c9021d774496",
                         maritalStatus: "single",
                         gender: "male",
                         ethnicity: "brown",
                         contacts : [{
-                            name : "Maria",
-                            phone : "2799999999"
+                            name : "Home",
+                            phone : "2744332211"
                         }],
                         documents: [{
                             description : "Comprovante de residência",
@@ -80,20 +86,20 @@
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
                         _verifyFields(res.body, res.status, 201);
-                        newStudent = res.body;
+                        newEmployee = res.body;
                         done();
                     });
             });
         });
 
 
-        describe('UPDATE Student', () => {
-            it('-> Atualizando aluno', function (done) {
-                supertest(app).post('/api/v1/updateStudent')
+        describe('-> UPDATE Employee', function () {
+            it('-> Atualizando funcionário', function (done) {
+                supertest(app).post('/api/v1/updateEmployee')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        _id: newStudent._id,
+                        _id: newEmployee._id,
                         address: {
                             street: "Ápice",
                             number: "321",
@@ -111,20 +117,20 @@
                         if (!!err) return done(err);
                         expect(err).to.equal(null);
                         _verifyFields(res.body, res.status, 200);
-                        newStudent = res.body;
+                        newEmployee = res.body;
                         done();
                     });
             });
         });
 
 
-        describe('DELETE Student', () => {
-            it('-> Removendo aluno', (done) => {
-                supertest(app).post('/api/v1/deleteStudent')
+        describe('DELETE Employee', () => {
+            it('-> Removendo funcionário', (done) => {
+                supertest(app).post('/api/v1/deleteEmployee')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        _id: newStudent._id
+                        _id: newEmployee._id
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {
@@ -160,7 +166,14 @@
         expect(statusCode).to.equal(status);
         expect(data).to.be.an(type);
         expect(data).to.have.property("_id").and.not.to.be.null;
-        expect(data).to.have.property("matNumber").and.not.to.be.null;
+        expect(data).to.have.property("admin").and.not.to.be.null;
+        expect(data).to.have.property("enabled").and.not.to.be.null;
+        expect(data).to.have.property("position").and.not.to.be.null;
+        expect(data).to.have.property("titration").and.not.to.be.null;
+        expect(data).to.have.property("perms").and.to.be.an('array');
+        expect(data.perms[0]).to.have.property("unit").and.not.to.be.null;
+        expect(data.perms[0]).to.have.property("modules").and.to.be.an('array');
+        expect(data.perms[0].modules[0]).not.to.be.null;
         expect(data).to.have.property("name").and.not.to.be.null;
         expect(data).to.have.property("address").and.to.be.an('array');
         expect(data.address[0]).to.have.property("street").and.not.to.be.null;

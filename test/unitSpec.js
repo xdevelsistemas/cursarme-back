@@ -24,6 +24,7 @@
             });
         });
 
+
         describe('-> GET Unit', () => {
             it('-> Buscando todos as unidades', (done) => {
                 this.timeout(60000);
@@ -39,6 +40,7 @@
             });
         });
 
+
         describe('-> ADD Unit', () => {
             it('-> Adicionando unidade', (done) => {
                 this.timeout(60000);
@@ -46,29 +48,26 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
-                        userId: ObjectId("5697face19d3c9021d774490"),
-                        unit: {
-                            name: "Unidade teste unitário",
-                            address: {
-                                street: "Vale",
-                                number: "123",
-                                complement: "",
-                                neighborhood: "Santo Antônio",
-                                city: "Vitória",
-                                state: "Espírito Santo",
-                                country: "Brasil",
-                                postalCode: "01234560",
-                                enabled: true
-                            },
-                            cnpj: "36625217000134",
-                            alias: "Teste",
-                            phone: "99999999999",
-                            website: "www.x.yyy.zz",
-                            director: ObjectId("5697face19d3c9021d774496"),
-                            directorAuthorization: "0123456789",
-                            secretary: ObjectId("5697face19d3c9021d774497"),
-                            secretaryAuthorization: "0123456789"
-                        }
+                        name: "Unidade teste unitário",
+                        address: {
+                            street: "Vale",
+                            number: "123",
+                            complement: "",
+                            neighborhood: "Santo Antônio",
+                            city: "Vitória",
+                            state: "Espírito Santo",
+                            country: "Brasil",
+                            postalCode: "01234560",
+                            enabled: true
+                        },
+                        cnpj: "36625217000134",
+                        alias: "Teste",
+                        phone: "99999999999",
+                        website: "www.x.yyy.zz",
+                        director: ObjectId("5697face19d3c9021d774496"),
+                        directorAuthorization: "0123456789",
+                        secretary: ObjectId("5697face19d3c9021d774497"),
+                        secretaryAuthorization: "0123456789"
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {
@@ -81,6 +80,7 @@
             });
         });
 
+
         describe('UPDATE Unit', () => {
             it('-> Atualizando unidade', (done) => {
                 this.timeout(60000);
@@ -88,6 +88,7 @@
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
                     .set('Accept', 'application/json')
                     .send({
+                        _id: newUnit._id,
                         address: {
                             street: "Ápice",
                             number: "321",
@@ -106,6 +107,27 @@
                         expect(err).to.equal(null);
                         _verifyFields(res.body, res.status, 200);
                         newUnit = res.body;
+                        done();
+                    });
+            });
+        });
+
+
+        describe('DELETE Unit', () => {
+            it('-> Removendo unidade', (done) => {
+                supertest(app).post('/api/v1/deleteUnit')
+                    .set('authorization', 'Bearer ' + process.env.API_TOKEN)
+                    .set('Accept', 'application/json')
+                    .send({
+                        _id: newUnit._id
+                    })
+                    .expect('Content-Type', /json/)
+                    .end(function (err, res) {
+                        if (!!err) return done(err);
+                        expect(err).to.equal(null);
+                        expect(res.status).to.equal(200);
+                        expect(res.body).to.be.an('object');
+                        expect(res.body).to.have.property("success").and.to.be.true;
                         done();
                     });
             });

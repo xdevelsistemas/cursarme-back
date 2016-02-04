@@ -87,10 +87,9 @@
 
 
         describe('-> UPDATE Employee', () => {
-            it('-> Atualizando um funcionário', function(done) {
-                this.timeout(60000);
+            it('-> Atualizando um funcionário', (done) => {
                 req.body = {
-                    _id: res.body._id,
+                    _id: newEmployee._id,
                     name: "Funcionário atualizado"
                 };
 
@@ -98,6 +97,23 @@
                 return Employee.update(req, res).then(() => {
                     _verifyFields(res.body, res.statusCode, 200);
                     newEmployee = res.body;
+                    done();
+                });
+            });
+        });
+
+
+        describe('DELETE Employee', () => {
+            it('-> Removendo funcionário', (done) => {
+                req.body = {
+                    _id: newEmployee._id
+                };
+
+                // note o return
+                return Employee.delete(req, res).then(() => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property("success").and.to.be.true;
                     done();
                 });
             });

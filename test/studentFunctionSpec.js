@@ -83,6 +83,23 @@
                 });
             });
         });
+
+
+        describe('DELETE Student', () => {
+            it('-> Removendo aluno', (done) => {
+                req.body = {
+                    _id: newStudent._id
+                };
+
+                // note o return
+                return Student.delete(req, res).then(() => {
+                    expect(res.status).to.equal(200);
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property("success").and.to.be.true;
+                    done();
+                });
+            });
+        });
     });
 
     /**

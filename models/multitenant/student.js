@@ -119,6 +119,5 @@ function callModule(client) {
     };
 
 
-
     return xDevModel.model(client,'Student',StudentSchema);
 }

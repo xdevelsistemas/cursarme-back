@@ -83,8 +83,8 @@
         });
 
 
-        describe('-> DELETE Units', () => {
-            it('-> Removendo uma unidade', (done) => {
+        describe('DELETE Unit', () => {
+            it('-> Removendo unidade', (done) => {
                 req.body = {
                     _id: newUnit._id
                 };

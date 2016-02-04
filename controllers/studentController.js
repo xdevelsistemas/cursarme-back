@@ -64,6 +64,22 @@ module.exports = () => {
             });
     };
 
+    /**
+     * Remove um aluno
+     * @param req
+     * @param res
+     * @returns {Promise.<T>}
+     */
+    studentController.delete = (req, res) => {
+        return StudentModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
+            .then(() => {
+                return res.status(200).json({success : true});
+            })
+            .catch((erro) => {
+                return MongooseErr.apiGetMongooseErr(erro, res);
+            })
+    };
+
 
 
     return studentController;

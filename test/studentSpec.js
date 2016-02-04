@@ -36,6 +36,7 @@
             });
         });
 
+
         describe('-> ADD Student', function () {
             it('-> Adicionando aluno', function (done) {
                 supertest(app).post('/api/v1/addStudent')
@@ -83,7 +84,10 @@
                         done();
                     });
             });
+        });
 
+
+        describe('UPDATE Student', () => {
             it('-> Atualizando aluno', function (done) {
                 supertest(app).post('/api/v1/updateStudent')
                     .set('authorization', 'Bearer ' + process.env.API_TOKEN)
@@ -108,6 +112,27 @@
                         expect(err).to.equal(null);
                         _verifyFields(res.body, res.status, 200);
                         newStudent = res.body;
+                        done();
+                    });
+            });
+        });
+
+
+        describe('DELETE Student', () => {
+            it('-> Removendo aluno', (done) => {
+                supertest(app).post('/api/v1/deleteStudent')
+                    .set('authorization', 'Bearer ' + process.env.API_TOKEN)
+                    .set('Accept', 'application/json')
+                    .send({
+                        _id: newStudent._id
+                    })
+                    .expect('Content-Type', /json/)
+                    .end(function (err, res) {
+                        if (!!err) return done(err);
+                        expect(err).to.equal(null);
+                        expect(res.status).to.equal(200);
+                        expect(res.body).to.be.an('object');
+                        expect(res.body).to.have.property("success").and.to.be.true;
                         done();
                     });
             });

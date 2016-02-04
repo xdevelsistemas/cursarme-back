@@ -122,6 +122,27 @@
                     });
             });
         });
+
+
+        describe('DELETE Employee', () => {
+            it('-> Removendo funcionário', (done) => {
+                supertest(app).post('/api/v1/deleteEmployee')
+                    .set('authorization', 'Bearer ' + process.env.API_TOKEN)
+                    .set('Accept', 'application/json')
+                    .send({
+                        _id: newEmployee._id
+                    })
+                    .expect('Content-Type', /json/)
+                    .end(function (err, res) {
+                        if (!!err) return done(err);
+                        expect(err).to.equal(null);
+                        expect(res.status).to.equal(200);
+                        expect(res.body).to.be.an('object');
+                        expect(res.body).to.have.property("success").and.to.be.true;
+                        done();
+                    });
+            });
+        });
     });
 
     /**

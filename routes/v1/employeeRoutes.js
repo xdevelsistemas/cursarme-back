@@ -21,6 +21,9 @@ function callModule (app,passport) {
     app.post('/api/v1/updateEmployee',autentica(passport), employeeController().update);
 
 
+    app.post('/api/v1/deleteEmployee',autentica(passport), employeeController().delete);
+
+
     return app;
 }
 

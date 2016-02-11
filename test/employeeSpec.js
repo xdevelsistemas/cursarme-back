@@ -100,7 +100,7 @@
                     .set('Accept', 'application/json')
                     .send({
                         _id: newEmployee._id,
-                        address: {
+                        address: [{
                             street: "Ápice",
                             number: "321",
                             complement: "",
@@ -110,7 +110,7 @@
                             country: "Brasil",
                             postalCode: "06543210",
                             enabled: true
-                        }
+                        }]
                     })
                     .expect('Content-Type', /json/)
                     .end(function (err, res) {

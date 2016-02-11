@@ -18,7 +18,7 @@ module.exports = () => {
             .then((data) => {
                 return res.status(200).json(data);
             })
-            .catch((erro) => MongooseErr.apiGetMongooseErr(erro,res));
+            .catch((err) => MongooseErr.apiGetMongooseErr(err,res));
     };
 
     /**
@@ -75,11 +75,27 @@ module.exports = () => {
             .then(() => {
                 return res.status(200).json({success : true});
             })
-            .catch((erro) => {
-                return MongooseErr.apiGetMongooseErr(erro, res);
+            .catch((err) => {
+                return MongooseErr.apiGetMongooseErr(err, res);
             })
     };
 
+
+    /**
+     * Verifica a situação do aluno com a instituição
+     * @param cpf
+     * @returns {{status: boolean}}
+     */
+    studentController.verifCpf = (cpf) => {
+        return StudentModel(getClient(req)).verifCpf(cpf)
+            .then((data) => {
+                // TOdo verificar estrutura e campos para os dados de retorno
+                return {status: data.status};
+            })
+            .catch((err) => {
+                return MongooseErr.apiGetMongooseErr(err, res);
+            });
+    };
 
 
     return studentController;

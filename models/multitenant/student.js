@@ -118,6 +118,10 @@ function callModule(client) {
         return this.remove({"_id": data._id});
     };
 
+    StudentSchema.statics.verifCpf = function(cpf) {
+        // TOdo verificar busca
+    };
+
 
     return xDevModel.model(client,'Student',StudentSchema);
 }

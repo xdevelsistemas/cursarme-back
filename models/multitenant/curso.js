@@ -36,19 +36,19 @@ function callModule(client) {
         /**
          * habilitação -
          */
-        habilitação: { type: Number, required: true },
+        license: { type: String, required: true },
         /**
          * resolução -
          */
-        resolução: { type: Number, required: true },
+        resolution: { type: String, required: true },
         /**
          * autorização -
          */
-        autorização: { type: Number, required: true },
+        authorization: { type: String, required: true },
         /**
          * reconhecimento -
          */
-        reconhecimento: { type: Number, required: true }
+        recognition: { type: String, required: true }
     });
 
     /**

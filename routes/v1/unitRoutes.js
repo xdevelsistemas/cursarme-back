@@ -8,20 +8,20 @@ function callModule (app,passport) {
      * Obtém todas as unidades
      */
 
-    const unitController = require('../../controllers/unitController');
+    const unitController = require('../../controllers/unitController')();
 
 
 
-    app.get('/api/v1/units',autentica(passport), unitController().all);
+    app.get('/api/v1/units',autentica(passport), unitController.all);
 
 
-    app.post('/api/v1/addUnit',autentica(passport), unitController().add);
+    app.post('/api/v1/addUnit',autentica(passport), unitController.add);
 
 
-    app.post('/api/v1/updateUnit',autentica(passport), unitController().update);
+    app.post('/api/v1/updateUnit',autentica(passport), unitController.update);
 
 
-    app.post('/api/v1/deleteUnit',autentica(passport), unitController().delete);
+    app.post('/api/v1/deleteUnit',autentica(passport), unitController.delete);
 
 
     return app;

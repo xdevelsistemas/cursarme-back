@@ -35,7 +35,7 @@ function callModule(client) {
      */
     let SupplierSchema = PersonSchema.extend({
         cnpj: {type: String, required: true , unique: true}
-
+        // TOdo adicionar os outros campos
     });
 
 

@@ -28,7 +28,7 @@ module.exports = () => {
      */
     studentController.add = (req, res) => {
         // validando os dados da unidade em req.body
-        /*if (!ValidValues.validValues(req.body)) {
+        /*if (!ValidValues.validValues(req.body, ["complement"])) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
 

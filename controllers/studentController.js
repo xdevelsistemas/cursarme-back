@@ -9,7 +9,7 @@ module.exports = () => {
     const ValidValues = require("../services/validValues");
 
     /**
-     * lista todas os alunos
+     * lista todos os alunos
      * @param req
      * @param res
      */
@@ -27,7 +27,6 @@ module.exports = () => {
      * @param res
      */
     studentController.add = (req, res) => {
-        // validando os dados da unidade em req.body
         /*if (!ValidValues.validValues(req.body, ["complement"])) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }*/
@@ -48,8 +47,6 @@ module.exports = () => {
      * @param res
      */
     studentController.update = (req, res) => {
-
-        // validando os dados da unidade em req.body
         /*if (!ValidValues.validValues(req.body)) {
          return MongooseErr.apiCallErr("Dados inválidos", res, 400);
          }*/

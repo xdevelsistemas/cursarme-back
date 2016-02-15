@@ -21,7 +21,7 @@ function callModule (app,passport) {
     app.post('/api/v1/updateUnit',autentica(passport), unitController.update);
 
 
-    app.post('/api/v1/deleteUnit',autentica(passport), unitController.delete);
+    app.delete('/api/v1/deleteUnit',autentica(passport), unitController.delete);
 
 
     return app;

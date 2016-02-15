@@ -17,7 +17,7 @@ function callModule (app,passport) {
     app.post('/api/v1/updateStudent',autentica(passport), studentController.update);
 
 
-    app.post('/api/v1/deleteStudent',autentica(passport), studentController.delete);
+    app.delete('/api/v1/deleteStudent',autentica(passport), studentController.delete);
 
 
     app.post('/api/v1/verifCpf', autentica(passport), studentController.verifCpf);

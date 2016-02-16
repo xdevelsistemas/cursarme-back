@@ -8,6 +8,9 @@ function callModule (app,passport) {
     const studentController = require('../../controllers/studentController')();
 
 
+    app.get('/api/v1/student',autentica(passport), studentController.one);
+
+
     app.get('/api/v1/students',autentica(passport), studentController.all);
 
 

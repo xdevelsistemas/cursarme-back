@@ -8,6 +8,24 @@ module.exports = () => {
     const StudentModel = require('../models/multitenant/student');
     const ValidValues = require("../services/validValues");
 
+
+    /**
+     * Busca um aluno com o número de matrícula
+     * @param req
+     * @param res
+     */
+    studentController.one = (req, res) => {
+        if (!!req.body.matNumber || !!req.body.name) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
+
+        return StudentModel(getClient(req)).findByMatNumber(req.body)
+            .then((data) => {
+                return res.status(200).json(data);
+            })
+            .catch((err) => MongooseErr.apiGetMongooseErr(err,res));
+    };
+
     /**
      * lista todos os alunos
      * @param req

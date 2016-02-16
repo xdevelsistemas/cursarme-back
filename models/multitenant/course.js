@@ -34,6 +34,10 @@ function callModule(client) {
     let CourseSchema = xDevSchema.extend({
         name: { type: String, required: true },
         /**
+         * Area do curso
+         */
+        area: { type: Schema.Types.ObjectId, ref: client + 'Area', required: true },
+        /**
          * habilitação -
          */
         license: { type: String, required: true },
@@ -55,6 +59,66 @@ function callModule(client) {
      * enabling caching
      */
     CourseSchema.set('redisCache', true);
+
+
+    /**
+     * Busca todos os cursos
+     * @returns {*}
+     */
+    // TODO Converter o bloco de código abaixo para es6
+    // mantido código no formato antigo por problemas de escopo com o modelo
+    CourseSchema.statics.all = function() { return this.find({})};
+
+    /**
+     * Adiciona um curso
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    CourseSchema.statics.add = function(userId, useLog, entity, data) {
+        let course = this();
+
+        // TOdo adicoinar campos para os dados de curso
+        return xDevSchema._add(entity, course, userId, useLog, 1, 'Curso adicionado');
+    };
+
+    /**
+     * Atualiza um curso
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    CourseSchema.statics.update = function(userId, useLog, entity, data) {
+        let CourseModel = this;
+
+        return CourseModel.findOne({_id: data._id})
+            .then((result) => {
+                if (!result) {
+                    let err = new Error("Dados inválidos");
+                    err.status = 400;
+                    throw err;
+                }
+
+                extendObj(true, result, data);
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Curso atualizado');
+            })
+    };
+
+    /**
+     * Remove um curso
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    CourseSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
+    };
 
 
     return xDevModel.model(client,'Course',CourseSchema);

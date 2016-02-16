@@ -8,6 +8,9 @@ function callModule (app,passport) {
     const studentController = require('../../controllers/studentController')();
 
 
+    app.get('/api/v1/student',autentica(passport), studentController.one);
+
+
     app.get('/api/v1/students',autentica(passport), studentController.all);
 
 
@@ -17,7 +20,7 @@ function callModule (app,passport) {
     app.post('/api/v1/updateStudent',autentica(passport), studentController.update);
 
 
-    app.post('/api/v1/deleteStudent',autentica(passport), studentController.delete);
+    app.delete('/api/v1/deleteStudent',autentica(passport), studentController.delete);
 
 
     app.post('/api/v1/verifCpf', autentica(passport), studentController.verifCpf);

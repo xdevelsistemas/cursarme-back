@@ -24,6 +24,8 @@ function callModule() {
         state : { type: String , required : true } ,
         country: { type: String , required : true } ,
         postalCode : { type: String , required : true },
-        enabled : { type: Boolean , required : true , default: true }
+        enabled : { type: Boolean , required : true , default: true },
+        description: { type: String, required: true},
+        default: { type: Boolean, required: true, default: true}
     });
 }

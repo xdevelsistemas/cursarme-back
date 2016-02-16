@@ -43,6 +43,14 @@ function callModule(client) {
      */
     StudentSchema.set('redisCache', true);
 
+    /**
+     * Busca um aluno pelo nome e matrícula
+     * @param data
+     * @returns {*|Query|Promise}
+     */
+    StudentSchema.statics.findByMatNumber = function(data) {
+        return this.findOne({$or: [{matNumber: data.matNumber}, {name: data.name}]});
+    };
 
     /**
      * Busca todos os alunos
@@ -119,7 +127,8 @@ function callModule(client) {
     };
 
     StudentSchema.statics.verifCpf = function(cpf) {
-        // TOdo verificar busca
+        // TOdo definir buscador
+
     };
 
 

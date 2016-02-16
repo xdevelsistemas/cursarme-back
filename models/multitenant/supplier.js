@@ -119,6 +119,7 @@ function callModule(client) {
      * @returns {*}
      */
     SupplierSchema.statics.delete = function(userId, useLog, entity, data) {
+        // TOdo aperfeiçoar delete
         return this.remove({"_id": data._id});
     };
 

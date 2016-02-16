@@ -120,5 +120,10 @@ function callModule(client) {
     };
 
 
+    xDevEntity.xDevSchema._delete = (entity, obj, userId, useLog, op, text) => {
+        // TOdo função delete para as entidades
+    };
+
+
     return xDevEntity
 }

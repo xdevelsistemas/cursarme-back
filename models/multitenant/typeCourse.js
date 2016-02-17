@@ -36,7 +36,7 @@ function callModule(client) {
         /**
          * Unidade o curso
          */
-        unit: { type: Schema.Types.ObjectId, ref : client + 'Unit' , required: true },
+        unit: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'Unit') , required: true },
         /**
          * Quantidade de alunos para o curso
          */

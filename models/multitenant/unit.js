@@ -45,7 +45,7 @@ function callModule(client) {
         /*
           fk com entidade dentro da empresa
         */
-        director: { type: Schema.Types.ObjectId, ref: client + 'Employee' , required: false },
+        director: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Employee') , required: false },
         /*
          autorizacao do diretor da escola (numero)
          */
@@ -53,7 +53,7 @@ function callModule(client) {
         /*
          fk com entidade dentro da empresa
          */
-        secretary: { type: Schema.Types.ObjectId, ref: client + 'Employee' , required: false },
+        secretary: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Employee') , required: false },
         /*
          autorizacao da secretaria da escola (numero)
          */

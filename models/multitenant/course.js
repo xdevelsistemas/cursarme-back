@@ -36,7 +36,7 @@ function callModule(client) {
         /**
          * Area do curso
          */
-        area: { type: Schema.Types.ObjectId, ref: client + 'Area', required: true },
+        area: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Area'), required: true },
         /**
          * habilitação -
          */

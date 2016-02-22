@@ -66,12 +66,19 @@ function callModule(client) {
     UnitSchema.set('redisCache', true);
 
     /**
-     * Busca todas as unidades
+     * Lista todas as unidades
      * @returns {*}
      */
     // TODO Converter o bloco de código abaixo para es6
     // mantido código no formato antigo por problemas de escopo com o modelo
     UnitSchema.statics.all = function() { return this.find({})};
+
+    /**
+     * Busca uma unidade
+     * @param id Id da unidade para a busca
+     * @returns {*|Query|Promise}
+     */
+    UnitSchema.statics.findById = function(id) { return this.findOne({"_id": id})};
 
     /**
      * Cria uma unidade

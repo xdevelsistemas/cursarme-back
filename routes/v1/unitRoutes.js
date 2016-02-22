@@ -15,6 +15,9 @@ function callModule (app,passport) {
     app.get('/api/v1/units',autentica(passport), unitController.all);
 
 
+    app.get('/api/v1/unit',autentica(passport), unitController.one);
+
+
     app.post('/api/v1/addUnit',autentica(passport), unitController.add);
 
 

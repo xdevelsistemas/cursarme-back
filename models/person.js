@@ -36,7 +36,8 @@ function callModule() {
 
     const PhoneSchema = new Schema({
         description : { type: String, required: true },
-        phone : { type: String, required: true }
+        phone : { type: String, required: true },
+        default: { type: Boolean, required: true, default: true}
     });
 
     return  xDevSchema.extend({

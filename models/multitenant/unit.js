@@ -45,7 +45,7 @@ function callModule(client) {
         /*
           fk com entidade dentro da empresa
         */
-        director: { type: Schema.Types.ObjectId, ref: client + 'Employee' , required: false },
+        director: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Employee') , required: false },
         /*
          autorizacao do diretor da escola (numero)
          */
@@ -53,7 +53,7 @@ function callModule(client) {
         /*
          fk com entidade dentro da empresa
          */
-        secretary: { type: Schema.Types.ObjectId, ref: client + 'Employee' , required: false },
+        secretary: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Employee') , required: false },
         /*
          autorizacao da secretaria da escola (numero)
          */
@@ -66,12 +66,19 @@ function callModule(client) {
     UnitSchema.set('redisCache', true);
 
     /**
-     * Busca todas as unidades
+     * Lista todas as unidades
      * @returns {*}
      */
     // TODO Converter o bloco de código abaixo para es6
     // mantido código no formato antigo por problemas de escopo com o modelo
     UnitSchema.statics.all = function() { return this.find({})};
+
+    /**
+     * Busca uma unidade
+     * @param id Id da unidade para a busca
+     * @returns {*|Query|Promise}
+     */
+    UnitSchema.statics.findById = function(id) { return this.findOne({"_id": id})};
 
     /**
      * Cria uma unidade

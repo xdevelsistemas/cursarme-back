@@ -8,7 +8,10 @@ module.exports = () => {
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
     const UnitModel = require('../models/multitenant/unit');
-    const ValidValues = require("../services/validValues");
+    const ValidAddress = require("../../services/validAddress");
+    const sanitize = require('mongo-sanitize');
+    const ObjectId = require('mongoose').Types.ObjectId;
+
 
     /**
      * lista todas as unidades
@@ -17,9 +20,22 @@ module.exports = () => {
      */
     unitController.all = (req, res) => {
         return UnitModel(getClient(req)).all()
-            .then((data) => {
-                return res.status(200).json(data);
-            })
+            .then((data) => res.status(200).json(data))
+            .catch((erro) => MongooseErr.apiGetMongooseErr(erro,res));
+    };
+
+    /**
+     * lista uma unidade
+     * @param req
+     * @param res
+     */
+    unitController.one = (req, res) => {
+        if (!ObjectId(sanitize(req.body._id))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
+
+        return UnitModel(getClient(req)).findById(req.body._id)
+            .then((data) => res.status(200).json(data))
             .catch((erro) => MongooseErr.apiGetMongooseErr(erro,res));
     };
 
@@ -29,19 +45,15 @@ module.exports = () => {
      * @param res
      */
     unitController.add = (req, res) => {
-        // validando os dados da unidade em req.body
-        /*if (!ValidValues.validValues(req.body)) {
+        if (!(req.body.name && req.body.address && req.body.cnpj && req.body.alias && req.body.phone
+        && req.body.website && req.body.directorAuthorization && req.body.secretaryAuthorization
+        && (req.body.address.length === 0) && ValidAddress(req.body.address))) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }*/
+        }
 
         return UnitModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
-            .then((data) => {
-
-                return res.status(201).json(data);
-            })
-            .catch((err) => {
-                return MongooseErr.apiGetMongooseErr(err, res);
-            });
+            .then((data) => res.status(201).json(data))
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     /**
@@ -50,20 +62,15 @@ module.exports = () => {
      * @param res
      */
     unitController.update = (req, res) => {
-
-        // validando os dados da unidade em req.body
-        /*if (!ValidValues.validValues(req.body)) {
-         return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-         }*/
+        if (!(ObjectId(sanitize(req.body._id)) && req.body.name && req.body.address && req.body.cnpj && req.body.alias && req.body.phone
+        && req.body.website && req.body.directorAuthorization && req.body.secretaryAuthorization
+        && (req.body.address.length === 0) && ValidAddress(req.body.address))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
 
         return UnitModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
-            .then((data) => {
-
-                return res.status(200).json(data);
-            })
-            .catch((err) => {
-                return MongooseErr.apiGetMongooseErr(err, res);
-            });
+            .then((data) => res.status(200).json(data))
+            .catch((err) => MongooseErr.apiGetMongooseErr(err, res));
     };
 
     /**
@@ -73,13 +80,12 @@ module.exports = () => {
      * @returns {Promise.<T>}
      */
     unitController.delete = (req, res) => {
+        if (!ObjectId(sanitize(req.body._id))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
         return UnitModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
-            .then(() => {
-                return res.status(200).json({success : true});
-            })
-            .catch((erro) => {
-                return MongooseErr.apiGetMongooseErr(erro, res);
-            })
+            .then(() => res.status(200).json({success : true}))
+            .catch((erro) => MongooseErr.apiGetMongooseErr(erro, res));
     };
 
 

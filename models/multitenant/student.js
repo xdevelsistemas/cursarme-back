@@ -20,6 +20,7 @@ function callModule(client) {
     const _ = require('lodash');
     const PersonSchema = require("../person");
     const modules = require("../enum/modules");
+    const studentStatus = require("../enum/studentStatus");
 
 
 
@@ -34,7 +35,8 @@ function callModule(client) {
      * model Schema
      */
     let StudentSchema = PersonSchema.extend({
-        matNumber: {type: String, required: true , unique: true}
+        matNumber: {type: String, required: true , unique: true},
+        status: {type: String , required: true , array: studentStatus.options, default: "preEnrolled"}
     });
 
 
@@ -44,12 +46,12 @@ function callModule(client) {
     StudentSchema.set('redisCache', true);
 
     /**
-     * Busca um aluno pelo nome e matrícula
+     * Busca um aluno pelo id, nome ou matrícula
      * @param data
      * @returns {*|Query|Promise}
      */
     StudentSchema.statics.findByMatNumber = function(data) {
-        return this.findOne({$or: [{matNumber: data.matNumber}, {name: data.name}]});
+        return this.findOne({$or: [{_id: data._id}, {matNumber: data.matNumber}, {name: data.name}]});
     };
 
     /**

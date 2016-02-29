@@ -6,10 +6,8 @@ module.exports = {
         normal: 'normal',
         canceled: 'cancelado',
         locked: 'trancado',
-        transfered: 'transferido'
+        transfered: 'transferido',
+        preEnrolled: 'pré-matriculado'
     },
-    options : ['normal','canceled','locked','transfered']
+    options : ['normal','canceled','locked','transfered', 'preEnrolled']
 };
-
-
-

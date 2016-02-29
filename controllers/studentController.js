@@ -6,7 +6,9 @@ module.exports = () => {
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
     const StudentModel = require('../models/multitenant/student');
-    const ValidValues = require("../services/validValues");
+    const ValidAddress = require("../services/validAddress");
+    const sanitize = require('mongo-sanitize');
+    const ObjectId = require('mongoose').Types.ObjectId;
 
 
     /**
@@ -15,7 +17,7 @@ module.exports = () => {
      * @param res
      */
     studentController.one = (req, res) => {
-        if (!!req.body.matNumber || !!req.body.name) {
+        if ((!req.body._id || !ObjectId.isValid(sanitize(req.body._id))) || !req.body.matNumber || !req.body.name) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
@@ -45,9 +47,11 @@ module.exports = () => {
      * @param res
      */
     studentController.add = (req, res) => {
-        /*if (!ValidValues.validValues(req.body, ["complement"])) {
+        if (!(req.body.matNumber && req.body.name && req.body.birthDate && req.body.cpf && req.body.phones && req.body.user
+        && req.body.maritalStatus && req.body.gender && req.body.ethnicity && req.body.contacts && req.body.documents
+        && (req.body.address.length === 0) && req.body.address && ValidAddress(req.body.address))) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }*/
+        }
 
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
@@ -65,9 +69,12 @@ module.exports = () => {
      * @param res
      */
     studentController.update = (req, res) => {
-        /*if (!ValidValues.validValues(req.body)) {
-         return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-         }*/
+        if (!(ObjectId.isValid(sanitize(req.body._id)) && req.body.matNumber && req.body.name && req.body.birthDate
+        && req.body.cpf && req.body.phones && req.body.user && req.body.maritalStatus && req.body.gender
+        && req.body.ethnicity && req.body.contacts && req.body.documents && (req.body.address.length === 0)
+        && req.body.address && ValidAddress(req.body.address))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
 
         return StudentModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
             .then((data) => {
@@ -86,6 +93,10 @@ module.exports = () => {
      * @returns {Promise.<T>}
      */
     studentController.delete = (req, res) => {
+        if (!ObjectId.isValid(sanitize(req.body._id))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
+
         return StudentModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
             .then(() => {
                 return res.status(200).json({success : true});

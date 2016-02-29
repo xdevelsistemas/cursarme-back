@@ -15,17 +15,18 @@
         if (Array.isArray(data)) {
             isValid = true;
             data.forEach((el) => {
-                isValid = isValid && !!el.street && !!el.number
-                    && !!el.neighborhood && !!el.city && !!el.state
-                    && !!el.country && !!el.postalCode && !!el.enabled
+                isValid = isValid && fields(el);
             });
         } else {
-            isValid = isValid && !!data.street && !!data.number
-                && !!data.neighborhood && !!data.city && !!data.state
-                && !!data.country && !!data.postalCode && !!data.enabled
+            isValid = fields(data);
         }
 
         return isValid;
+    };
+
+    let fields = (obj) => {
+        return !!obj.street && !!obj.number && !!obj.neighborhood && !!obj.city && !!obj.state
+        && !!obj.country && !!obj.postalCode && !!obj.enabled && !!obj.description;
     };
 
     module.exports = {validAddress};

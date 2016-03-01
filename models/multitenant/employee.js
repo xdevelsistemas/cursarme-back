@@ -67,6 +67,14 @@ function callModule(client) {
     // mantido código no formato antigo por problemas de escopo com o modelo
     EmployeeSchema.statics.all = function() { return this.find({})};
 
+
+    /**
+     * Busca uma unidade
+     * @param id Id da unidade para a busca
+     * @returns {*|Query|Promise}
+     */
+    EmployeeSchema.statics.findById = function(id) { return this.findOne({"_id": id})};
+
     /**
      * Adiciona um funcionário
      * @param userId

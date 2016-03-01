@@ -7,6 +7,27 @@ module.exports = () => {
     const getClient = require('../services/getClient');
     const EmployeeModel = require('../models/multitenant/employee');
     const ValidValues = require("../services/validValues");
+    const ValidAddress = require("../services/validAddress");
+    const sanitize = require('mongo-sanitize');
+    const ObjectId = require('mongoose').Types.ObjectId;
+
+
+    let validPerms = (obj) => (!!obj.unit && !!obj.modules);
+
+    /**
+     * lista um funcionário
+     * @param req
+     * @param res
+     */
+    employeeController.one = (req, res) => {
+        if (!ObjectId(sanitize(req.body._id))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
+
+        return EmployeeModel(getClient(req)).findById(req.body._id)
+            .then((data) => res.status(200).json(data))
+            .catch((erro) => MongooseErr.apiGetMongooseErr(erro,res));
+    };
 
     /**
      * lista todos os funcionários
@@ -27,10 +48,12 @@ module.exports = () => {
      * @param res
      */
     employeeController.add = (req, res) => {
-        // validando os dados
-        /*if (!ValidValues.validValues(req.body)) {
+        if (!(req.body.admin && req.body.enabled && req.body.position && req.body.titration && req.body.perms
+        && validPerms(req.body.perms) && req.body.name && req.body.birthDate && req.body.cpf && req.body.phones
+        && req.body.user && req.body.maritalStatus && req.body.gender && req.body.ethnicity && req.body.contacts
+        && req.body.documents && (req.body.address.length === 0) && req.body.address && ValidAddress(req.body.address))) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-        }*/
+        }
 
         return EmployeeModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
@@ -48,10 +71,13 @@ module.exports = () => {
      * @param res
      */
     employeeController.update = (req, res) => {
-        // validando os dados
-        /*if (!ValidValues.validValues(req.body)) {
-         return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-         }*/
+        if (!(ObjectId.isValid(sanitize(req.body._id)) && req.body.admin && req.body.enabled && req.body.position
+        && req.body.titration && req.body.perms && validPerms(req.body.perms) && req.body.name && req.body.birthDate
+        && req.body.cpf && req.body.phones && req.body.user && req.body.maritalStatus && req.body.gender
+        && req.body.ethnicity && req.body.contacts && req.body.documents && (req.body.address.length === 0)
+        && req.body.address && ValidAddress(req.body.address))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
 
         return EmployeeModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
             .then((data) => {
@@ -61,6 +87,27 @@ module.exports = () => {
             .catch((err) => {
                 return MongooseErr.apiGetMongooseErr(err, res);
             });
+    };
+
+
+    /**
+     * Remove um funcionário
+     * @param req
+     * @param res
+     * @returns {Promise.<T>}
+     */
+    employeeController.delete = (req, res) => {
+        if (!ObjectId.isValid(sanitize(req.body._id))) {
+            return MongooseErr.apiCallErr("Dados inválidos", res, 400);
+        }
+
+        return EmployeeModel(getClient(req)).delete(req.user._id, true, 'Test', req.body)
+            .then(() => {
+                return res.status(200).json({success : true});
+            })
+            .catch((err) => {
+                return MongooseErr.apiGetMongooseErr(err, res);
+            })
     };
 
 

@@ -15,6 +15,9 @@ function callModule (app,passport) {
     app.get('/api/v1/employees',autentica(passport), employeeController.all);
 
 
+    app.get('/api/v1/employee',autentica(passport), employeeController.one);
+
+
     app.post('/api/v1/addEmployee',autentica(passport), employeeController.add);
 
 

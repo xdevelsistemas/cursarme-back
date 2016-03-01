@@ -8,7 +8,7 @@ module.exports = () => {
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
     const UnitModel = require('../models/multitenant/unit');
-    const ValidAddress = require("../../services/validAddress");
+    const ValidAddress = require("../services/validAddress");
     const sanitize = require('mongo-sanitize');
     const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -20,8 +20,12 @@ module.exports = () => {
      */
     unitController.all = (req, res) => {
         return UnitModel(getClient(req)).all()
-            .then((data) => res.status(200).json(data))
-            .catch((erro) => MongooseErr.apiGetMongooseErr(erro,res));
+            .then((data) => {
+                return res.status(200).json(data)
+            })
+            .catch((erro) => {
+                return MongooseErr.apiGetMongooseErr(erro,res)
+            });
     };
 
     /**
@@ -47,7 +51,7 @@ module.exports = () => {
     unitController.add = (req, res) => {
         if (!(req.body.name && req.body.address && req.body.cnpj && req.body.alias && req.body.phone
         && req.body.website && req.body.directorAuthorization && req.body.secretaryAuthorization
-        && (req.body.address.length === 0) && ValidAddress(req.body.address))) {
+        && ValidAddress(req.body.address))) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

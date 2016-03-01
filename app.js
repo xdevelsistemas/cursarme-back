@@ -35,12 +35,12 @@ app.use(passport.initialize());
 
 
 //rota padrão do home da api
-app = require('./routes/home')(app, passport);
+require('./routes/home')(app, passport);
 // routes v1 ======================================================================
 // load our routes and pass in our app and fully configured passport
-app = require('./routes/v1/userRoutes')(app, passport);
-app = require('./routes/v1/permLoginRoutes')(app, passport);
-app = require('./routes/v1/unitRoutes')(app, passport);
+require('./routes/v1/userRoutes')(app, passport);
+require('./routes/v1/permLoginRoutes')(app, passport);
+require('./routes/v1/unitRoutes')(app, passport);
 
 
 app.use(function (err, req, res, next) {

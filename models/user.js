@@ -98,10 +98,12 @@ function callModule() {
      * @param email
      * @returns {*|Query}
      */
-    UserSchema.statics.findByEmail = (email) => this.findOne({ 'email': email });
+    UserSchema.statics.findByEmail = function(email) { return this.findOne({ 'email': email })};
 
 
-    UserSchema.statics.findByToken = (token) => this.findOne({ token: { $elemMatch: { token : token } } });
+    UserSchema.statics.findByToken = function(token) {
+        return this.findOne({ token: { $elemMatch: { token : token } } })
+    };
 
 
     /**
@@ -109,7 +111,7 @@ function callModule() {
      * @param id
      * @returns {*|Query}
      */
-    UserSchema.statics.findById = (id) => this.findOne({ '_id': id });
+    UserSchema.statics.findById = function(id) { return this.findOne({ '_id': id })};
 
     /**
      * checa se a senha é valida

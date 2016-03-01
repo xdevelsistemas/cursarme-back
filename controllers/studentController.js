@@ -53,6 +53,10 @@ module.exports = () => {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
+
+        //TOdo criar o user e cadastrar em student junto com os dados do aluno
+
+
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
 

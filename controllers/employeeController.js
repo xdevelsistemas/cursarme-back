@@ -20,7 +20,7 @@ module.exports = () => {
      * @param res
      */
     employeeController.one = (req, res) => {
-        if (!ObjectId(sanitize(req.body._id))) {
+        if (!ObjectId.isValid(sanitize(req.body._id))) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

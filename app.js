@@ -38,9 +38,13 @@ app.use(passport.initialize());
 require('./routes/home')(app, passport);
 // routes v1 ======================================================================
 // load our routes and pass in our app and fully configured passport
-require('./routes/v1/userRoutes')(app, passport);
+require('./routes/v1/clientRoutes')(app, passport);
+require('./routes/v1/employeeRoutes')(app, passport);
 require('./routes/v1/permLoginRoutes')(app, passport);
+require('./routes/v1/studentRoutes')(app, passport);
+require('./routes/v1/supplierRoutes')(app, passport);
 require('./routes/v1/unitRoutes')(app, passport);
+require('./routes/v1/userRoutes')(app, passport);
 
 
 app.use(function (err, req, res, next) {

@@ -55,6 +55,7 @@ module.exports = () => {
 
 
         //TOdo criar o user e cadastrar em student junto com os dados do aluno
+        //req.body.user = o id do usuário criado na entidade user
 
 
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
@@ -120,6 +121,7 @@ module.exports = () => {
         return StudentModel(getClient(req)).verifCpf(cpf)
             .then((data) => {
                 // TOdo verificar estrutura e campos para os dados de retorno
+                // retorna algo identificando se o aluno está ou não pendente com algumas cobranças
                 return {status: data.status};
             })
             .catch((err) => {

@@ -7,12 +7,20 @@ module.exports = () => {
     const getClient = require('../services/getClient');
     const EmployeeModel = require('../models/multitenant/employee');
     const ValidValues = require("../services/validValues");
-    const ValidAddress = require("../services/validAddress");
+    const ValidAddress = require("../services/validAddress").validAddress;
     const sanitize = require('mongo-sanitize');
     const ObjectId = require('mongoose').Types.ObjectId;
 
 
-    let validPerms = (obj) => (!!obj.unit && !!obj.modules);
+    let validPerms = (list) => {
+        let isValid = true;
+
+        list.forEach(function(el) {
+            isValid = isValid && (!!el.unit && !!el.modules);
+        });
+
+        return isValid;
+    };
 
     /**
      * lista um funcionário
@@ -48,10 +56,10 @@ module.exports = () => {
      * @param res
      */
     employeeController.add = (req, res) => {
-        if (!(req.body.admin && req.body.enabled && req.body.position && req.body.titration && req.body.perms
-        && validPerms(req.body.perms) && req.body.name && req.body.birthDate && req.body.cpf && req.body.phones
-        && req.body.user && req.body.maritalStatus && req.body.gender && req.body.ethnicity && req.body.contacts
-        && req.body.documents && (req.body.address.length === 0) && req.body.address && ValidAddress(req.body.address))) {
+        if (!req.body.admin || !req.body.enabled || !req.body.position || !req.body.titration || !req.body.perms
+        || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones
+        || !req.body.user || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts
+        || !req.body.documents || !req.body.address || (req.body.address.length === 0) || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
@@ -73,11 +81,11 @@ module.exports = () => {
      * @param res
      */
     employeeController.update = (req, res) => {
-        if (!(ObjectId.isValid(sanitize(req.body._id)) && req.body.admin && req.body.enabled && req.body.position
-        && req.body.titration && req.body.perms && validPerms(req.body.perms) && req.body.name && req.body.birthDate
-        && req.body.cpf && req.body.phones && req.body.user && req.body.maritalStatus && req.body.gender
-        && req.body.ethnicity && req.body.contacts && req.body.documents && (req.body.address.length === 0)
-        && req.body.address && ValidAddress(req.body.address))) {
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.admin || !req.body.enabled || !req.body.position
+        || !req.body.titration || !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate
+        || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
+        || !req.body.ethnicity || !req.body.contacts || !req.body.documents || (req.body.address.length === 0)
+        || !req.body.address || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

@@ -17,7 +17,6 @@ function callModule(client) {
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
-    const ValidValues = require("../../services/validValues");
     const _ = require('lodash');
 
 
@@ -33,6 +32,10 @@ function callModule(client) {
      */
     let CourseSchema = xDevSchema.extend({
         name: { type: String, required: true },
+        /**
+         * Tipo do curso
+         */
+        type_course: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'TypeCourse'), required: true },
         /**
          * Area do curso
          */

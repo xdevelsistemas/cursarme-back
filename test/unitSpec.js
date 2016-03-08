@@ -64,9 +64,9 @@
                         alias: "Teste",
                         phone: "99999999999",
                         website: "www.x.yyy.zz",
-                        director: ObjectId("5697face19d3c9021d774496"),
+                        director: "5697face19d3c9021d774496",
                         directorAuthorization: "0123456789",
-                        secretary: ObjectId("5697face19d3c9021d774497"),
+                        secretary: "5697face19d3c9021d774497",
                         secretaryAuthorization: "0123456789"
                     })
                     .expect('Content-Type', /json/)

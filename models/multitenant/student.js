@@ -50,8 +50,8 @@ function callModule(client) {
      * @param data
      * @returns {*|Query|Promise}
      */
-    StudentSchema.statics.findByMatNumber = function(data) {
-        return this.findOne({$or: [{_id: data._id}, {matNumber: data.matNumber}, {name: data.name}]});
+    StudentSchema.statics.findById = function(data) {
+        return this.findOne({$or: [{_id: data._id}, {matNumber: data.matNumber}, {cpf: data.cpf}]});
     };
 
     /**

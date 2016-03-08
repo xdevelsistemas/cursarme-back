@@ -6,7 +6,7 @@ module.exports = () => {
     const MongooseErr = require('../services/MongooseErr');
     const getClient = require('../services/getClient');
     const StudentModel = require('../models/multitenant/student');
-    const ValidAddress = require("../services/validAddress");
+    const ValidAddress = require("../services/validAddress").validAddress;
     const sanitize = require('mongo-sanitize');
     const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -21,7 +21,7 @@ module.exports = () => {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
-        return StudentModel(getClient(req)).findByMatNumber(req.body)
+        return StudentModel(getClient(req)).findById(req.body)
             .then((data) => {
                 return res.status(200).json(data);
             })
@@ -47,14 +47,15 @@ module.exports = () => {
      * @param res
      */
     studentController.add = (req, res) => {
-        if (!(req.body.matNumber && req.body.name && req.body.birthDate && req.body.cpf && req.body.phones && req.body.user
-        && req.body.maritalStatus && req.body.gender && req.body.ethnicity && req.body.contacts && req.body.documents
-        && (req.body.address.length === 0) && req.body.address && ValidAddress(req.body.address))) {
+        if (!req.body.matNumber || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones || !req.body.user
+        || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts || !req.body.documents
+        && (req.body.address.length === 0) || !req.body.address && !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
 
         //TOdo criar o user e cadastrar em student junto com os dados do aluno
+        //req.body.user = o id do usuário criado na entidade user
 
 
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
@@ -73,10 +74,10 @@ module.exports = () => {
      * @param res
      */
     studentController.update = (req, res) => {
-        if (!(ObjectId.isValid(sanitize(req.body._id)) && req.body.matNumber && req.body.name && req.body.birthDate
-        && req.body.cpf && req.body.phones && req.body.user && req.body.maritalStatus && req.body.gender
-        && req.body.ethnicity && req.body.contacts && req.body.documents && (req.body.address.length === 0)
-        && req.body.address && ValidAddress(req.body.address))) {
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.matNumber || !req.body.name || !req.body.birthDate
+        || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
+        || !req.body.ethnicity || !req.body.contacts || !req.body.documents && (req.body.address.length === 0)
+        || !req.body.address && !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
@@ -120,6 +121,7 @@ module.exports = () => {
         return StudentModel(getClient(req)).verifCpf(cpf)
             .then((data) => {
                 // TOdo verificar estrutura e campos para os dados de retorno
+                // retorna algo identificando se o aluno está ou não pendente com algumas cobranças
                 return {status: data.status};
             })
             .catch((err) => {

@@ -53,12 +53,7 @@ function callModule(client) {
      * @param text
      * @private
      */
-    let _createLog = (entity, obj, userId, op, text) => {
-        // TOdo continuar daqui
-        // TOdo falta testar o insert em log, verificar se continua a inserir no campo data somente o id, verificar tbm sem o result.JSON()
-        _.unset(obj, '_id');
-        LogSchema.createLog(entity, obj, userId, op, text);
-    };
+    let _createLog = (entity, obj, userId, op, text) => LogSchema.createLog(entity, obj, userId, op, text);
 
 
     /**

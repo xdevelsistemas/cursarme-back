@@ -17,7 +17,6 @@ function callModule(client) {
     const xDevModel = require("../../services/xDevModel")(mongoose);
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
-    const ValidValues = require("../../services/validValues");
     const _ = require('lodash');
 
 
@@ -27,6 +26,10 @@ function callModule(client) {
      * padrão - utilizando bluebird como promise
      */
     mongoose.Promise = require('bluebird');
+
+    const DocsCourse = new Schema({
+        name : { type: String, required: true }
+    });
 
     /**
      * model Schema
@@ -40,7 +43,11 @@ function callModule(client) {
         /**
          * Quantidade de alunos para o curso
          */
-        quorum: {type: Number, required: true}
+        quorum: {type: Number, required: true},
+        /**
+         * Documentos obrigatórios para o curso
+         */
+        docsCourse: [DocsCourse]
     });
 
     /**

@@ -70,15 +70,16 @@ module.exports = () => {
      * @param res
      */
     unitController.update = (req, res) => {
-        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.name || !req.body.address || !req.body.cnpj || !req.body.alias || !req.body.phone
-        || !req.body.website || !req.body.directorAuthorization || !req.body.secretaryAuthorization
-        || (req.body.address.length === 0) || !ValidAddress(req.body.address)) {
+        /* || !req.body.address || !req.body.cnpj || !req.body.alias || !req.body.phone
+         || !req.body.website || !req.body.directorAuthorization || !req.body.secretaryAuthorization
+         || (req.body.address.length === 0) || !ValidAddress(req.body.address)*/
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.name) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
         // convertendo os ids para ObjectId;
-        req.body.director = ObjectId.isValid(req.body.director) ? ObjectId(req.body.director) : req.body.director;
-        req.body.secretary = ObjectId.isValid(req.body.secretary) ? ObjectId(req.body.secretary) : req.body.secretary;
+        /*req.body.director = ObjectId.isValid(req.body.director) ? ObjectId(req.body.director) : req.body.director;
+        req.body.secretary = ObjectId.isValid(req.body.secretary) ? ObjectId(req.body.secretary) : req.body.secretary;*/
 
         return UnitModel(getClient(req)).update(req.user._id, true, 'Test', req.body)
             .then((data) => res.status(200).json(data))

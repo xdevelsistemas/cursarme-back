@@ -125,7 +125,7 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
+                return xDevSchema._update(entity, result.toJSON(), userId, useLog, 0, 'Unidade atualizada');
             })
     };
 

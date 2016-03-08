@@ -38,10 +38,11 @@ function callModule() {
     const TokenSchema = new Schema({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
-        client: { type: String , require: true }
+        client: { type: String , require: true },
+        // TOdo client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true },
     });
 
-    let UserSchema = new Schema({
+    let UserSchema = xDevSchema.extend({
         local: {
             name: String,
             email: String,
@@ -175,7 +176,7 @@ function callModule() {
                             if (!!err) throw err;
                         });
                     }
-                    return enviaEmail(emailVars, token, res);
+                    return sendMail(emailVars, token, res);
                 })
                 .catch((err) =>
                     MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode)
@@ -278,11 +279,11 @@ function callModule() {
 
     /**
      * Prepara e envia o email (signup || resetPassword)
-     * @param emailVars
+     * @param mailVars
      * @param token
      * @param res
      */
-    let enviaEmail = (emailVars, token, res) => {
+    let sendMail = (mailVars, token, res) => {
         let smtpTransport = nodemailer.createTransport(ses({
             accessKeyId: awsConf.ses.accessKeyId,
             secretAccessKey: awsConf.ses.secretAccessKey,
@@ -290,18 +291,18 @@ function callModule() {
             rateLimit: 5
         }));
 
-        emailVars.token = token;
+        mailVars.token = token;
 
         let mailOptions = {
-            to: emailVars.email,
-            from: emailVars.fromEmail,
-            subject: emailVars.subjectEmail,
-            text: format(emailVars.template,emailVars)
+            to: mailVars.email,
+            from: mailVars.fromEmail,
+            subject: mailVars.subjectEmail,
+            text: format(mailVars.template,mailVars)
         };
 
         smtpTransport.sendMail(mailOptions, (err) => {
             if (err) throw err;
-            return res.status(200).json({success: true, msg: "Email enviado com sucesso para " + emailVars.email, token: emailVars.token});
+            return res.status(200).json({success: true, msg: "Email enviado com sucesso para " + mailVars.email, token: mailVars.token});
         });
     };
 

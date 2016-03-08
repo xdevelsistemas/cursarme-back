@@ -30,23 +30,20 @@ function callModule(client) {
     /**
      * model Schema
      */
-    let AreaSchema = xDevSchema.extend({
+    let PeriodSchema = xDevSchema.extend({
+        // TOdo falta terminar de inserir os campos
         name: {type: String, required: true},
         /**
-         * Unidade
+         * curso
          */
-        unit: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Unit'), required: true },
-        /**
-         * Tipo de curso
-         */
-        typeCourse: { type: Schema.Types.ObjectId, ref : client + 'TypeCourse' , required: true }
+        course: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'Course') , required: true }
     });
 
     /**
      * enabling caching
      */
-    AreaSchema.set('redisCache', true);
+    PeriodSchema.set('redisCache', true);
 
 
-    return xDevModel.model(client,'Area',AreaSchema);
+    return xDevModel.model(client,'Period',PeriodSchema);
 }

@@ -49,8 +49,8 @@ function callModule(){
      * model Schema
      */
     let ClientSchema = xDevSchema.extend({
-        name : String,
-        alias: String,
+        name : { type: String, required: true},
+        alias: { type: String, required: true, unique: true },
         tax: { type: Number , require: true },
         cpfcnpj: { type: String, unique: true , require: true },
         user: { type: Schema.Types.ObjectId, ref : 'User' , require: true },
@@ -72,6 +72,11 @@ function callModule(){
     // TODO Converter o bloco de código abaixo para es6
     // mantido código no formato antigo por problemas de escopo com o modelo
     ClientSchema.statics.all = function() { return this.find({})};
+
+
+    ClientSchema.statics.findById = function(_id) {
+        return this.findOne({_id: _id})
+    };
 
     /**
      * Adiciona um cliente

@@ -38,8 +38,7 @@ function callModule() {
     const TokenSchema = new Schema({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
-        client: { type: String , require: true },
-        // TOdo client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true },
+        client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true }
     });
 
     let UserSchema = xDevSchema.extend({
@@ -103,7 +102,7 @@ function callModule() {
 
 
     UserSchema.statics.findByToken = function(token) {
-        return this.findOne({ token: { $elemMatch: { token : token } } })
+        return this.findOne({ token: { $elemMatch: { token : token, enabled:true } } })
     };
 
 

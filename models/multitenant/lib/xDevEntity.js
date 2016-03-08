@@ -23,7 +23,7 @@ function callModule(client) {
     const Schema = mongoose.Schema;
     const _ = require('lodash');
     const LogSchema = require("../log")(client);
-    const ClientSchema = require("../../Client");
+    const ClientSchema = require("../../client");
 
 
     /**

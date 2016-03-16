@@ -85,6 +85,34 @@ function callModule() {
     UserSchema.set('redisCache', true);
 
 
+    UserSchema.statics.add = function(userId, useLog, entity, data) {
+        let userAdd = this();
+        let token;
+
+        crypto.randomBytes(20, (err, buf) => {
+            if (err) throw err;
+            token = buf.toString('hex');
+        });
+
+        let tokenAdd = [{
+            token: { type: String, unique: true , require: true },
+            enabled: { type: Boolean , require: true },
+            client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true }
+        }];
+
+        userAdd.local = {
+            name: data.name,
+            email: data.email,
+            signupToken: data.signupToken,
+            // TOdo signupExpires: data.signupExpires
+        };
+        userAdd.token = [TokenSchema];
+        userAdd.email = data.email;
+        userAdd.cpfcnpj = data.cpf;
+
+        return xDevSchema._add(entity, userAdd, userId, useLog, 1, '.');
+    };
+
     /**
      * static methods
      * generate Hash
@@ -123,12 +151,12 @@ function callModule() {
 
     /**
      * envia token por email para o usuário
-     * @param emailVars
+     * @param mailVars
      * @param field
      * @param res
      * @param next
      */
-    UserSchema.statics.sendTokenEmail = (emailVars, field, res, next) => {
+    UserSchema.statics.sendTokenMail = (mailVars, field, res, next) => {
         // todo verificar o uso de UserModel ao invés do this
         // (escopo em bloco)
         const UserModel = this;
@@ -141,7 +169,7 @@ function callModule() {
                 token = buf.toString('hex');
             });
 
-            UserModel.findOne({ email: emailVars.email })
+            UserModel.findOne({ email: mailVars.email })
                 .then((user) => {
                     if (!user) {
                         if (field === 'resetPassword') {
@@ -149,8 +177,8 @@ function callModule() {
                             error.status = 400;
                             throw error;
                         }
-                        user =  new UserModel({"email" : emailVars.email});
-                        insertToken(user, field, emailVars, token);
+                        user =  new UserModel({"email" : mailVars.email});
+                        insertToken(user, field, mailVars, token);
 
                         user.save(function(err){
                             if(err) {
@@ -170,12 +198,12 @@ function callModule() {
                             throw error;
                         }
 
-                        insertToken(user, field, emailVars, token);
+                        insertToken(user, field, mailVars, token);
                         user.save((err) => {
                             if (!!err) throw err;
                         });
                     }
-                    return sendMail(emailVars, token, res);
+                    return sendMail(mailVars, token, res);
                 })
                 .catch((err) =>
                     MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode)
@@ -183,7 +211,7 @@ function callModule() {
 
         }
         catch(err) {
-            return MongooseErr.apiCallErr(err.message + " - Passou por aqui", res, err.status || err.statusCode);
+            return MongooseErr.apiCallErr(err.message + " - Passou por aqui (sendTokenMail", res, err.status || err.statusCode);
         }
     };
 
@@ -253,7 +281,7 @@ function callModule() {
      * @param res
      * @returns {*}
      */
-    UserSchema.statics.updateCategory = (body, res) => {
+    /*UserSchema.statics.updateCategory = (body, res) => {
         if (!!body.userId) {
             this.findOne({_id: body.userId})
                 .then((user) => {
@@ -271,7 +299,7 @@ function callModule() {
                 },
                 (erro) => MongooseErr.apiGetMongooseErr(erro, res));
         } else return res.send();
-    };
+    };*/
 
 
 
@@ -309,11 +337,11 @@ function callModule() {
      * Adiciona o novo token e a data de expiração dele.
      * @param user
      * @param field
-     * @param emailVars
+     * @param mailVars
      * @param token
      */
-    let insertToken = (user, field, emailVars, token) => {
-        user.local.email = emailVars.email;
+    let insertToken = (user, field, mailVars, token) => {
+        user.local.email = mailVars.email;
         user.local[field + "Token"] = token;
         user.local[field + "Expires"] = Date.now() + (3600000 * 24); // 24 hours
     };

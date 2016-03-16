@@ -402,7 +402,7 @@ module.exports = function() {
             template : req.body.template
         };
 
-        return UserModel.sendTokenEmail(emailVars, "signup", res, next);
+        return UserModel.sendTokenMail(emailVars, "signup", res, next);
     };
 
 
@@ -435,7 +435,7 @@ module.exports = function() {
                 template : req.body.template
             };
 
-        return UserModel.sendTokenEmail(emailVars,"resetPassword", res, next);
+        return UserModel.sendTokenMail(emailVars,"resetPassword", res, next);
     };
 
 

@@ -74,12 +74,17 @@ function callModule(){
     ClientSchema.statics.all = function() { return this.find({})};
 
 
+    /**
+     * Lista um client com o id
+     * @param _id
+     * @returns {*|Query|Promise}
+     */
     ClientSchema.statics.findById = function(_id) {
         return this.findOne({_id: _id})
     };
 
     /**
-     * Adiciona um cliente
+     * Adiciona um client
      * @param userId
      * @param useLog
      * @param entity
@@ -97,11 +102,11 @@ function callModule(){
         client.iuguConf = data.iuguConf;
         client.conf = data.conf;
 
-        return xDevSchema._add(entity, client, userId, useLog, 1, 'Cliente adicionado');
+        return xDevSchema._add(entity, client, userId, useLog, 1, 'client adicionado');
     };
 
     /**
-     * Atualiza um cliente
+     * Atualiza um client
      * @param userId
      * @param useLog
      * @param entity
@@ -125,7 +130,7 @@ function callModule(){
     };
 
     /**
-     * Remove um cliente
+     * Remove um client
      * @param userId
      * @param useLog
      * @param entity

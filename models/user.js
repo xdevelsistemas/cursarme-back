@@ -87,30 +87,48 @@ function callModule() {
 
     UserSchema.statics.add = function(userId, useLog, entity, data) {
         let userAdd = this();
-        let token;
-
-        crypto.randomBytes(20, (err, buf) => {
-            if (err) throw err;
-            token = buf.toString('hex');
-        });
-
         let tokenAdd = [{
-            token: { type: String, unique: true , require: true },
-            enabled: { type: Boolean , require: true },
-            client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true }
+            token: UserSchema.generateToken(),
+            enabled: true,
+            client: client // TOdo amarrar o client
         }];
 
         userAdd.local = {
             name: data.name,
             email: data.email,
-            signupToken: data.signupToken,
-            // TOdo signupExpires: data.signupExpires
+            signupToken: UserSchema.generateToken()
+            // TOdo esse token precisa expirar ???
+            // signupExpires: data.signupExpires
         };
-        userAdd.token = [TokenSchema];
+        userAdd.token = [tokenAdd];
         userAdd.email = data.email;
         userAdd.cpfcnpj = data.cpf;
 
-        return xDevSchema._add(entity, userAdd, userId, useLog, 1, '.');
+        return xDevSchema._add(entity, userAdd, userId, useLog, 1, 'Usuário cadastrado');
+    };
+
+    /**
+     * Atualiza os dados do usuário
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {Promise.<T>|Promise}
+     */
+    EmployeeSchema.statics.update = function(userId, useLog, entity, data) {
+        let EmployeeModel = this;
+
+        return EmployeeModel.findOne({_id: data._id})
+            .then((result) => {
+                if (!result) {
+                    let err = new Error("Dados inválidos");
+                    err.status = 400;
+                    throw err;
+                }
+
+                extendObj(true, result, data);
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
+            })
     };
 
     /**
@@ -120,6 +138,21 @@ function callModule() {
      * @returns {*}
      */
     UserSchema.statics.generateHash = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+
+    /**
+     * Gera e retorna um token
+     * @returns {*}
+     */
+    UserSchema.statics.generateToken = () => {
+        let token;
+
+        crypto.randomBytes(20, (err, buf) => {
+            if (err) throw err;
+            token = buf.toString('hex');
+        });
+
+        return token;
+    };
 
     /**
      * buscar de usuários pelo email
@@ -271,37 +304,6 @@ function callModule() {
                 },
                 (err) => MongooseErr.apiGetMongooseErr(err, res));
     };
-
-
-
-    /**
-     * Insere a categoria em categories do usuário
-     * @param Database
-     * @param body
-     * @param res
-     * @returns {*}
-     */
-    /*UserSchema.statics.updateCategory = (body, res) => {
-        if (!!body.userId) {
-            this.findOne({_id: body.userId})
-                .then((user) => {
-                    // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
-                    user.categories = _.difference(
-                        _.union(user.categories.map((el) => el.toString()),_.filter(body.categories,{active: true}).map((el) => el.id)),
-                        _.filter(body.categories,{active: false}).map((el) => el.id)).map((el) => toObjectId(el));
-
-                    user.save((err) => {
-                        if(!!err) {
-                            return MongooseErr.apiGetMongooseErr(err, res)
-                        }
-                        return res.status(201).send();
-                    });
-                },
-                (erro) => MongooseErr.apiGetMongooseErr(erro, res));
-        } else return res.send();
-    };*/
-
-
 
 
     /**

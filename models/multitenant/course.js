@@ -33,14 +33,6 @@ function callModule(client) {
     let CourseSchema = xDevSchema.extend({
         name: { type: String, required: true },
         /**
-         * Tipo do curso
-         */
-        type_course: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'TypeCourse'), required: true },
-        /**
-         * Area do curso
-         */
-        area: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Area'), required: true },
-        /**
          * habilitação -
          */
         license: { type: String, required: true },
@@ -55,7 +47,24 @@ function callModule(client) {
         /**
          * reconhecimento -
          */
-        recognition: { type: String, required: true }
+        recognition: { type: String, required: true },
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////
+        documents: [{}],
+        /**
+         * Tipo do curso
+         */
+        type_course: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'TypeCourse'), required: true },
+        /**
+         * Area do curso
+         */
+        area: { type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Area'), required: true },
+
+
+
+
+
     });
 
     /**

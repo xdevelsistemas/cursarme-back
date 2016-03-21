@@ -44,27 +44,14 @@ module.exports = () => {
      * @param res
      */
     courseController.add = (req, res) => {
-        if (!req.body.admin || !req.body.enabled || !req.body.position || !req.body.titration || !req.body.perms
-        || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones
-        || !req.body.user || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts
-        || !req.body.documents || !req.body.address || (req.body.address.length === 0) || !ValidAddress(req.body.address)) {
+        if (!req.body.name || !req.body.license || !req.body.resolution || !req.body.authorization || !req.body.recognition ||
+        !req.body.documents || !req.body.documents.length || !req.body.quorum || !req.body.typeCourse ||
+        !req.body.area || !req.body.modality || !req.body.period || !req.body.period.year || !req.body.period.part ||
+        !req.body.period.period || !req.body.class || !req.body.class.name || !req.body.class.shift ||
+        !req.body.class.description || !req.body.grade.name || !req.body.grade.effective || !req.body.grade.workload ||
+        !req.body.grade.workloadTotal || !req.body.grade.disciplines || !req.body.grade.disciplines.length) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
-
-
-        !req.body.name ||
-        !req.body.license ||
-        !req.body.resolution ||
-        !req.body.authorization ||
-        !req.body.recognition ||
-        !req.body.documents ||
-        !req.body.quorum ||
-        !req.body.typeCourse ||
-        !req.body.area ||
-        !req.body.period ||
-        !req.body.class ||
-        !req.body.modality ||
-        !req.body.grade ||
 
 
         //TOdo criar o user e cadastrar em employee junto com os dados do curso
@@ -85,11 +72,13 @@ module.exports = () => {
      * @param res
      */
     courseController.update = (req, res) => {
-        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.admin || !req.body.enabled || !req.body.position
-        || !req.body.titration || !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate
-        || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
-        || !req.body.ethnicity || !req.body.contacts || !req.body.documents || (req.body.address.length === 0)
-        || !req.body.address || !ValidAddress(req.body.address)) {
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.name || !req.body.license || !req.body.resolution ||
+        !req.body.authorization || !req.body.recognition || !req.body.documents || !req.body.documents.length ||
+        !req.body.quorum || !req.body.typeCourse || !req.body.area || !req.body.modality || !req.body.period ||
+        !req.body.period.year || !req.body.period.part || !req.body.period.period || !req.body.class ||
+        !req.body.class.name || !req.body.class.shift || !req.body.class.description || !req.body.grade.name ||
+        !req.body.grade.effective || !req.body.grade.workload || !req.body.grade.workloadTotal ||
+        !req.body.grade.disciplines || !req.body.grade.disciplines.length) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

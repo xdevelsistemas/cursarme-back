@@ -86,10 +86,10 @@ module.exports = () => {
      */
     employeeController.update = (req, res) => {
         if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.position || !req.body.titration ||
-        !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate
-        || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
-        || !req.body.ethnicity || !req.body.contacts || !req.body.documents || (req.body.address.length === 0)
-        || !req.body.address || !ValidAddress(req.body.address)) {
+        !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate ||
+        !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender ||
+        !req.body.ethnicity || !req.body.contacts || !req.body.documents || (req.body.address.length === 0) ||
+        !req.body.address || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

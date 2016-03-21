@@ -10,8 +10,9 @@ function callModule() {
     "use strict";
 
     let mongoose = require('mongoose');
-    const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
+    const extendObj = require('extend');
+    const Schema = mongoose.Schema;
     const xDevSchema = require("./multitenant/lib/xDevEntity")().xDevSchema;
     const mongooseRedisCache = require("../config/mongooseRedisCache");
     const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -76,7 +77,7 @@ function callModule() {
         },
         token: [TokenSchema],
         email: { type: String, unique: true , require: true },
-        cpfcnpj: { type: String, unique: true , require: true }
+        cpf: { type: String, unique: true , require: true }
     });
 
     /**
@@ -102,7 +103,7 @@ function callModule() {
         };
         userAdd.token = [tokenAdd];
         userAdd.email = data.email;
-        userAdd.cpfcnpj = data.cpf;
+        userAdd.cpf = data.cpf;
 
         return xDevSchema._add(entity, userAdd, userId, useLog, 1, 'Usuário cadastrado');
     };
@@ -115,10 +116,8 @@ function callModule() {
      * @param data
      * @returns {Promise.<T>|Promise}
      */
-    EmployeeSchema.statics.update = function(userId, useLog, entity, data) {
-        let EmployeeModel = this;
-
-        return EmployeeModel.findOne({_id: data._id})
+    UserSchema.statics.update = function(userId, useLog, entity, data) {
+        return this.findOne({_id: data._id})
             .then((result) => {
                 if (!result) {
                     let err = new Error("Dados inválidos");
@@ -129,6 +128,18 @@ function callModule() {
                 extendObj(true, result, data);
                 return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
             })
+    };
+
+    /**
+     * Remove um usuário
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    UserSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
     };
 
     /**
@@ -168,11 +179,19 @@ function callModule() {
 
 
     /**
-     * filtra usuário pela id
-     * @param id
+     * filtra usuário pela _id
+     * @param _id
      * @returns {*|Query}
      */
-    UserSchema.statics.findById = function(id) { return this.findOne({ '_id': id })};
+    UserSchema.statics.findById = function(_id) { return this.findOne({ '_id': _id })};
+
+    /**
+     * Busca todos os usuários
+     * @returns {*}
+     */
+        // TODO Converter o bloco de código abaixo para es6
+        // mantido código no formato antigo por problemas de escopo com o modelo
+    UserSchema.statics.all = function() { return this.find({})};
 
     /**
      * checa se a senha é valida

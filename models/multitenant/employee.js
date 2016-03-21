@@ -11,7 +11,7 @@ function callModule(client) {
 
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
-    let extendObj = require('extend');
+    const extendObj = require('extend');
     const Schema = mongoose.Schema;
     const xDevSchema = require("./lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);

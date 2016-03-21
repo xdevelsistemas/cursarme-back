@@ -69,8 +69,8 @@ function callModule(client) {
 
 
     /**
-     * Busca uma unidade
-     * @param id Id da unidade para a busca
+     * Busca um funcionário
+     * @param id
      * @returns {*|Query|Promise}
      */
     EmployeeSchema.statics.findById = function(id) { return this.findOne({"_id": id})};
@@ -103,7 +103,7 @@ function callModule(client) {
         empl.contacts = data.contacts;
         empl.documents = data.documents;
 
-        return xDevSchema._add(entity, empl, userId, useLog, 1, 'Unidade adicionada');
+        return xDevSchema._add(entity, empl, userId, useLog, 1, 'Funcionário adicionada');
     };
 
     /**
@@ -126,7 +126,7 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Funcionário atualizada');
             })
     };
 

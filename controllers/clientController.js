@@ -4,7 +4,7 @@ module.exports = () => {
 
     let clientController = {};
     const MongooseErr = require('../services/MongooseErr');
-    const ClientModel = require('../models/Client');
+    const ClientModel = require('../models/client');
     const ValidValues = require("../services/validValues");
 
     /**

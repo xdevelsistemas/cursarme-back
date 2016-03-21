@@ -27,72 +27,64 @@ function callModule(client) {
      */
     mongoose.Promise = require('bluebird');
 
-    const DocsCourse = new Schema({
-        name : { type: String, required: true }
-    });
-
     /**
      * model Schema
      */
-    let TypeCourseSchema = xDevSchema.extend({
+    let DisciplineSchema = xDevSchema.extend({
         name: {type: String, required: true},
-        /**
-         * Unidade o curso
-         */
-        unit: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'Unit') , required: true }
+        value: { type: Number , required: true }
     });
 
     /**
      * enabling caching
      */
-    TypeCourseSchema.set('redisCache', true);
+    DisciplineSchema.set('redisCache', true);
 
     /**
-     * Busca um tipo de curso
-     * @param _id
-     * @returns {*|Query|Promise}
-     */
-    TypeCourseSchema.statics.findById = function(_id) {
-        return this.findOne({_id: _id});
-    };
-
-    /**
-     * Busca todos os tipos de curso
+     * Busca todas as disciplinas
      * @returns {*}
      */
         // TODO Converter o bloco de código abaixo para es6
         // mantido código no formato antigo por problemas de escopo com o modelo
-    TypeCourseSchema.statics.all = function() { return this.find({})};
+    DisciplineSchema.statics.all = function() { return this.find({})};
 
 
     /**
-     * Adiciona um novo tipo de curso
+     * Busca uma disciplina
+     * @param _id
+     * @returns {*|Query|Promise}
+     */
+    DisciplineSchema.statics.findById = function(_id) { return this.findOne({"_id": _id})};
+
+    /**
+     * Adiciona uma disciplina
      * @param userId
      * @param useLog
      * @param entity
      * @param data
      * @returns {Promise.<T>}
      */
-    TypeCourseSchema.statics.add = function(userId, useLog, entity, data) {
-        let type = this();
+    DisciplineSchema.statics.add = function(userId, useLog, entity, data) {
+        let disc = this();
 
-        type.name = data.name;
-        type.unit = data.unit;
+        disc.name = data.name;
+        disc.value = data.value;
 
-        return xDevSchema._add(entity, type, userId, useLog, 1, 'Tipo de curso adicionado');
+        return xDevSchema._add(entity, disc, userId, useLog, 1, 'Disciplina adicionada');
     };
 
-
     /**
-     * Atualiza um tipo de curso
+     * Atualiza uma disciplina
      * @param userId
      * @param useLog
      * @param entity
      * @param data
      * @returns {Promise.<T>|Promise}
      */
-    TypeCourseSchema.statics.update = function(userId, useLog, entity, data) {
-        return this.findOne({_id: data._id})
+    DisciplineSchema.statics.update = function(userId, useLog, entity, data) {
+        let EmployeeModel = this;
+
+        return EmployeeModel.findOne({_id: data._id})
             .then((result) => {
                 if (!result) {
                     let err = new Error("Dados inválidos");
@@ -101,22 +93,22 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Tipo de curso atualizado');
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Disciplina atualizada');
             })
     };
 
     /**
-     * Remove um tipo de curso
+     * Remove uma disciplina
      * @param userId
      * @param useLog
      * @param entity
      * @param data
      * @returns {*}
      */
-    TypeCourseSchema.statics.delete = function(userId, useLog, entity, data) {
+    DisciplineSchema.statics.delete = function(userId, useLog, entity, data) {
         return this.remove({"_id": data._id});
     };
 
 
-    return xDevModel.model(client,'TypeCourse',TypeCourseSchema);
+    return xDevModel.model(client,'Discipline',DisciplineSchema);
 }

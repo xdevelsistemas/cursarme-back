@@ -10,8 +10,9 @@ function callModule() {
     "use strict";
 
     let mongoose = require('mongoose');
-    const Schema = mongoose.Schema;
     let extend = require('mongoose-schema-extend');
+    const extendObj = require('extend');
+    const Schema = mongoose.Schema;
     const xDevSchema = require("./multitenant/lib/xDevEntity")().xDevSchema;
     const mongooseRedisCache = require("../config/mongooseRedisCache");
     const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -38,8 +39,7 @@ function callModule() {
     const TokenSchema = new Schema({
         token: { type: String, unique: true , require: true },
         enabled: { type: Boolean , require: true },
-        client: { type: String , require: true },
-        // TOdo client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true },
+        client: { type: Schema.Types.ObjectId, ref : 'Client' , require: true }
     });
 
     let UserSchema = xDevSchema.extend({
@@ -77,7 +77,7 @@ function callModule() {
         },
         token: [TokenSchema],
         email: { type: String, unique: true , require: true },
-        cpfcnpj: { type: String, unique: true , require: true }
+        cpf: { type: String, unique: true , require: true }
     });
 
     /**
@@ -85,6 +85,62 @@ function callModule() {
      */
     UserSchema.set('redisCache', true);
 
+
+    UserSchema.statics.add = function(userId, useLog, entity, data) {
+        let userAdd = this();
+        let tokenAdd = [{
+            token: UserSchema.generateToken(),
+            enabled: true,
+            client: client // TOdo amarrar o client
+        }];
+
+        userAdd.local = {
+            name: data.name,
+            email: data.email,
+            signupToken: UserSchema.generateToken()
+            // TOdo esse token precisa expirar ???
+            // signupExpires: data.signupExpires
+        };
+        userAdd.token = [tokenAdd];
+        userAdd.email = data.email;
+        userAdd.cpf = data.cpf;
+
+        return xDevSchema._add(entity, userAdd, userId, useLog, 1, 'Usuário cadastrado');
+    };
+
+    /**
+     * Atualiza os dados do usuário
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {Promise.<T>|Promise}
+     */
+    UserSchema.statics.update = function(userId, useLog, entity, data) {
+        return this.findOne({_id: data._id})
+            .then((result) => {
+                if (!result) {
+                    let err = new Error("Dados inválidos");
+                    err.status = 400;
+                    throw err;
+                }
+
+                extendObj(true, result, data);
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Unidade atualizada');
+            })
+    };
+
+    /**
+     * Remove um usuário
+     * @param userId
+     * @param useLog
+     * @param entity
+     * @param data
+     * @returns {*}
+     */
+    UserSchema.statics.delete = function(userId, useLog, entity, data) {
+        return this.remove({"_id": data._id});
+    };
 
     /**
      * static methods
@@ -95,6 +151,21 @@ function callModule() {
     UserSchema.statics.generateHash = (password) => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 
     /**
+     * Gera e retorna um token
+     * @returns {*}
+     */
+    UserSchema.statics.generateToken = () => {
+        let token;
+
+        crypto.randomBytes(20, (err, buf) => {
+            if (err) throw err;
+            token = buf.toString('hex');
+        });
+
+        return token;
+    };
+
+    /**
      * buscar de usuários pelo email
      * @param email
      * @returns {*|Query}
@@ -103,16 +174,24 @@ function callModule() {
 
 
     UserSchema.statics.findByToken = function(token) {
-        return this.findOne({ token: { $elemMatch: { token : token } } })
+        return this.findOne({ token: { $elemMatch: { token : token, enabled:true } } })
     };
 
 
     /**
-     * filtra usuário pela id
-     * @param id
+     * filtra usuário pela _id
+     * @param _id
      * @returns {*|Query}
      */
-    UserSchema.statics.findById = function(id) { return this.findOne({ '_id': id })};
+    UserSchema.statics.findById = function(_id) { return this.findOne({ '_id': _id })};
+
+    /**
+     * Busca todos os usuários
+     * @returns {*}
+     */
+        // TODO Converter o bloco de código abaixo para es6
+        // mantido código no formato antigo por problemas de escopo com o modelo
+    UserSchema.statics.all = function() { return this.find({})};
 
     /**
      * checa se a senha é valida
@@ -124,12 +203,12 @@ function callModule() {
 
     /**
      * envia token por email para o usuário
-     * @param emailVars
+     * @param mailVars
      * @param field
      * @param res
      * @param next
      */
-    UserSchema.statics.sendTokenEmail = (emailVars, field, res, next) => {
+    UserSchema.statics.sendTokenMail = (mailVars, field, res, next) => {
         // todo verificar o uso de UserModel ao invés do this
         // (escopo em bloco)
         const UserModel = this;
@@ -142,7 +221,7 @@ function callModule() {
                 token = buf.toString('hex');
             });
 
-            UserModel.findOne({ email: emailVars.email })
+            UserModel.findOne({ email: mailVars.email })
                 .then((user) => {
                     if (!user) {
                         if (field === 'resetPassword') {
@@ -150,8 +229,8 @@ function callModule() {
                             error.status = 400;
                             throw error;
                         }
-                        user =  new UserModel({"email" : emailVars.email});
-                        insertToken(user, field, emailVars, token);
+                        user =  new UserModel({"email" : mailVars.email});
+                        insertToken(user, field, mailVars, token);
 
                         user.save(function(err){
                             if(err) {
@@ -171,12 +250,12 @@ function callModule() {
                             throw error;
                         }
 
-                        insertToken(user, field, emailVars, token);
+                        insertToken(user, field, mailVars, token);
                         user.save((err) => {
                             if (!!err) throw err;
                         });
                     }
-                    return sendMail(emailVars, token, res);
+                    return sendMail(mailVars, token, res);
                 })
                 .catch((err) =>
                     MongooseErr.apiCallErr(err.message, res, err.status || err.statusCode)
@@ -184,7 +263,7 @@ function callModule() {
 
         }
         catch(err) {
-            return MongooseErr.apiCallErr(err.message + " - Passou por aqui", res, err.status || err.statusCode);
+            return MongooseErr.apiCallErr(err.message + " - Passou por aqui (sendTokenMail", res, err.status || err.statusCode);
         }
     };
 
@@ -246,37 +325,6 @@ function callModule() {
     };
 
 
-
-    /**
-     * Insere a categoria em categories do usuário
-     * @param Database
-     * @param body
-     * @param res
-     * @returns {*}
-     */
-    UserSchema.statics.updateCategory = (body, res) => {
-        if (!!body.userId) {
-            this.findOne({_id: body.userId})
-                .then((user) => {
-                    // insere novas categorias inexistentes , e remove categorias que foram marcadas para remover e eram existentes
-                    user.categories = _.difference(
-                        _.union(user.categories.map((el) => el.toString()),_.filter(body.categories,{active: true}).map((el) => el.id)),
-                        _.filter(body.categories,{active: false}).map((el) => el.id)).map((el) => toObjectId(el));
-
-                    user.save((err) => {
-                        if(!!err) {
-                            return MongooseErr.apiGetMongooseErr(err, res)
-                        }
-                        return res.status(201).send();
-                    });
-                },
-                (erro) => MongooseErr.apiGetMongooseErr(erro, res));
-        } else return res.send();
-    };
-
-
-
-
     /**
      * Prepara e envia o email (signup || resetPassword)
      * @param mailVars
@@ -310,11 +358,11 @@ function callModule() {
      * Adiciona o novo token e a data de expiração dele.
      * @param user
      * @param field
-     * @param emailVars
+     * @param mailVars
      * @param token
      */
-    let insertToken = (user, field, emailVars, token) => {
-        user.local.email = emailVars.email;
+    let insertToken = (user, field, mailVars, token) => {
+        user.local.email = mailVars.email;
         user.local[field + "Token"] = token;
         user.local[field + "Expires"] = Date.now() + (3600000 * 24); // 24 hours
     };

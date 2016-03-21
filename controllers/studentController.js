@@ -47,20 +47,15 @@ module.exports = () => {
      * @param res
      */
     studentController.add = (req, res) => {
-        if (!req.body.matNumber || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones || !req.body.user
-        || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts || !req.body.documents
-        && (req.body.address.length === 0) || !req.body.address && !ValidAddress(req.body.address)) {
+        if (!req.body.matNumber || !req.body.email || !(req.body.email.indexOf('@') > 0) || !req.body.name ||
+        !req.body.birthDate || !req.body.cpf || !req.body.phones || !req.body.maritalStatus ||
+        !req.body.gender || !req.body.ethnicity || !req.body.contacts || !req.body.documents ||
+        !req.body.address || !req.body.address.length || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
-
-        //TOdo criar o user e cadastrar em student junto com os dados do aluno
-        //req.body.user = o id do usuário criado na entidade user
-
-
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
-
                 return res.status(201).json(data);
             })
             .catch((err) => {
@@ -74,10 +69,10 @@ module.exports = () => {
      * @param res
      */
     studentController.update = (req, res) => {
-        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.matNumber || !req.body.name || !req.body.birthDate
-        || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
-        || !req.body.ethnicity || !req.body.contacts || !req.body.documents && (req.body.address.length === 0)
-        || !req.body.address && !ValidAddress(req.body.address)) {
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.email || !(req.body.email.indexOf('@') > 0) ||
+        !req.body.matNumber || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones ||
+        !req.body.user || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts ||
+        !req.body.documents && !req.body.address || !req.body.address.length || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 

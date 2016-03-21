@@ -3,13 +3,9 @@ module.exports = callModule;
 
 function callModule (app,passport) {
     "use strict";
+
     const autentica = require('../../services/bearerAuth');
-    /**
-     * Obtém todas as unidades
-     */
-
     const employeeController = require('../../controllers/employeeController')();
-
 
 
     app.get('/api/v1/employees',autentica(passport), employeeController.all);

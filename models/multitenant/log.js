@@ -23,15 +23,12 @@ function callmodule(client) {
 
     /**
      * model Schema
-     * vazio por não ter restrição do tipo de dado e será um objeto que está sendo feito o log
      */
-    const DataSchema = new Schema({});
 
     let LogSchema = new Schema({
-        unidade: { type: Schema.Types.ObjectId, required: false },
         op: { type: Number, required: true },
         entity: { type: String, required: true },
-        data: { type: DataSchema, required: true },
+        data: { type: Schema.Types.Mixed, required: true },
         text: { type: String },
         date: { type: Date },
         user: { type: Schema.Types.ObjectId, ref: 'user', required: true }

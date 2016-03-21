@@ -49,8 +49,8 @@ function callModule(){
      * model Schema
      */
     let ClientSchema = xDevSchema.extend({
-        name : String,
-        alias: String,
+        name : { type: String, required: true},
+        alias: { type: String, required: true, unique: true },
         tax: { type: Number , require: true },
         cpfcnpj: { type: String, unique: true , require: true },
         user: { type: Schema.Types.ObjectId, ref : 'User' , require: true },
@@ -73,8 +73,18 @@ function callModule(){
     // mantido código no formato antigo por problemas de escopo com o modelo
     ClientSchema.statics.all = function() { return this.find({})};
 
+
     /**
-     * Adiciona um cliente
+     * Lista um client com o id
+     * @param _id
+     * @returns {*|Query|Promise}
+     */
+    ClientSchema.statics.findById = function(_id) {
+        return this.findOne({_id: _id})
+    };
+
+    /**
+     * Adiciona um client
      * @param userId
      * @param useLog
      * @param entity
@@ -92,11 +102,11 @@ function callModule(){
         client.iuguConf = data.iuguConf;
         client.conf = data.conf;
 
-        return xDevSchema._add(entity, client, userId, useLog, 1, 'Cliente adicionado');
+        return xDevSchema._add(entity, client, userId, useLog, 1, 'client adicionado');
     };
 
     /**
-     * Atualiza um cliente
+     * Atualiza um client
      * @param userId
      * @param useLog
      * @param entity
@@ -120,7 +130,7 @@ function callModule(){
     };
 
     /**
-     * Remove um cliente
+     * Remove um client
      * @param userId
      * @param useLog
      * @param entity

@@ -3,17 +3,19 @@
  * @type {*|exports|module.exports}
  */
 
-var collectionName = 'users';
-var UserModel = require('../models/user');
-var ObjectId = require('mongoose').Types.ObjectId;
-var sanitize = require('mongo-sanitize');
-var crypto = require('crypto');
-var format = require('string-format');
-var extend = require('extend');
-var MongooseErr = require('../services/MongooseErr.js');
-
 module.exports = function() {
-    var userController = {};
+    "use strict";
+
+    let userController = {};
+
+    const collectionName = 'users';
+    const UserModel = require('../models/user');
+    const ObjectId = require('mongoose').Types.ObjectId;
+    const sanitize = require('mongo-sanitize');
+    const crypto = require('crypto');
+    const format = require('string-format');
+    const extendObj = require('extend');
+    const MongooseErr = require('../services/MongooseErr.js');
 
 
     /**
@@ -22,32 +24,24 @@ module.exports = function() {
      * @param res
      */
     userController.authenticateLocal = function(req,res) {
-
-        var email = req.body.email;
-        var password = req.body.password;
-
-        if ((!email || !(email.indexOf('@') > 0)) || (!password || !(password != ""))) {
+        if ((!req.body.email || !(req.body.email.indexOf('@') > 0)) || (!req.body.password || !(req.body.password != ""))) {
             return MongooseErr.apiCallErr("Email e/ou senha inválido(s)", res, 400);
         }
 
-        UserModel.findOne({email: email})
-            .then(
-            function (user) {
+        return UserModel.findByEmail(req.body.email)
+            .then((user) => {
                 // verifica  se usuário está cadastrado no sistema
                 if (!user) return MongooseErr.apiCallErr("Usuário não encontrado", res, 401);
                 // se estiver vazio, é esperado que dê a opcao para mandar email outra vez
                 if (!user.local.password) return MongooseErr.apiCallErr("Cadastro de Usuário incompleto", res, 401);
-                var validaUsuario = (user.validPassword(password));
 
 
-                if (!validaUsuario) {
-                    return MongooseErr.apiCallErr("Usuário e/ou senha inválidos", res, 401);
-                } else {
+                return user.validPassword(req.body.password) ?
+                    MongooseErr.apiCallErr("Usuário e/ou senha inválidos", res, 401):
                     res.status(201).json(user);
-                }
 
-            },
-            function (err) {
+            }).
+            catch((err) => {
                 return MongooseErr.apiGetMongooseErr(err, res)
             }
         );
@@ -62,7 +56,7 @@ module.exports = function() {
      * @returns {*}
      */
     userController.authenticateFacebook = function(req,res) {
-        var facebookId = req.body.facebookId;
+        /*var facebookId = req.body.facebookId;
         var facebookData = req.body.facebookData;
         var email = facebookData.email;
 
@@ -122,7 +116,7 @@ module.exports = function() {
             function(erro) {
                 return MongooseErr.apiGetMongooseErr(erro,res);
             }
-        );
+        );*/
     };
 
 
@@ -141,7 +135,7 @@ module.exports = function() {
         //newUser.google.email = profile.emails[0].value; // pull the first email
         //newUser.google.picture = picture;
 
-        var email = req.body.google.email;
+        /*var email = req.body.google.email;
 
         if(!email){
             return MongooseErr.apiCallErr("não foi possivel obter o email para cadastro",res,401);
@@ -178,7 +172,7 @@ module.exports = function() {
             function(erro) {
                 return MongooseErr.apiGetMongooseErr(erro,res);
             }
-        );
+        );*/
     };
 
 
@@ -229,17 +223,16 @@ module.exports = function() {
 
 
     /**
-     * CRUD usuário = lista os usuários
+     * lista os usuários
      * @param req
      * @param res
      */
     userController.all = function(req, res) {
-        UserModel.find()
-            .then(
-            function(user) {
+        UserModel.all()
+            .then((user) => {
                 return res.json(user);
-            },
-            function(erro) {
+            }).
+            catch((erro) => {
                 return MongooseErr.apiGetMongooseErr(erro,res);
             }
         );
@@ -247,7 +240,7 @@ module.exports = function() {
 
 
     /**
-     * CRUD usuário = obtem o usuário como objeto
+     * Busca um usuário
      * @param req
      * @param res
      */
@@ -258,21 +251,19 @@ module.exports = function() {
             return MongooseErr.apiCallErr("Usuário inválido", res, 400);
         }
 
-        UserModel.findById(_id,
-            function (erro, dado) {
-                if (erro) {
-                    return MongooseErr.apiGetMongooseErr(erro, res);
-                }
-
-                if (!dado) return MongooseErr.apiCallErr("Usuário não encontrado", res, 404);
-                return res.json(dado);
-            }
-        );
+        UserModel.findById(_id)
+            .then((user) => {
+                if (!user) return MongooseErr.apiCallErr("Usuário não encontrado", res, 401);
+                return res.json(user);
+            })
+            .catch((err) => {
+                return MongooseErr.apiGetMongooseErr(err, res);
+            });
     };
 
 
     /**
-     * CRUD usuário = remove usuário
+     * Remove usuário
      * @param req
      * @param res
      */
@@ -296,79 +287,37 @@ module.exports = function() {
 
 
     /**
-     * CRUD usuário = salva usuário
+     * Salva os dados do usuário
      * @param req
      * @param res
      */
     userController.saveUser = function(req, res) {
-
-        if (!!req.body._id) {
-
-            if (!ObjectId.isValid(req.body._id) || (req.body.local.name !== undefined && req.body.local.name === "")) {
-                return MongooseErr.apiCallErr("Usuário inválido", res, 400);
-            }
-
-            if (!!req.body.local.password) {
-                req.body.local.password = UserModel.generateHash(req.body.local.password);
-            }
-
-            UserModel.findOne({_id: req.body._id})
-                .then(function (user) {
-                    var newLocal = user.local;
-
-                    extend(newLocal, req.body.local);
-
-                    user.local = newLocal;
-
-                    user.save(function(err) {
-                        if (err) {
-                            return MongooseErr.apiGetMongooseErr(err, res);
-                        }
-                        return res.status(200).json(user);
-                    });
-                },
-                function (erro) {
-                    return MongooseErr.apiGetMongooseErr(erro, res);
-                });
-        } else {
-            if (!(req.body.email.indexOf('@') > 0)) {
-                return MongooseErr.apiCallErr("Email inválido", res, 400);
-            }
-
-            UserModel.findByEmail(req.body.email)
-                .then(function (user) {
-                    if (!user) {
-                        return MongooseErr.apiCallErr("Não há usuário cadastrado para este email", res, 401);
-                    } else if (!user.local.name && !!user.local.email) {
-                        if (!!req.body.local.email && !!req.body.local.name && !!req.body.local.password) {
-                            var newUser = req.body;
-
-                            newUser.local.password = UserModel.generateHash(newUser.local.password);
-                            newUser.local.signupExpires = Date.now();
-                            extend(true, user, newUser);
-
-                            user.save(function (err) {
-                                if (!!err) {
-                                    return MongooseErr.apiGetMongooseErr(err, res);
-                                }
-                                return res.status(201).json({
-                                    success: true,
-                                    msg: "Usuário cadastrado com sucesso",
-                                    data: user
-                                });
-                            });
-                        } else return MongooseErr.apiCallErr("Dados inválidos", res, 400);
-                    } else if (!user.local.email) {
-                        return res.status(401).json({
-                            err: "O usuário já possui cadastro com rede social",
-                            success: false,
-                            fields: [],
-                            dadosUser: user
-                        });
-                    }
-                }
-            );
+        if (!ObjectId.isValid(sanitize(req.body._id)) || (req.body.local.name !== undefined && req.body.local.name === "")) {
+            return MongooseErr.apiCallErr("Usuário inválido", res, 400);
         }
+
+        if (!!req.body.local.password) {
+            req.body.local.password = UserModel.generateHash(req.body.local.password);
+        }
+
+        UserModel.findById({_id: req.body._id})
+            .then(function (user) {
+                var newLocal = user.local;
+
+                extendObj(newLocal, req.body.local);
+
+                user.local = newLocal;
+
+                user.save(function(err) {
+                    if (err) {
+                        return MongooseErr.apiGetMongooseErr(err, res);
+                    }
+                    return res.status(200).json(user);
+                });
+            },
+            function (erro) {
+                return MongooseErr.apiGetMongooseErr(erro, res);
+            });
     };
 
 
@@ -402,7 +351,7 @@ module.exports = function() {
             template : req.body.template
         };
 
-        return UserModel.sendTokenEmail(emailVars, "signup", res, next);
+        return UserModel.sendTokenMail(emailVars, "signup", res, next);
     };
 
 
@@ -435,7 +384,7 @@ module.exports = function() {
                 template : req.body.template
             };
 
-        return UserModel.sendTokenEmail(emailVars,"resetPassword", res, next);
+        return UserModel.sendTokenMail(emailVars,"resetPassword", res, next);
     };
 
 

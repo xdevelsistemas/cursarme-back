@@ -42,12 +42,12 @@ function callModule() {
 
     return  xDevSchema.extend({
         name: { type: String, required: true },
+        email: { type: String, required: true },
         address: [AddressSchema],
         birthDate: { type: Date, required: true },
         cpf: { type: String, unique: true , required: true },
         rg: { type: String, required: false },
         phones: [PhoneSchema],
-        user: { type: Schema.Types.ObjectId, ref : 'User' , required: true },
         maritalStatus: { type: String , required: true , array: maritalStatus.options },
         gender: { type: String , required: true , array: gender.options },
         ethnicity: { type: String , required: true , array: ethnicity.options },

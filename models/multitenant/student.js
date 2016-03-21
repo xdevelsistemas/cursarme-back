@@ -11,10 +11,11 @@ function callModule(client) {
 
     let mongoose = require('mongoose');
     let extend = require('mongoose-schema-extend');
-    let extendObj = require('extend');
+    const extendObj = require('extend');
     const Schema = mongoose.Schema;
     const xDevSchema = require("../multitenant/lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
+    const UserModel = require('../../models/user');
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const MongooseErr = require("../../services/MongooseErr");
     const _ = require('lodash');
@@ -36,6 +37,7 @@ function callModule(client) {
      */
     let StudentSchema = PersonSchema.extend({
         matNumber: {type: String, required: true , unique: true},
+        user: { type: Schema.Types.ObjectId, ref : 'User' , required: true },
         status: {type: String , required: true , array: studentStatus.options, default: "preEnrolled"}
     });
 
@@ -73,22 +75,37 @@ function callModule(client) {
      */
     StudentSchema.statics.add = function(userId, useLog, entity, data) {
         let stud = this();
+        let user;
 
         stud.matNumber = data.matNumber;
+        stud.email = data.email;
         stud.name = data.name;
         stud.address = data.address;
         stud.birthDate = data.birthDate;
         stud.cpf = data.cpf;
         stud.rg = data.rg;
         stud.phones = data.phones;
-        stud.user = data.user;
         stud.maritalStatus = data.maritalStatus;
         stud.gender = data.gender;
         stud.ethnicity = data.ethnicity;
         stud.contacts = data.contacts;
         stud.documents = data.documents;
 
-        return xDevSchema._add(entity, stud, userId, useLog, 1, 'Aluno adicionado');
+        user = {
+            name: data.name,
+            email: data.email,
+            cpf: data.cpf
+        };
+
+        return UserModel.add(userId, true, 'Test', user)
+            .then((data) => {
+                stud.user = data._id;
+                user = data;
+                return xDevSchema._add(entity, stud, userId, useLog, 1, 'Aluno adicionado');
+            })
+            .catch(() => {
+                UserModel.delete(userId, true, 'Test', user);
+            });
     };
 
 

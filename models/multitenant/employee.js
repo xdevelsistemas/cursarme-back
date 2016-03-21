@@ -36,8 +36,8 @@ function callModule(client) {
      * model Schema
      */
     let EmployeeSchema = PersonSchema.extend({
+        user: { type: Schema.Types.ObjectId, ref : 'User' , required: true },
         admin: {type: Boolean, required: true , default: false},
-
         enabled: {type: Boolean, required: true , default: true},
         /*
           cargo

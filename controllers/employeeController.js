@@ -13,11 +13,15 @@ module.exports = () => {
 
 
     let validPerms = (list) => {
-        let isValid = true;
+        let isValid = false;
 
-        list.forEach(function(el) {
-            isValid = isValid && (!!el.unit && !!el.modules);
-        });
+        if (list.length > 0) {
+            isValid = true;
+
+            list.forEach(function (el) {
+                isValid = isValid && (!!el.unit && !!el.modules);
+            });
+        }
 
         return isValid;
     };
@@ -56,10 +60,10 @@ module.exports = () => {
      * @param res
      */
     employeeController.add = (req, res) => {
-        if (!req.body.admin || !req.body.enabled || !req.body.position || !req.body.titration || !req.body.perms
-        || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones
-        || !req.body.user || !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts
-        || !req.body.documents || !req.body.address || (req.body.address.length === 0) || !ValidAddress(req.body.address)) {
+        if (!req.body.position || !req.body.titration || !req.body.perms || !validPerms(req.body.perms) ||
+        !req.body.name || !req.body.birthDate || !req.body.cpf || !req.body.phones || !req.body.user ||
+        !req.body.maritalStatus || !req.body.gender || !req.body.ethnicity || !req.body.contacts ||
+        !req.body.documents || !req.body.address || (req.body.address.length === 0) || !ValidAddress(req.body.address)) {
             return MongooseErr.apiCallErr("Dados inválidos", res, 400);
         }
 
@@ -81,8 +85,8 @@ module.exports = () => {
      * @param res
      */
     employeeController.update = (req, res) => {
-        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.admin || !req.body.enabled || !req.body.position
-        || !req.body.titration || !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate
+        if (!ObjectId.isValid(sanitize(req.body._id)) || !req.body.position || !req.body.titration ||
+        !req.body.perms || !validPerms(req.body.perms) || !req.body.name || !req.body.birthDate
         || !req.body.cpf || !req.body.phones || !req.body.user || !req.body.maritalStatus || !req.body.gender
         || !req.body.ethnicity || !req.body.contacts || !req.body.documents || (req.body.address.length === 0)
         || !req.body.address || !ValidAddress(req.body.address)) {

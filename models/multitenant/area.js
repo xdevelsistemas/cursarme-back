@@ -39,7 +39,7 @@ function callModule(client) {
         /**
          * Tipo de curso
          */
-        typeCourse: { type: Schema.Types.ObjectId, ref : client + 'TypeCourse' , required: true }
+        typeCourse: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'TypeCourse') , required: true }
     });
 
     /**

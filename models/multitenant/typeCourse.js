@@ -39,15 +39,7 @@ function callModule(client) {
         /**
          * Unidade o curso
          */
-        unit: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'Unit') , required: true },
-        /**
-         * Quantidade de alunos para o curso
-         */
-        quorum: {type: Number, required: true},
-        /**
-         * Documentos obrigatórios para o curso
-         */
-        docsCourse: [DocsCourse]
+        unit: { type: Schema.Types.ObjectId, ref : xDevModel.ref(client, 'Unit') , required: true }
     });
 
     /**

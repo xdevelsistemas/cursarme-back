@@ -26,7 +26,6 @@ function callmodule(client) {
      */
 
     let LogSchema = new Schema({
-        unidade: { type: Schema.Types.ObjectId, required: false },
         op: { type: Number, required: true },
         entity: { type: String, required: true },
         data: { type: Schema.Types.Mixed, required: true },

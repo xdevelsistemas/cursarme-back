@@ -15,6 +15,7 @@ function callModule(client) {
     const Schema = mongoose.Schema;
     const xDevSchema = require("./lib/xDevEntity")(client).xDevSchema;
     const xDevModel = require("../../services/xDevModel")(mongoose);
+    const UserModel = require('../../models/user');
     const mongooseRedisCache = require("../../config/mongooseRedisCache");
     const PersonSchema = require("../person");
     const modules = require("../enum/modules");
@@ -85,6 +86,7 @@ function callModule(client) {
      */
     EmployeeSchema.statics.add = function(userId, useLog, entity, data) {
         let empl = this();
+        let user;
 
         empl.admin = data.admin;
         empl.enabled = data.enabled;
@@ -92,18 +94,32 @@ function callModule(client) {
         empl.titration = data.titration;
         empl.perms = data.perms;
         empl.name = data.name;
+        empl.email = data.email;
         empl.address = data.address;
         empl.birthDate = data.birthDate;
         empl.cpf = data.cpf;
         empl.phones = data.phones;
-        empl.user = data.user;
         empl.maritalStatus = data.maritalStatus;
         empl.gender = data.gender;
         empl.ethnicity = data.ethnicity;
         empl.contacts = data.contacts;
         empl.documents = data.documents;
 
-        return xDevSchema._add(entity, empl, userId, useLog, 1, 'Funcionário adicionada');
+        user = {
+            name: data.name,
+            email: data.email,
+            cpf: data.cpf
+        };
+
+        return UserModel.add(userId, true, 'Test', user)
+            .then((data) => {
+                empl.user = data._id;
+                user = data;
+                return xDevSchema._add(entity, empl, userId, useLog, 1, 'Funcionário adicionado');
+            })
+            .catch(() => {
+                UserModel.delete(userId, true, 'Test', user);
+            });
     };
 
     /**
@@ -126,7 +142,7 @@ function callModule(client) {
                 }
 
                 extendObj(true, result, data);
-                return xDevSchema._update(entity, result, userId, useLog, 0, 'Funcionário atualizada');
+                return xDevSchema._update(entity, result, userId, useLog, 0, 'Funcionário atualizado');
             })
     };
 

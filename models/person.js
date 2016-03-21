@@ -42,6 +42,7 @@ function callModule() {
 
     return  xDevSchema.extend({
         name: { type: String, required: true },
+        email: { type: String, required: true },
         address: [AddressSchema],
         birthDate: { type: Date, required: true },
         cpf: { type: String, unique: true , required: true },

@@ -78,6 +78,7 @@ function callModule(client) {
         let user;
 
         stud.matNumber = data.matNumber;
+        stud.email = data.email;
         stud.name = data.name;
         stud.address = data.address;
         stud.birthDate = data.birthDate;

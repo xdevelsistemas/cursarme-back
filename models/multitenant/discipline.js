@@ -51,10 +51,10 @@ function callModule(client) {
 
     /**
      * Busca uma disciplina
-     * @param id
+     * @param _id
      * @returns {*|Query|Promise}
      */
-    DisciplineSchema.statics.findById = function(id) { return this.findOne({"_id": id})};
+    DisciplineSchema.statics.findById = function(_id) { return this.findOne({"_id": _id})};
 
     /**
      * Adiciona uma disciplina

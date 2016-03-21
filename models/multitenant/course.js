@@ -74,6 +74,7 @@ function callModule(client) {
         disciplines: [{ type: Schema.Types.ObjectId, ref: xDevModel.ref(client, 'Discipline'), required: true }]
     });
 
+    // TOdo verificar se algum outro modelo migrará para cá
     let CourseSchema = xDevSchema.extend({
         name: { type: String, required: true },
         /**

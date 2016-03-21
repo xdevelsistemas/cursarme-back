@@ -92,9 +92,7 @@ function callModule(client) {
      * @returns {Promise.<T>|Promise}
      */
     TypeCourseSchema.statics.update = function(userId, useLog, entity, data) {
-        let StudentModel = this;
-
-        return StudentModel.findOne({_id: data._id})
+        return this.findOne({_id: data._id})
             .then((result) => {
                 if (!result) {
                     let err = new Error("Dados inválidos");

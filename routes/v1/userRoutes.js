@@ -3,13 +3,12 @@
  * @type {*|exports|module.exports}
  */
 
-// load the auth variables from mongo
-var autentica = require('../../services/bearerAuth');
-
-
 module.exports = function (app, passport) {
+    "use strict";
 
-    var userController = require('../../controllers/userController.js')(passport);
+// load the auth variables from mongo
+    const autentica = require('../../services/bearerAuth');
+    const userController = require('../../controllers/userController.js')(passport);
 
     /* pegar a imagem de perfil  do usuário por email */
     /**
@@ -412,8 +411,6 @@ module.exports = function (app, passport) {
 
     /* POST auth users with facebook strategy. */
     app.post('/api/v1/users/auth/facebook',autentica(passport), userController.authenticateFacebook);
-
-
 
 
     /* GET one user. */

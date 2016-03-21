@@ -60,7 +60,6 @@ module.exports = () => {
 
         return StudentModel(getClient(req)).add(req.user._id, true, 'Test', req.body)
             .then((data) => {
-
                 return res.status(201).json(data);
             })
             .catch((err) => {
